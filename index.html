@@ -290,6 +290,26 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
   .source-stat .num{ font-size:19px; font-weight:600; color:var(--text-primary); }
   .source-stat .lbl{ font-size:11.5px; color:var(--text-secondary); }
   .bar-row{ display:grid; grid-template-columns: 108px 1fr 46px; align-items:center; gap:8px; padding:3px 0; border-radius:6px; cursor:default; }
+  .nat-ytd-summary{ margin:2px 0 12px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:var(--bg); }
+  .nat-ytd-total{ font-size:12px; font-weight:600; margin-bottom:6px; }
+  .nat-ytd-groups{ display:flex; flex-wrap:wrap; gap:6px; }
+  .nat-group-pill{ font-size:11.5px; border:1px solid var(--border-strong); border-radius:20px; padding:3px 10px; background:var(--surface); }
+  .nat-group-pill.muted{ color:var(--text-muted); }
+  .nat-group-pct{ color:var(--text-muted); }
+  .agency-row{ display:grid; grid-template-columns: 1fr auto auto auto; align-items:center; gap:10px; padding:4px 0; border-bottom:1px solid var(--border); font-size:12px; }
+  .agency-row:last-child{ border-bottom:none; }
+  .agency-name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .agency-stat{ color:var(--text-secondary); white-space:nowrap; }
+  .agency-badge{ font-size:11px; border-radius:20px; padding:2px 9px; white-space:nowrap; }
+  .agency-badge.active{ background:var(--good); color:#fff; }
+  .agency-badge.inactive{ background:var(--border); color:var(--text-muted); }
+  .monthly-summary-box textarea{ width:100%; min-height:110px; font:inherit; font-size:13px; line-height:1.5; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); resize:vertical; box-sizing:border-box; }
+  .monthly-summary-meta{ font-size:11px; color:var(--text-muted); margin-top:6px; }
+  .monthly-summary-actions{ display:flex; gap:8px; margin-top:8px; }
+  .monthly-summary-history{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+  .monthly-summary-history-item{ border-top:1px solid var(--border); padding-top:10px; }
+  .monthly-summary-history-month{ font-weight:600; font-size:12px; margin-bottom:3px; }
+  .monthly-summary-history-text{ font-size:12px; color:var(--text-secondary); white-space:pre-wrap; }
   .bar-row:hover{ background: var(--surface-2); }
   .bar-row-clickable{ cursor:pointer; }
   .bar-label{ font-size:12px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -398,7 +418,7 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
     min-width:220px;
   }
   .table-scroll{ overflow-x:auto; border-top:1px solid var(--border); }
-  table.data{ width:100%; border-collapse:collapse; font-size:12px; min-width:1720px; }
+  table.data{ width:100%; border-collapse:collapse; font-size:12px; min-width:1660px; }
   table.data th{
     text-align:left; font-weight:600; color:var(--text-muted); font-size:10.5px;
     text-transform:uppercase; letter-spacing:0.04em;
@@ -432,7 +452,7 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
   table.data td.note-col.empty .clamp{ -webkit-line-clamp:1; }
   /* customer-detail narrative gets extra room — it tends to run longer than the other
      free-text columns and is the one people most often need to actually read in place */
-  table.data th.note-col-cust, table.data td.note-col-cust{ min-width:420px; max-width:560px; }
+  table.data th.note-col-cust, table.data td.note-col-cust{ min-width:460px; max-width:620px; }
   /* full narrative, no truncation — this is the column people actually need to read in place */
   table.data td.note-col-cust .clamp{ -webkit-line-clamp:unset; overflow:visible; }
   table.data td.note-col-cust.empty .clamp{ -webkit-line-clamp:1; overflow:hidden; }
@@ -878,14 +898,13 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
             <th colspan="1" class="group-head interest">การตัดสินใจ</th>
             <th colspan="5" class="group-head interest">รถ &amp; การเข้าชม</th>
             <th colspan="1" class="group-head contact">ผู้ติดต่อ</th>
-            <th rowspan="2">สถานะ</th>
             <th rowspan="2">จัดการ</th>
           </tr>
           <tr>
             <th class="col-start">ชื่อ</th><th>อาชีพ</th><th>มาจากสื่อไหน</th><th>ชื่อ Agent</th><th>สัญชาติ</th><th>งบประมาณที่ลูกค้าตั้งไว้</th><th>แบบบ้านที่สนใจ</th>
             <th class="col-start note-col note-col-cust">รายละเอียดลูกค้า</th><th class="note-col note-col-cust">รายละเอียดความสนใจ</th>
             <th class="col-start">สถานะการตัดสินใจ</th>
-            <th class="col-start">ยี่ห้อรถ</th><th>รุ่นรถ</th><th>สีรถ</th><th>เกรดลูกค้า</th><th>Number of Visit</th>
+            <th class="col-start">ยี่ห้อรถ</th><th>รุ่นรถ</th><th>สีรถ</th><th>เกรดการตัดสินใจ</th><th>Number of Visit</th>
             <th class="col-start">เซล</th>
           </tr>
         </thead>
@@ -968,7 +987,7 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
     </div>
     <div id="spfUpdateNote" style="margin-bottom:14px;"></div>
 
-    <div class="section-heading" style="margin-top:22px;"><h3>1. Sale Performance</h3><div class="card-sub">สัดส่วนโอนแล้ว/รอโอน/เหลือขาย เทียบกับจำนวนยูนิตทั้งหมดของโครงการ</div></div>
+    <div class="section-heading" style="margin-top:22px;"><h3>1. Sales Performance</h3><div class="card-sub">สัดส่วนโอนแล้ว/รอโอน/เหลือขาย เทียบกับจำนวนยูนิตทั้งหมดของโครงการ</div></div>
     <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable1"></table></div></div>
     <div class="card spf-card">
       <div class="card-title">ภาพรวมความคืบหน้า</div>
@@ -978,18 +997,31 @@ const PATTA_PDF_FONT_APERCU_BOLD_BASE64 = "AAEAAAAOAIAAAwBgRFNJRwAAAAEAAkKgAAAAC
 
     <div class="section-heading" style="margin-top:22px;"><h3>2. Sales Performance Overview — Jan <span id="spfYear"></span> ถึงปัจจุบัน</h3><div class="card-sub">ยอดใหม่ที่เกิดขึ้นในช่วงเวลานี้เท่านั้น (ไม่ใช่ยอดสะสม) แยกตามโครงการ</div></div>
     <div class="kpi-grid" id="spfPeriodKpis" style="margin-bottom:16px;"></div>
-    <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable2"></table></div></div>
+    <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable2"></table></div>
+      <div class="spf-method-note">ตัวเลข "ยอดขาย" ในตารางนี้เป็นยอดขายใหม่จริง หลังตัดกรณีย้ายแปลง/ยกเลิก+จองใหม่ของลูกค้าเดิมที่ยืนยันแล้วออก — โครงการที่มีการปรับจะมีไอคอน ⓘ ต่อท้ายตัวเลข เลื่อนเมาส์เพื่อดู breakdown เต็ม (ตรวจสอบแล้ว 25 ก.ย. 2569: ยอดขายจริงปี 2569 ของ CHIEFTAIN = 4 ยูนิต จากยอดดิบ 6 ยูนิต เพราะ 2 รายการเป็นการย้ายแปลง/แปลงสิทธิ์ของลูกค้าเดิม ไม่ใช่ลูกค้าใหม่)</div>
+    </div>
 
     <div class="section-heading" style="margin-top:22px;"><h3>3. Absorption Rate</h3><div class="card-sub">อัตราการขายเทียบกับระยะเวลาที่เปิดขายมาแล้ว และเวลาที่คาดว่าจะขายหมด</div></div>
     <div class="card spf-card">
       <div class="table-scroll"><table class="data" id="spfTable3"></table></div>
-      <div class="spf-method-note">* "Sales After Launch"/"Avg หลังเปิดขาย" เป็นค่าประมาณ (นับสัญญาที่ Book ตั้งแต่วันเปิดขายเป็นต้นไป ไม่ใช่วิธีคำนวณเดียวกับรายงานต้นฉบับเป๊ะๆ) — Time to Close-out = ยูนิตคงเหลือ &divide; Avg หลังเปิดขาย · วันเปิดขายและจำนวนยูนิตรวมของโครงการที่เพิ่งเปิดใหม่บางโครงการยังอ้างอิงข้อมูลจากฝ่ายขาย เนื่องจากยังไม่มีในระบบ ERP</div>
+      <div class="spf-method-note">* "Sold After Launch"/"Avg หลังเปิดขาย" เป็นค่าประมาณ (นับสัญญาที่ Book ตั้งแต่วันเปิดขายเป็นต้นไป ไม่ใช่วิธีคำนวณเดียวกับรายงานต้นฉบับเป๊ะๆ) — Time to Close-out = ยูนิตคงเหลือ &divide; Avg หลังเปิดขาย · วันเปิดขายและจำนวนยูนิตรวมของโครงการที่เพิ่งเปิดใหม่บางโครงการยังอ้างอิงข้อมูลจากฝ่ายขาย เนื่องจากยังไม่มีในระบบ ERP</div>
     </div>
 
     <div class="section-heading" style="margin-top:22px;"><h3>4. Sales Target Performance</h3><div class="card-sub">เทียบยอดขายจริงปีนี้กับเป้าที่ตั้งไว้ รายโครงการ</div></div>
     <div class="card spf-card">
       <div class="table-scroll"><table class="data" id="spfTable4"></table></div>
       <div class="spf-table4-note" id="spfTable4Note"></div>
+    </div>
+
+    <div class="section-heading" style="margin-top:22px;"><h3>5. สรุปสถานการณ์ประจำเดือน</h3><div class="card-sub">ร่างอัตโนมัติจากตัวเลข Walk-in/ยอดขาย/ความคืบหน้าเทียบเดือนก่อน — แก้ไข/เพิ่มบริบทแล้วกดบันทึกได้</div></div>
+    <div class="card spf-card monthly-summary-box" id="spfMonthlySummary">
+      <textarea id="spfMonthlySummaryText" placeholder="กำลังโหลดร่างอัตโนมัติ..."></textarea>
+      <div class="monthly-summary-meta" id="spfMonthlySummaryMeta"></div>
+      <div class="monthly-summary-actions">
+        <button type="button" class="btn" id="spfMonthlySummaryRegenBtn">สร้างร่างอัตโนมัติใหม่</button>
+        <button type="button" class="btn primary" id="spfMonthlySummarySaveBtn">บันทึก</button>
+      </div>
+      <div class="monthly-summary-history" id="spfMonthlySummaryHistory"></div>
     </div>
   </div>
 
@@ -2146,7 +2178,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
   // total_units / launch_date / target_2026 for a few newer projects are static master data
   // supplied by the sales team (flagged with a footnote) since the ERP has no clean source
   // for them yet -- everything else here refreshes with each ERP sync.
-  var SPF_DATA = {"HORIZON":{"total_units":114,"sales_unit":107,"sales_pct":93.9,"transfer_unit":95,"transfer_pct":83.3,"pending_transfer":12,"remaining_unsold":7,"price_min":7750000.0,"price_max":17500000.0,"target_2026":19,"sales_2026":11,"avg_monthly_2024":2.33,"avg_monthly_2025":1.25,"avg_monthly_2026":1.22,"past_8_months":8,"period_sales":11,"period_sales_raw":12,"period_sales_unit_move":0,"period_sales_excluded":1,"period_transfer":10,"period_cancel":5,"launch_date":"2023-09-03","sales_period_months":36,"avg_sales_per_month_total":2.97,"sales_after_launch":103,"avg_sales_per_month_after_launch":2.86,"time_to_closeout_months":2,"target_progress_pct":57.9,"target_remaining":8},"CHIEFTAIN":{"total_units":58,"sales_unit":32,"sales_pct":55.2,"transfer_unit":28,"transfer_pct":48.3,"pending_transfer":4,"remaining_unsold":26,"price_min":9850000.0,"price_max":33500000.0,"target_2026":12,"sales_2026":4,"avg_monthly_2024":1.17,"avg_monthly_2025":0.67,"avg_monthly_2026":0.44,"past_8_months":4,"period_sales":4,"period_sales_raw":6,"period_sales_unit_move":1,"period_sales_excluded":1,"period_transfer":7,"period_cancel":3,"launch_date":"2023-12-16","sales_period_months":33,"avg_sales_per_month_total":0.97,"sales_after_launch":29,"avg_sales_per_month_after_launch":0.88,"time_to_closeout_months":30,"target_progress_pct":33.3,"target_remaining":8},"CASCADE":{"total_units":118,"sales_unit":28,"sales_pct":23.7,"transfer_unit":16,"transfer_pct":13.6,"pending_transfer":12,"remaining_unsold":90,"price_min":17700000.0,"price_max":41700000.0,"target_2026":20,"sales_2026":10,"avg_monthly_2024":0.33,"avg_monthly_2025":1.17,"avg_monthly_2026":1.11,"past_8_months":10,"period_sales":10,"period_sales_raw":10,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":6,"period_cancel":7,"launch_date":"2024-11-30","sales_period_months":22,"avg_sales_per_month_total":1.27,"sales_after_launch":28,"avg_sales_per_month_after_launch":1.27,"time_to_closeout_months":71,"target_progress_pct":50.0,"target_remaining":10},"ARCADE Autograph":{"total_units":80,"sales_unit":19,"sales_pct":23.8,"transfer_unit":1,"transfer_pct":1.2,"pending_transfer":18,"remaining_unsold":61,"price_min":14880000.0,"price_max":36780000.0,"target_2026":18,"sales_2026":7,"avg_monthly_2024":0.0,"avg_monthly_2025":1.0,"avg_monthly_2026":0.78,"past_8_months":6,"period_sales":7,"period_sales_raw":8,"period_sales_unit_move":1,"period_sales_excluded":0,"period_transfer":1,"period_cancel":7,"launch_date":"2025-11-07","sales_period_months":10,"avg_sales_per_month_total":1.9,"sales_after_launch":14,"avg_sales_per_month_after_launch":1.4,"time_to_closeout_months":44,"target_progress_pct":38.9,"target_remaining":11},"PATTA TERRANE":{"total_units":141,"sales_unit":6,"sales_pct":4.3,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":6,"remaining_unsold":135,"price_min":8290000.0,"price_max":12100000.0,"target_2026":12,"sales_2026":6,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.67,"past_8_months":6,"period_sales":6,"period_sales_raw":6,"period_sales_unit_move":1,"period_sales_excluded":0,"period_transfer":0,"period_cancel":2,"launch_date":"2026-06-12","sales_period_months":3,"avg_sales_per_month_total":2.0,"sales_after_launch":6,"avg_sales_per_month_after_launch":2.0,"time_to_closeout_months":68,"target_progress_pct":50.0,"target_remaining":6},"PATTA RIVERINE":{"total_units":124,"sales_unit":8,"sales_pct":6.5,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":8,"remaining_unsold":116,"price_min":3500000.0,"price_max":30670000.0,"target_2026":12,"sales_2026":8,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.89,"past_8_months":8,"period_sales":8,"period_sales_raw":8,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":0,"period_cancel":0,"launch_date":"2026-06-12","sales_period_months":3,"avg_sales_per_month_total":2.67,"sales_after_launch":8,"avg_sales_per_month_after_launch":2.67,"time_to_closeout_months":43,"target_progress_pct":66.7,"target_remaining":4},"PATTA PILLAR":{"total_units":124,"sales_unit":3,"sales_pct":2.4,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":3,"remaining_unsold":121,"price_min":6890000.0,"price_max":18230000.0,"target_2026":5,"sales_2026":3,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.33,"past_8_months":3,"period_sales":3,"period_sales_raw":3,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":0,"period_cancel":0,"launch_date":"2026-08-08","sales_period_months":1,"avg_sales_per_month_total":3.0,"sales_after_launch":3,"avg_sales_per_month_after_launch":3.0,"time_to_closeout_months":40,"target_progress_pct":60.0,"target_remaining":2},"ELEMENT":{"total_units":248,"sales_unit":248,"sales_pct":100.0,"transfer_unit":247,"transfer_pct":99.6,"pending_transfer":1,"remaining_unsold":0,"price_min":4068000.0,"price_max":9420000.0,"target_2026":null,"sales_2026":0,"avg_monthly_2024":7.75,"avg_monthly_2025":3.0,"avg_monthly_2026":0.0,"past_8_months":0,"period_sales":0,"period_sales_raw":0,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":1,"period_cancel":0,"launch_date":null,"sales_period_months":null,"avg_sales_per_month_total":null,"sales_after_launch":null,"avg_sales_per_month_after_launch":null,"time_to_closeout_months":null,"target_progress_pct":null,"target_remaining":null}};
+  var SPF_DATA = {"HORIZON":{"total_units":114,"sales_unit":107,"sales_pct":93.9,"transfer_unit":95,"transfer_pct":83.3,"pending_transfer":12,"remaining_unsold":7,"price_min":7750000.0,"price_max":17500000.0,"target_2026":19,"sales_2026":11,"avg_monthly_2024":2.33,"avg_monthly_2025":1.25,"avg_monthly_2026":1.22,"past_8_months":8,"period_sales":11,"period_sales_raw":12,"period_sales_unit_move":0,"period_sales_excluded":1,"period_transfer":10,"period_cancel":5,"launch_date":"2023-09-03","sales_period_months":36,"avg_sales_per_month_total":2.97,"sales_after_launch":103,"avg_sales_per_month_after_launch":2.86,"time_to_closeout_months":2,"target_progress_pct":57.9,"target_remaining":8},"CHIEFTAIN":{"total_units":58,"sales_unit":32,"sales_pct":55.2,"transfer_unit":28,"transfer_pct":48.3,"pending_transfer":4,"remaining_unsold":26,"price_min":9850000.0,"price_max":33500000.0,"target_2026":12,"sales_2026":4,"avg_monthly_2024":1.17,"avg_monthly_2025":0.67,"avg_monthly_2026":0.44,"past_8_months":4,"period_sales":4,"period_sales_raw":6,"period_sales_unit_move":1,"period_sales_excluded":1,"period_transfer":7,"period_cancel":3,"launch_date":"2023-12-16","sales_period_months":33,"avg_sales_per_month_total":0.97,"sales_after_launch":29,"avg_sales_per_month_after_launch":0.88,"time_to_closeout_months":30,"target_progress_pct":33.3,"target_remaining":8},"CASCADE":{"total_units":118,"sales_unit":28,"sales_pct":23.7,"transfer_unit":16,"transfer_pct":13.6,"pending_transfer":12,"remaining_unsold":90,"price_min":17700000.0,"price_max":41700000.0,"target_2026":20,"sales_2026":10,"avg_monthly_2024":0.33,"avg_monthly_2025":1.17,"avg_monthly_2026":1.11,"past_8_months":10,"period_sales":10,"period_sales_raw":10,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":6,"period_cancel":7,"launch_date":"2024-11-30","sales_period_months":22,"avg_sales_per_month_total":1.27,"sales_after_launch":28,"avg_sales_per_month_after_launch":1.27,"time_to_closeout_months":71,"target_progress_pct":50.0,"target_remaining":10},"ARCADE Autograph":{"total_units":80,"sales_unit":19,"sales_pct":23.8,"transfer_unit":1,"transfer_pct":1.2,"pending_transfer":18,"remaining_unsold":61,"price_min":14880000.0,"price_max":36780000.0,"target_2026":18,"sales_2026":7,"avg_monthly_2024":0.0,"avg_monthly_2025":1.0,"avg_monthly_2026":0.78,"past_8_months":6,"period_sales":7,"period_sales_raw":8,"period_sales_unit_move":1,"period_sales_excluded":0,"period_transfer":1,"period_cancel":7,"launch_date":"2025-11-07","sales_period_months":10,"avg_sales_per_month_total":1.9,"sales_after_launch":14,"avg_sales_per_month_after_launch":1.4,"time_to_closeout_months":44,"target_progress_pct":38.9,"target_remaining":11},"PATTA TERRANE":{"total_units":141,"sales_unit":6,"sales_pct":4.3,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":6,"remaining_unsold":135,"price_min":8290000.0,"price_max":12100000.0,"target_2026":10,"sales_2026":6,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.67,"past_8_months":6,"period_sales":6,"period_sales_raw":6,"period_sales_unit_move":1,"period_sales_excluded":0,"period_transfer":0,"period_cancel":2,"launch_date":"2026-06-12","sales_period_months":3,"avg_sales_per_month_total":2.0,"sales_after_launch":6,"avg_sales_per_month_after_launch":2.0,"time_to_closeout_months":68,"target_progress_pct":60.0,"target_remaining":4},"PATTA RIVERINE":{"total_units":124,"sales_unit":8,"sales_pct":6.5,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":8,"remaining_unsold":116,"price_min":3500000.0,"price_max":30670000.0,"target_2026":10,"sales_2026":8,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.89,"past_8_months":8,"period_sales":8,"period_sales_raw":8,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":0,"period_cancel":0,"launch_date":"2026-06-12","sales_period_months":3,"avg_sales_per_month_total":2.67,"sales_after_launch":8,"avg_sales_per_month_after_launch":2.67,"time_to_closeout_months":43,"target_progress_pct":80.0,"target_remaining":2},"PATTA PILLAR":{"total_units":124,"sales_unit":3,"sales_pct":2.4,"transfer_unit":0,"transfer_pct":0.0,"pending_transfer":3,"remaining_unsold":121,"price_min":6890000.0,"price_max":18230000.0,"target_2026":8,"sales_2026":3,"avg_monthly_2024":0.0,"avg_monthly_2025":0.0,"avg_monthly_2026":0.33,"past_8_months":3,"period_sales":3,"period_sales_raw":3,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":0,"period_cancel":0,"launch_date":"2026-08-08","sales_period_months":1,"avg_sales_per_month_total":3.0,"sales_after_launch":3,"avg_sales_per_month_after_launch":3.0,"time_to_closeout_months":40,"target_progress_pct":37.5,"target_remaining":5},"ELEMENT":{"total_units":248,"sales_unit":248,"sales_pct":100.0,"transfer_unit":247,"transfer_pct":99.6,"pending_transfer":1,"remaining_unsold":0,"price_min":4068000.0,"price_max":9420000.0,"target_2026":null,"sales_2026":0,"avg_monthly_2024":7.75,"avg_monthly_2025":3.0,"avg_monthly_2026":0.0,"past_8_months":0,"period_sales":0,"period_sales_raw":0,"period_sales_unit_move":0,"period_sales_excluded":0,"period_transfer":1,"period_cancel":0,"launch_date":null,"sales_period_months":null,"avg_sales_per_month_total":null,"sales_after_launch":null,"avg_sales_per_month_after_launch":null,"time_to_closeout_months":null,"target_progress_pct":null,"target_remaining":null}};
   var spfRendered = false;
 
   function spfFmtUpdated(){
@@ -2169,7 +2201,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     // ---- 1. Sale Performance ----
     (function(){
       var t = document.getElementById('spfTable1');
-      var head = '<tr><th>Project</th><th>Total Units</th><th>Sales (Unit)</th><th>Sales %</th><th>Units Transfer</th><th>Transfer %</th></tr>';
+      var head = '<tr><th>Project</th><th>Total Units</th><th>Sold (Unit)</th><th>Sold %</th><th>Units Transfer</th><th>Transfer %</th></tr>';
       var body = withElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.total_units)+'</td><td class="num">'+fmtInt(d.sales_unit)+'</td>'+
@@ -2239,8 +2271,8 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     // ---- 3. Absorption Rate ----
     (function(){
       var t = document.getElementById('spfTable3');
-      var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Sales (Unit)</th>'+
-        '<th>Avg/mo (Total)</th><th>Sales After Launch</th><th>Avg/mo (After Launch)</th><th>Past 8mo Sales</th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
+      var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Sold (Unit)</th>'+
+        '<th>Avg/mo (Total)</th><th>Sold After Launch</th><th>Avg/mo (After Launch)</th><th>Sold (Past 8mo)</th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td>'+spfMoneyM(d.price_min)+'-'+spfMoneyM(d.price_max).replace('MB','')+'</td>'+
@@ -2257,7 +2289,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     (function(){
       var t = document.getElementById('spfTable4');
       var head = '<tr><th>Project</th><th>Total Units</th><th>Avg/mo 2024</th><th>Avg/mo 2025</th><th>2026 Target</th>'+
-        '<th>Sales in 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th></tr>';
+        '<th>Sold YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th></tr>';
       var now = new Date();
       var monthsPassed = now.getMonth()+1;
       var monthsLeft = Math.max(12 - monthsPassed, 1);
@@ -2279,12 +2311,141 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
       t.innerHTML = head+body;
       var noteEl = document.getElementById('spfTable4Note');
       if (noteEl){
+        // TER vs RVR year-end potential comparison (per request) -- computed live from
+        // SPF_DATA so it stays accurate if targets/sales change, rather than a fixed
+        // hardcoded verdict. Higher target_progress_pct + shorter time_to_closeout_months
+        // = stronger year-end potential.
+        var terD = SPF_DATA['PATTA TERRANE'], rvrD = SPF_DATA['PATTA RIVERINE'];
+        var terVsRvrHTML = '';
+        if (terD && rvrD && terD.target_progress_pct!=null && rvrD.target_progress_pct!=null){
+          var rvrAhead = rvrD.target_progress_pct >= terD.target_progress_pct;
+          var leader = rvrAhead ? 'PATTA RIVERINE' : 'PATTA TERRANE';
+          terVsRvrHTML = '<span class="spf-note-row"><b>TER vs RVR (ศักยภาพช่วงปลายปี):</b> '+leader+' นำอยู่ — Target Progress RVR '+rvrD.target_progress_pct+'% vs TER '+terD.target_progress_pct+'%, Time-to-Close-out RVR '+fmtInt(rvrD.time_to_closeout_months)+' เดือน vs TER '+fmtInt(terD.time_to_closeout_months)+' เดือน</span>';
+        }
         noteEl.innerHTML =
           '<span class="spf-note-row"><b>ผ่านไปแล้ว '+monthsPassed+' เดือน</b> ('+pctPassed+'% ของปี '+now.getFullYear()+')</span>'+
           '<span class="spf-note-row"><b>เหลือระยะเวลาขาย</b> '+monthsLeft+' เดือน</span>'+
+          terVsRvrHTML+
           '<span class="spf-note-row spf-note-legend"><span class="spf-legend-swatch behind"></span>แถวที่ไฮไลท์ = ความคืบหน้ายังตามหลังเวลาที่ผ่านไปของปี ('+pctPassed+'%)</span>';
       }
     })();
+
+    // ---- 5. Monthly summary (hybrid: auto-draft + editable, saved per month) ----
+    wireMonthlySummaryUIOnce();
+    renderMonthlySummarySection();
+  }
+
+  // Start/end ISO dates for the calendar month named by monthKey ("YYYY-M", i.e.
+  // bucketKey(iso,'month')'s own format).
+  function spfMonthBounds(monthKey){
+    var p = monthKey.split('-'); var y=+p[0], m=+p[1];
+    var start = y+'-'+String(m).padStart(2,'0')+'-01';
+    var end = toISO(new Date(Date.UTC(y, m, 0))); // last day of that month
+    return { start: start, end: end };
+  }
+
+  function spfPctDeltaText(cur, prev){
+    if(!prev) return cur>0 ? '(เดือนก่อนไม่มีข้อมูลเทียบ)' : '';
+    var d = Math.round((cur-prev)/prev*100);
+    if(d===0) return '(ใกล้เคียงเดือนก่อน)';
+    return d>0 ? ('(เพิ่มขึ้น '+d+'% จากเดือนก่อน)') : ('(ลดลง '+Math.abs(d)+'% จากเดือนก่อน)');
+  }
+
+  // Auto-computed numeric draft for monthKey -- Walk-in total, closed-deal count
+  // (both all projects, vs the previous calendar month), and overall Target Progress %
+  // (sum sales_2026 / sum target_2026 across every project that has a 2026 target).
+  // Purely a starting point: the user is expected to edit/add context before saving.
+  function computeMonthlyAutoDraft(monthKey){
+    var cur = spfMonthBounds(monthKey);
+    var curEnd = cur.end > DATA_MAX ? DATA_MAX : cur.end;
+    var prevKey = bucketKey(toISO(addDays(parseISO(cur.start), -1)), 'month');
+    var prev = spfMonthBounds(prevKey);
+
+    var curWalkin = RAW.filter(function(r){ return r.d>=cur.start && r.d<=curEnd; }).length;
+    var prevWalkin = RAW.filter(function(r){ return r.d>=prev.start && r.d<=prev.end; }).length;
+    var curClosed = RAW.filter(function(r){ return r.d>=cur.start && r.d<=curEnd && isClosedDealRow(r); }).length;
+    var prevClosed = RAW.filter(function(r){ return r.d>=prev.start && r.d<=prev.end && isClosedDealRow(r); }).length;
+
+    var totalTarget=0, totalSales2026=0;
+    PROJECTS.forEach(function(p){
+      var d = SPF_DATA[p];
+      if(d && d.target_2026){ totalTarget += d.target_2026; totalSales2026 += (d.sales_2026||0); }
+    });
+    var overallProgress = totalTarget ? Math.round(totalSales2026/totalTarget*100) : null;
+
+    var lines = [];
+    lines.push('สรุปสถานการณ์ประจำเดือน '+bucketLabel(monthKey,'month')+' (ร่างอัตโนมัติ):');
+    lines.push('- Walk-in รวมทุกโครงการ: '+fmtInt(curWalkin)+' ราย '+spfPctDeltaText(curWalkin, prevWalkin));
+    lines.push('- ปิดการขาย/จองใหม่ รวมทุกโครงการ: '+fmtInt(curClosed)+' ราย '+spfPctDeltaText(curClosed, prevClosed));
+    if(overallProgress!=null) lines.push('- ความคืบหน้าเทียบเป้าปี 2026 สะสมทุกโครงการ: '+overallProgress+'%');
+    return lines.join('\n');
+  }
+
+  var monthlySummaryUIWired = false;
+  function wireMonthlySummaryUIOnce(){
+    if(monthlySummaryUIWired) return;
+    monthlySummaryUIWired = true;
+    var ta = document.getElementById('spfMonthlySummaryText');
+    var regenBtn = document.getElementById('spfMonthlySummaryRegenBtn');
+    var saveBtn = document.getElementById('spfMonthlySummarySaveBtn');
+    if(ta) ta.addEventListener('input', function(){ monthlySummaryDirty = true; });
+    if(regenBtn) regenBtn.addEventListener('click', function(){
+      var curKey = bucketKey(DATA_MAX, 'month');
+      if(ta){ ta.value = computeMonthlyAutoDraft(curKey); monthlySummaryDirty = true; }
+    });
+    if(saveBtn) saveBtn.addEventListener('click', saveMonthlySummary);
+  }
+
+  function saveMonthlySummary(){
+    if(!monthlySummaryCollection || !currentUser){ alert('ต้องเข้าสู่ระบบก่อนจึงจะบันทึกได้'); return; }
+    var curKey = bucketKey(DATA_MAX, 'month');
+    var ta = document.getElementById('spfMonthlySummaryText');
+    var text = ta ? ta.value.trim() : '';
+    var saveBtn = document.getElementById('spfMonthlySummarySaveBtn');
+    if(saveBtn) saveBtn.disabled = true;
+    monthlySummaryCollection.doc(curKey).set({
+      text: text,
+      updatedAt: new Date().toISOString(),
+      updatedByEmail: currentUser.email || ''
+    }, { merge: true }).then(function(){
+      monthlySummaryDirty = false;
+      if(saveBtn) saveBtn.disabled = false;
+    }).catch(function(err){
+      console.error('save monthly_summaries failed:', err);
+      if(saveBtn) saveBtn.disabled = false;
+      alert('บันทึกไม่สำเร็จ: '+firebaseErrMsg(err));
+    });
+  }
+
+  // Renders the current month's textarea (unless the user has it focused or has
+  // unsaved local edits -- monthlySummaryDirty guards against a live Firestore
+  // snapshot clobbering text someone else is mid-typing) plus a read-only history
+  // of past months that have a saved summary.
+  function renderMonthlySummarySection(){
+    var ta = document.getElementById('spfMonthlySummaryText');
+    if(!ta) return; // section 5 not in the DOM yet
+    var curKey = bucketKey(DATA_MAX, 'month');
+    var saved = monthlySummaryByKey[curKey];
+    var isFocused = document.activeElement === ta;
+    if(!isFocused && !monthlySummaryDirty){
+      ta.value = (saved && saved.text) ? saved.text : computeMonthlyAutoDraft(curKey);
+    }
+    var metaEl = document.getElementById('spfMonthlySummaryMeta');
+    if(metaEl){
+      metaEl.textContent = (saved && saved.updatedAt)
+        ? ('บันทึกล่าสุดโดย '+(saved.updatedByEmail||'-')+' เมื่อ '+fmtDateShort(saved.updatedAt.slice(0,10))+' '+saved.updatedAt.slice(11,16)+' น.')
+        : 'ยังไม่มีการบันทึกสำหรับเดือนนี้ — ข้อความด้านบนเป็นร่างที่คำนวณอัตโนมัติ แก้ไข/เพิ่มบริบทแล้วกดบันทึกได้';
+    }
+    var histEl = document.getElementById('spfMonthlySummaryHistory');
+    if(histEl){
+      var keys = Object.keys(monthlySummaryByKey).filter(function(k){
+        return k!==curKey && monthlySummaryByKey[k].text;
+      }).sort().reverse().slice(0,6);
+      histEl.innerHTML = keys.length ? keys.map(function(k){
+        var item = monthlySummaryByKey[k];
+        return '<div class="monthly-summary-history-item"><div class="monthly-summary-history-month">'+escapeHTML(bucketLabel(k,'month'))+'</div><div class="monthly-summary-history-text">'+escapeHTML(item.text)+'</div></div>';
+      }).join('') : '';
+    }
   }
 
   function ssFmtUpdated(){
@@ -2620,6 +2781,17 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     'PATTA PILLAR':     { online: null,   offline: 73396 }
   });
 
+  // Best-effort name match against SS_DATA.contractDetail[proj] (ERP) for closed-deal
+  // walk-ins that have no unit code typed into the Walk-in tracker's "แปลงที่จอง" column --
+  // added per request (Monthly SEP item, "กราฟสื่อ Online/Offline เพิ่มแปลงที่จอง"). Matches
+  // on booking stage or beyond (bs/cs/ds/ts) so a customer who has progressed past booking
+  // still shows their plot. Name-matching across the two systems isn't always exact
+  // (spelling/spacing/honorifics), so an ERP-matched code is prefixed with "~" to flag it
+  // as an estimate rather than a confirmed value from the tracker itself.
+  function mcNormName(v){
+    return (v||'').replace(/^(คุณ|Mr\.|Mrs\.|Ms\.|มร\.|นาย|นาง|นางสาว)\s*/i,'').trim().toLowerCase();
+  }
+
   function computeMediaCompare(proj, startISO, endISO, channelKey){
     var group = MEDIA_COMPARE_GROUPS[channelKey];
     var rows = RAW.filter(function(r){ return r.p===proj && r.d>=startISO && r.d<=endISO; });
@@ -2638,8 +2810,22 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     var keys = group.series.map(function(s){ return s.key; });
     var channelRows = rows.filter(function(r){ return keys.indexOf(r.m)>=0; });
     var closedRows = channelRows.filter(isClosedDealRow);
-    var units = closedRows.map(function(r){ return r.bu; }).filter(Boolean);
-    return { buckets: buckets, series: series, total: channelRows.length, closedCount: closedRows.length, units: units };
+    var contractList = (SS_DATA.contractDetail && SS_DATA.contractDetail[proj]) || [];
+    var contractByName = {};
+    contractList.forEach(function(c){
+      if(c.bs || c.cs || c.ds || c.ts){
+        var k = mcNormName(c.nm);
+        if(k && c.rc && !contractByName[k]) contractByName[k] = c.rc;
+      }
+    });
+    var unitsMatched = false;
+    var units = closedRows.map(function(r){
+      if(r.bu) return r.bu;
+      var m = contractByName[mcNormName(r.nm)];
+      if(m){ unitsMatched = true; return '~'+m; }
+      return null;
+    }).filter(Boolean);
+    return { buckets: buckets, series: series, total: channelRows.length, closedCount: closedRows.length, units: units, unitsMatched: unitsMatched };
   }
 
   function renderMediaCompareCard(rootEl, proj, startISO, endISO, channelKey){
@@ -2648,7 +2834,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     var spendCfg = (AD_SPEND[proj] || {})[channelKey];
     var hasSpend = typeof spendCfg === 'number';
     var perSuccess = (hasSpend && res.closedCount>0) ? Math.round(spendCfg/res.closedCount) : null;
-    var unitsText = res.units.length ? (' ('+res.units.map(escapeHTML).join(', ')+')') : '';
+    var unitsText = res.units.length ? (' ('+res.units.map(escapeHTML).join(', ')+')'+(res.unitsMatched?' <span style="cursor:help;opacity:.6" title="~ = จับคู่ชื่อกับ ERP โดยประมาณ (ไม่ได้พิมพ์แปลงในชีต Walk-in) อาจไม่ครบทุกราย">ⓘ</span>':'')) : '';
     var legendId = rootEl.id+'Legend', chartId = rootEl.id+'Chart';
 
     rootEl.innerHTML =
@@ -4311,7 +4497,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     return list;
   }
 
-  function renderBarCard(title, sub, entries, colorFn, total){
+  function renderBarCard(title, sub, entries, colorFn, total, extraHTML){
     var card = document.createElement('div');
     card.className = 'card';
     var maxV = Math.max.apply(null, entries.map(function(e){ return e[1]; }).concat([1]));
@@ -4329,6 +4515,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     card.innerHTML =
       '<div class="card-title">'+escapeHTML(title)+'</div>'+
       '<div class="card-sub">'+escapeHTML(sub)+'</div>'+
+      (extraHTML||'')+
       rowsHTML;
     Array.prototype.forEach.call(card.querySelectorAll('.bar-row'), function(rowEl){
       rowEl.addEventListener('pointermove', function(ev){
@@ -4372,9 +4559,97 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     var mediaM = countBy(rows,'m');
     renderBarCard('แหล่งที่มา / ช่องทาง', 'Media · '+scopeLabel, topNOther(mediaM,7), function(){ return 'var(--accent)'; }, total);
 
+    // Agency: per-agent Active (brought a walk-in in the last 3 months) + Contract-
+    // signed counts (added per request, Monthly July item 2). Independent of the
+    // date-range/period filter above -- respects only the project filter, all-time
+    // visit history and a fixed 3-month "Active" window from DATA_MAX. "Contract-
+    // signed" cross-references SS_DATA.contractDetail (ERP, cs flag = currently at
+    // contract stage or beyond, active i.e. not cancelled) by normalized customer
+    // name within the same project -- name-matching between the two systems isn't
+    // always exact (spelling/spacing/honorifics), so treat this as a good-faith
+    // estimate, not an exact reconciled count.
+    (function(){
+      function normName(v){
+        return (v||'').replace(/^(คุณ|Mr\.|Mrs\.|Ms\.|มร\.|นาย|นาง|นางสาว)\s*/i,'').trim().toLowerCase();
+      }
+      var agencyAllRows = RAW.filter(function(r){ return r.m==='Agency' && r.ag && (state.project==='ALL'||r.p===state.project); });
+      if(agencyAllRows.length===0) return;
+      var threeMoAgoISO = toISO(addDays(parseISO(DATA_MAX), -90));
+      var contractedKey = {};
+      Object.keys(SS_DATA.contractDetail||{}).forEach(function(proj){
+        (SS_DATA.contractDetail[proj]||[]).forEach(function(c){
+          if(c.cs) contractedKey[normName(c.nm)+'|'+proj] = true;
+        });
+      });
+      var agentStats = {};
+      agencyAllRows.forEach(function(r){
+        var ag = r.ag;
+        if(!agentStats[ag]) agentStats[ag] = { visits:0, active:false, customerKeys:{} };
+        var st = agentStats[ag];
+        st.visits++;
+        if(r.d>=threeMoAgoISO) st.active = true;
+        st.customerKeys[normName(r.nm)+'|'+r.p] = true;
+      });
+      var agentNames = Object.keys(agentStats).sort(function(a,b){ return agentStats[b].visits-agentStats[a].visits; });
+      agentNames.forEach(function(ag){
+        var st = agentStats[ag];
+        st.signed = Object.keys(st.customerKeys).filter(function(k){ return contractedKey[k]; }).length;
+      });
+      var activeCount = agentNames.filter(function(a){ return agentStats[a].active; }).length;
+      var allSignedKeys = {};
+      agentNames.forEach(function(ag){ Object.keys(agentStats[ag].customerKeys).forEach(function(k){ if(contractedKey[k]) allSignedKeys[k]=true; }); });
+      var totalSigned = Object.keys(allSignedKeys).length;
+
+      var card = document.createElement('div');
+      card.className = 'card';
+      var rowsHTML = agentNames.map(function(ag){
+        var st = agentStats[ag];
+        return '<div class="agency-row">'+
+          '<div class="agency-name" title="'+escapeHTML(ag)+'">'+escapeHTML(ag)+'</div>'+
+          '<div class="agency-stat">พามา '+fmtInt(st.visits)+' ครั้ง</div>'+
+          '<div class="agency-badge '+(st.active?'active':'inactive')+'">'+(st.active?'Active':'ไม่ Active')+'</div>'+
+          '<div class="agency-stat">เซ็นสัญญาแล้ว '+fmtInt(st.signed)+'</div>'+
+        '</div>';
+      }).join('');
+      card.innerHTML =
+        '<div class="card-title">Agency</div>'+
+        '<div class="card-sub">Active = พามาเยี่ยมชมภายใน 3 เดือนล่าสุด (จาก '+escapeHTML(fmtDateShort(DATA_MAX))+') · เซ็นสัญญาแล้ว = จับคู่ชื่อลูกค้ากับ ERP (อาจไม่ครบทุกราย)</div>'+
+        '<div class="nat-ytd-summary"><div class="nat-ytd-total">Agent ที่ Active: <b>'+fmtInt(activeCount)+'</b> / '+fmtInt(agentNames.length)+' ราย &nbsp;·&nbsp; ลูกค้าที่เซ็นสัญญาแล้ว (รวมทุก Agent): <b>'+fmtInt(totalSigned)+'</b> ราย</div></div>'+
+        rowsHTML;
+      breakdownGrid.appendChild(card);
+    })();
+
     // Nationality
     var natM = countBy(rows,'n');
-    renderBarCard('สัญชาติลูกค้า', 'Nationality · top 7', topNOther(natM,7), function(k){ return k==='N/A'?cssVar('--text-muted'):'var(--accent)'; }, total);
+    // YTD (1 ม.ค. ปีปัจจุบัน -> DATA_MAX) 3-group summary, independent of the selected
+    // date-range/period filter above (only respects the project filter) -- added per
+    // request (Monthly July item 1): always shows "this year so far" split into
+    // ไทย / ต่างชาติ / สัญชาติผสม regardless of what period the user is currently browsing.
+    // "สัญชาติผสม" = any value containing a hyphen (e.g. ไทย-อังกฤษ, จีน-ญี่ปุ่น) --
+    // covers both Thai-foreign and foreign-foreign dual-nationality entries.
+    var natYtdStart = parseISO(DATA_MAX).getUTCFullYear()+'-01-01';
+    var natYtdRows = RAW.filter(function(r){ return (state.project==='ALL'||r.p===state.project) && r.d>=natYtdStart && r.d<=DATA_MAX; });
+    function natGroupOf(v){
+      if(!v || v==='N/A' || v==='อื่นๆ') return 'ไม่ระบุ';
+      if(v.indexOf('-')>=0) return 'สัญชาติผสม';
+      if(v==='ไทย') return 'ไทย';
+      return 'ต่างชาติ';
+    }
+    var natGroupCounts = {'ไทย':0,'ต่างชาติ':0,'สัญชาติผสม':0,'ไม่ระบุ':0};
+    natYtdRows.forEach(function(r){ natGroupCounts[natGroupOf(r.n)]++; });
+    var natYtdTotal = natYtdRows.length;
+    var natGroupHTML = '<div class="nat-ytd-summary">'+
+      '<div class="nat-ytd-total">YTD '+natYtdStart.slice(0,4)+' (1 ม.ค. – '+escapeHTML(fmtDateShort(DATA_MAX))+')'+(state.project==='ALL'?'':' · '+escapeHTML(state.project))+': <b>'+fmtInt(natYtdTotal)+'</b> ราย</div>'+
+      '<div class="nat-ytd-groups">'+
+        ['ไทย','ต่างชาติ','สัญชาติผสม'].map(function(g){
+          var c = natGroupCounts[g];
+          var pct = natYtdTotal ? Math.round(c/natYtdTotal*1000)/10 : 0;
+          return '<span class="nat-group-pill"><b>'+escapeHTML(g)+'</b> '+fmtInt(c)+' <span class="nat-group-pct">('+pct+'%)</span></span>';
+        }).join('')+
+        (natGroupCounts['ไม่ระบุ']>0 ? '<span class="nat-group-pill muted">ไม่ระบุ '+fmtInt(natGroupCounts['ไม่ระบุ'])+'</span>' : '')+
+      '</div>'+
+    '</div>';
+    renderBarCard('สัญชาติลูกค้า', 'Nationality · top 7 (ตามตัวกรองช่วงเวลาด้านบน)', topNOther(natM,7), function(k){ return k==='N/A'?cssVar('--text-muted'):'var(--accent)'; }, total, natGroupHTML);
 
     // Budget (ordinal)
     var budM = countBy(rows,'b');
@@ -4384,7 +4659,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     // Grade (ordinal)
     var gradeM = countBy(rows,'g');
     var gradeEntries = orderedEntries(gradeM, GRADE_ORDER, 'ไม่มีเกรด/N/A');
-    renderBarCard('เกรดลูกค้า', 'A = ศักยภาพสูงสุด', gradeEntries, function(k){ return (k==='ไม่มีเกรด/N/A') ? cssVar('--text-muted') : seqColor(GRADE_ORDER,k); }, total);
+    renderBarCard('เกรดการตัดสินใจ', 'A = ศักยภาพสูงสุด', gradeEntries, function(k){ return (k==='ไม่มีเกรด/N/A') ? cssVar('--text-muted') : seqColor(GRADE_ORDER,k); }, total);
 
     // Visit engagement (ordinal)
     var visitM = countBy(rows,'v');
@@ -4502,7 +4777,6 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
         '<td>'+escapeHTML(r.g)+'</td>'+
         '<td>'+escapeHTML(r.v)+'</td>'+
         '<td class="col-start">'+escapeHTML(orNA(r.sl))+'</td>'+
-        '<td class="col-start">'+statusPill+'</td>'+
         '<td class="actions-col">'+(r._manual ?
           ('<span class="manual-tag">กรอกเอง</span><div class="row-actions">'+
             '<button type="button" class="btn small edit-entry-btn" data-doc="'+escapeHTML(r._docId)+'">แก้ไข</button>'+
@@ -4572,10 +4846,9 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     { label:'ยี่ห้อรถ', get:function(r){ return pOrNA(r.cb); } },
     { label:'รุ่นรถ', get:function(r){ return pOrNA(r.cm); } },
     { label:'สีรถ', get:function(r){ return pOrNA(r.cc); } },
-    { label:'เกรด', get:function(r){ return pOrNA(r.g); } },
+    { label:'เกรดการตัดสินใจ', get:function(r){ return pOrNA(r.g); } },
     { label:'การเข้าชม (Visit)', get:function(r){ return pOrNA(r.v); } },
-    { label:'เซล', get:function(r){ return pOrNA(r.sl); } },
-    { label:'สถานะ/ผลการติดตาม', get: pOutcome }
+    { label:'เซล', get:function(r){ return pOrNA(r.sl); } }
   ];
 
   // Builds a real, multi-page PDF client-side with jsPDF + jspdf-autotable (loaded
@@ -5078,6 +5351,16 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
   var salesEmailError = document.getElementById('salesEmailError');
   var salesEmailByName = {};       // salesperson name (matches SL_OPTIONS) -> email, from Firestore "sales_emails"
   var salesEmailsUnsub = null;
+
+  // ---- Monthly summary (Sales Performance tab, section 5) -- added per request
+  // ("สรุปสถานการณ์ประจำเดือน", hybrid format: auto-computed numeric draft + editable
+  // text, saved per month). One Firestore doc per month (id = "YYYY-M", matching
+  // bucketKey(iso,'month')), any logged-in user may edit/save (same access level as
+  // sales_emails, not admin-gated).
+  var monthlySummaryCollection = null;
+  var monthlySummaryUnsub = null;
+  var monthlySummaryByKey = {}; // monthKey -> {text, updatedAt, updatedByEmail, _docId}
+  var monthlySummaryDirty = false; // true while the textarea has unsaved local edits (blocks snapshot overwrites)
 
   var profilesByUid = {};          // uid -> {uid, email, displayName, isAdmin}, from Firestore "profiles"
   var currentUser = null;          // {uid, email, displayName, isAdmin} once logged in this session
@@ -6706,11 +6989,13 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
     if(salesEmailsUnsub){ salesEmailsUnsub(); salesEmailsUnsub = null; }
     if(followupLogUnsub){ followupLogUnsub(); followupLogUnsub = null; }
     if(followupClosedUnsub){ followupClosedUnsub(); followupClosedUnsub = null; }
+    if(monthlySummaryUnsub){ monthlySummaryUnsub(); monthlySummaryUnsub = null; }
     manualRecords = []; manualById = {};
     deletedManualRecords = []; deletedById = {};
     salesEmailByName = {};
     followupLogRecords = [];
     followupClosedMap = {};
+    monthlySummaryByKey = {};
     onManualDataChanged();
   }
 
@@ -6730,6 +7015,21 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
       if(!followupModal.hidden) renderFollowupModalRows();
       if(!salesEmailModal.hidden) renderSalesEmailsModal();
     }, function(err){ console.error('sales_emails subscription error:', err); });
+  }
+
+  // Any logged-in user may read/write monthly_summaries -- same access level as
+  // sales_emails above, not admin-gated (see the var declaration comment near the top).
+  function wireMonthlySummaryListener(){
+    monthlySummaryCollection = db.collection('monthly_summaries');
+    monthlySummaryUnsub = monthlySummaryCollection.onSnapshot(function(snap){
+      var map = {};
+      snap.docs.forEach(function(doc){
+        var body = doc.data() || {};
+        map[doc.id] = { text: body.text||'', updatedAt: body.updatedAt||'', updatedByEmail: body.updatedByEmail||'', _docId: doc.id };
+      });
+      monthlySummaryByKey = map;
+      if(spfRendered) renderMonthlySummarySection();
+    }, function(err){ console.error('monthly_summaries subscription error:', err); });
   }
 
   // Given a signed-in Firebase user, loads their Firestore profile and either unlocks
@@ -6756,6 +7056,7 @@ const EXCEL_RAW = [{"p":"HORIZON","d":"2024-12-06","nm":"Khun Prapaporn Teanyai"
       wireSalesEmailsListener();
       wireFollowupLogListener();
       wireFollowupClosedListener();
+      wireMonthlySummaryListener();
       if(currentUser.isAdmin) wireProfilesListener();
     }).catch(function(err){
       console.error('profiles read failed:', err);
