@@ -91,6 +91,26 @@ tr.tot td{font-weight:700;border-bottom:0}
 .loading{text-align:center;color:var(--mut);padding:60px 0}
 .err{color:var(--err);font-size:13px;margin-top:8px}
 .gate{max-width:380px;margin:60px auto;padding:0 16px}
+.nick{font-weight:400;color:var(--mut)}
+.pdpa{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;margin-top:6px;font-size:13px}
+.pdpa .pt{font-weight:700;color:var(--pri);margin-bottom:6px}
+.pdpa .px{max-height:180px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+.pdpa .pb{display:flex;gap:8px;margin-top:10px}
+.pdpa .pb .btn{margin:0;padding:12px;font-size:15px}
+.pdpa.ok{border-color:#16a34a}
+.pdpa.ok .pt{color:#166534}
+@media (prefers-color-scheme:dark){.pdpa.ok .pt{color:#86efac}}
+.phbtns{display:flex;gap:8px;margin-top:8px}
+.phbtns label{flex:1;margin:0;text-align:center;padding:12px 6px;border-radius:12px;background:var(--pri2);color:var(--pri);font-weight:700;font-size:15px;cursor:pointer}
+.phbtns input{display:none}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.thumb{position:relative;width:84px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.thumb .x{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:99px;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:15px;line-height:24px;padding:0;cursor:pointer}
+.thumb .nw{position:absolute;left:3px;bottom:3px;background:#f59e0b;color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:0 4px}
+.viewer{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out}
+.viewer img{max-width:100%;max-height:100%;border-radius:8px}
+.camtag{font-size:12px;color:var(--mut);margin-left:4px}
 </style>
 </head>
 <body>
@@ -126,6 +146,17 @@ var ALL_PROJECTS=Object.keys(HOUSES);
 var MEDIA=['Facebook','Google','ป้ายโฆษณา','เพื่อน/คนรู้จักแนะนำ','Line OA','Agency','ขับรถผ่านโครงการ','อื่นๆ'];
 var BUDGET=['ต่ำกว่า 6 ล้าน','6-7 ล้าน','7-8 ล้าน','8-9 ล้าน','9-10 ล้าน','10-15 ล้าน','15-20 ล้าน','20-25 ล้าน','25-30 ล้าน','มากกว่า 30 ล้าน'];
 var CU='customer',AG='agent';
+
+/* ---------- Photo + PDPA settings ---------- */
+var MAX_PHOTOS=3;          // รูปต่อลูกค้า 1 ราย
+var PHOTO_MAX_EDGE=900;     // ย่อรูปให้ด้านยาวไม่เกิน (px)
+var PHOTO_MAX_BYTES=170000; // ขนาดสูงสุดต่อรูปหลังบีบอัด (เก็บใน Firestore ได้ไม่เกิน 1MB ต่อรายชื่อ)
+var PHOTO_PDPA_VER='photo-v1';
+var PHOTO_PDPA_TEXT='ข้าพเจ้ายินยอมให้ PATTA Development Co., Ltd. ("บริษัทฯ") เก็บรวบรวมและใช้ภาพถ่ายใบหน้าของข้าพเจ้าที่ถ่ายในงาน '+'PATTA GRAND OPENING'+' เพื่อวัตถุประสงค์ดังนี้\n'+
+ '1. เพื่อให้เจ้าหน้าที่ฝ่ายขายจดจำและให้บริการข้าพเจ้าได้อย่างถูกต้อง\n'+
+ '2. เพื่อประกอบการติดต่อกลับและติดตามการให้บริการเกี่ยวกับโครงการของบริษัทฯ\n\n'+
+ 'ภาพถ่ายจะใช้ภายในบริษัทฯ เท่านั้น จะไม่นำไปเผยแพร่ต่อสาธารณะหรือใช้เพื่อการโฆษณา และจะเก็บไว้เท่าที่จำเป็นตามวัตถุประสงค์ข้างต้น ตามนโยบายคุ้มครองข้อมูลส่วนบุคคลของบริษัทฯ\n\n'+
+ 'ข้าพเจ้าทราบว่าการให้ความยินยอมนี้เป็นไปโดยสมัครใจ ไม่ยินยอมก็ยังรับบริการได้ตามปกติ และสามารถขอถอนความยินยอม ขอเข้าถึง หรือขอให้ลบภาพถ่ายได้ทุกเมื่อ โดยแจ้งเจ้าหน้าที่ของบริษัทฯ';
 function typeLabel(t){return t===AG?'Property Agent':'ลูกค้า'}
 
 var params=new URLSearchParams(location.search);
@@ -134,7 +165,8 @@ var COLL=TEST?'event_guests_test':'event_guests';
 
 /* ---------- State ---------- */
 var S={user:null,me:'',isAdmin:false,view:'desk',open:null,newOpen:false,flt:'all',q:'',dashDay:'all',type:CU,showAll:false,
-  nh:[],nb:'',nm:'',np:1,today:null,todayMsg:'',offsetMs:0,online:true,pending:false,ready:false,err:'',imp:null,noRestore:false};
+  nh:[],nb:'',nm:'',np:1,today:null,todayMsg:'',offsetMs:0,online:true,pending:false,ready:false,err:'',imp:null,noRestore:false,
+  ph:[],pc:'',busy:false}; // ph = รูปที่ยังไม่บันทึก, pc = PDPA รูปถ่าย ('' ยังไม่ถาม / 'yes' / 'no')
 var G=[]; // guests from Firestore
 var auth=null,db=null,unsub=null;
 
@@ -168,6 +200,62 @@ function slotsText(g){return ['20','21'].filter(function(d){return g.slots&&g.sl
 function tags(g){
   return '<span class="tag '+(g.src==='pre'?'t-pre':'t-walk')+'">'+(g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in')+'</span>'+(g.type===AG?'<span class="tag t-ag">Property Agent</span>':'')+(!g.phone?'<span class="tag t-warn">ต้องเช็กเบอร์</span>':'');
 }
+function nickHtml(g){return g.nickname?' <span class="nick">('+esc(g.nickname)+')</span>':''}
+function resetPhotoState(){S.ph=[];S.pc='';S.busy=false}
+/* ย่อ + บีบอัดรูปในเครื่องก่อนบันทึก ให้ไฟล์เล็กพอเก็บใน Firestore */
+function compressImage(file){
+  return new Promise(function(res,rej){
+    if(!file||!/^image\//.test(file.type||'image/'))return rej(new Error('ไฟล์นี้ไม่ใช่รูปภาพ'));
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      var w=img.naturalWidth,h=img.naturalHeight,s=Math.min(1,PHOTO_MAX_EDGE/Math.max(w,h));
+      var draw=function(scale){var c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*scale));c.height=Math.max(1,Math.round(h*scale));var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);return c};
+      var c=draw(s),q=0.78,d=c.toDataURL('image/jpeg',q);
+      while(d.length>PHOTO_MAX_BYTES&&q>0.4){q-=0.08;d=c.toDataURL('image/jpeg',q)}
+      while(d.length>PHOTO_MAX_BYTES&&s>0.2){s*=0.8;c=draw(s);d=c.toDataURL('image/jpeg',0.6)}
+      URL.revokeObjectURL(url);res(d);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('เปิดรูปนี้ไม่ได้ (ลองถ่ายใหม่ หรือเลือกไฟล์ JPG/PNG)'))};
+    img.src=url;
+  });
+}
+function consentRecord(){return {given:true,version:PHOTO_PDPA_VER,text:PHOTO_PDPA_TEXT,by:S.me,at:nowIso()}}
+function photoObjs(){return S.ph.map(function(d){return {src:d,by:S.me,at:nowIso()}})}
+/* กล่อง PDPA + ปุ่มถ่ายรูป/แนบรูป  (g = ลูกค้าที่เปิดอยู่ หรือ null ถ้าเป็นฟอร์มเพิ่มใหม่) */
+function photoSection(g){
+  var saved=(g&&g.photos)||[],consented=!!(g&&g.photoConsent&&g.photoConsent.given)||S.pc==='yes';
+  var h='<label>รูปลูกค้า <span class="hint" style="font-weight:400">(ไม่บังคับ · สูงสุด '+MAX_PHOTOS+' รูป)</span></label>';
+  if(!consented){
+    if(S.pc==='no')return h+'<div class="pdpa"><div class="pt">ลูกค้าไม่ยินยอมให้ถ่ายรูป</div><div class="hint">ไม่ต้องถ่ายรูป บันทึกข้อมูลอื่นได้ตามปกติ</div><button class="btn link" id="pcReset">ถามใหม่อีกครั้ง</button></div>';
+    return h+'<div class="pdpa"><div class="pt">ขอความยินยอม (PDPA) ก่อนถ่าย/แนบรูป</div><div class="hint" style="margin:0 0 6px;color:var(--ink)">ยื่นหน้าจอให้ลูกค้าอ่าน แล้วให้ลูกค้ากดปุ่มเอง</div><div class="px">'+esc(PHOTO_PDPA_TEXT)+'</div>'+
+      '<div class="pb"><button class="btn" id="pcYes" style="flex:2">ข้าพเจ้ายินยอม</button><button class="btn sec" id="pcNo" style="flex:1">ไม่ยินยอม</button></div></div>';
+  }
+  var pcInfo=g&&g.photoConsent&&g.photoConsent.given?('ลูกค้ายินยอมแล้ว ✓ · '+esc(fmtStamp(g.photoConsent.at))+' (บันทึกโดย '+esc(g.photoConsent.by||'')+')'):'ลูกค้ากดยินยอมแล้ว ✓ (จะบันทึกพร้อมข้อมูล)';
+  h+='<div class="pdpa ok"><div class="pt">'+pcInfo+'</div>';
+  var total=saved.length+S.ph.length;
+  if(total||S.busy){
+    h+='<div class="thumbs">';
+    saved.forEach(function(p,i){h+='<div class="thumb"><img src="'+esc(p.src)+'" data-view="s'+i+'" alt="รูปลูกค้า"><button class="x" data-delsaved="'+i+'" title="ลบรูปนี้">×</button></div>'});
+    S.ph.forEach(function(d,i){h+='<div class="thumb"><img src="'+esc(d)+'" data-view="p'+i+'" alt="รูปใหม่"><span class="nw">ยังไม่บันทึก</span><button class="x" data-delnew="'+i+'" title="เอาออก">×</button></div>'});
+    if(S.busy)h+='<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--mut)">กำลังย่อรูป…</div>';
+    h+='</div>';
+  }
+  if(total<MAX_PHOTOS)h+='<div class="phbtns"><label>📷 ถ่ายรูป<input type="file" id="phCam" accept="image/*" capture="environment"></label><label>🖼️ เลือกไฟล์รูป<input type="file" id="phFile" accept="image/*" multiple></label></div>';
+  else h+='<div class="hint">ครบ '+MAX_PHOTOS+' รูปแล้ว ลบรูปเดิมก่อนถ้าต้องการเพิ่ม</div>';
+  if(S.ph.length)h+='<div class="hint">รูปที่มีป้าย "ยังไม่บันทึก" จะถูกบันทึกเมื่อกดปุ่มบันทึกด้านล่าง</div>';
+  return h+'</div>';
+}
+function addPhotoFiles(files){
+  var g=S.open?byId(S.open):null,room=MAX_PHOTOS-((g&&g.photos)||[]).length-S.ph.length;
+  var list=[].slice.call(files||[]);
+  if(!list.length)return;
+  if(list.length>room){toast('เพิ่มได้อีก '+Math.max(0,room)+' รูป');list=list.slice(0,Math.max(0,room))}
+  if(!list.length)return;
+  S.busy=true;render();
+  var chain=Promise.resolve();
+  list.forEach(function(f){chain=chain.then(function(){return compressImage(f).then(function(d){S.ph.push(d)})})});
+  chain.catch(function(e){toast(e&&e.message?e.message:'แนบรูปไม่สำเร็จ')}).then(function(){S.busy=false;render()});
+}
 
 /* ---------- Data layer (Firestore) ---------- */
 function ref(id){return db.collection(COLL).doc(id)}
@@ -191,6 +279,9 @@ function doSaveNote(g,o){
   if(o.media!==undefined)u.media=o.media;
   if(o.phone){u.phone=o.phone;u.noPhone=false}
   if(g.type===AG){u.name=o.name||'';u.company=o.company||''}
+  if(o.nickname!==undefined&&o.nickname!==(g.nickname||''))u.nickname=o.nickname;
+  if(o.photoConsent)u.photoConsent=o.photoConsent;
+  if(o.photos&&o.photos.length)u.photos=FV().arrayUnion.apply(null,o.photos);
   if(o.checkinDay)u['checkins.'+o.checkinDay]={pax:o.pax,by:S.me,at:nowIso()};
   u.updatedAt=nowIso();u.updatedBy=S.me;
   return ref(g.id).update(u);
@@ -198,9 +289,19 @@ function doSaveNote(g,o){
 function doCreateWalkin(o){
   var id=guestId(o.phone);
   return ref(id).get().then(function(snap){
-    if(snap.exists)return {existing:true,id:id};
-    var d={type:o.type,name:o.name,company:o.company||'',phone:o.phone,src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
+    if(snap.exists){
+      // เบอร์นี้มีอยู่แล้ว: ไม่ทับข้อมูลเดิม แต่เก็บชื่อเล่น (ถ้ายังไม่มี) รูป และการยินยอมที่เพิ่งได้มาไว้ด้วย
+      var cur=snap.data()||{},u={};
+      if(o.nickname&&!cur.nickname)u.nickname=o.nickname;
+      if(o.photoConsent&&!(cur.photoConsent&&cur.photoConsent.given))u.photoConsent=o.photoConsent;
+      if(o.photos&&o.photos.length){var room=MAX_PHOTOS-(cur.photos||[]).length;if(room>0)u.photos=FV().arrayUnion.apply(null,o.photos.slice(0,room))}
+      if(!Object.keys(u).length)return {existing:true,id:id};
+      u.updatedAt=nowIso();u.updatedBy=S.me;
+      return ref(id).update(u).then(function(){return {existing:true,id:id}});
+    }
+    var d={type:o.type,name:o.name,nickname:o.nickname||'',company:o.company||'',phone:o.phone,photos:o.photos||[],src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
       checkins:{},notes:[],pdpa:{source:'onsite',by:S.me,at:nowIso()},createdBy:S.me,createdAt:nowIso()};
+    if(o.photoConsent)d.photoConsent=o.photoConsent;
     if(S.today)d.checkins[S.today]={pax:o.pax,by:S.me,at:nowIso()};
     if(o.budget)d.notes=[{by:S.me,at:nowIso(),detail:'',interest:'',houses:[],budgetSet:o.budget}];
     return ref(id).set(d).then(function(){return {existing:false,id:id}});
@@ -210,6 +311,10 @@ function doCreateWalkin(o){
 /* ---------- Render ---------- */
 // Never re-draw the page while someone is typing (a live update from another phone would
 // close the keyboard and drop the cursor). Draw as soon as the field loses focus.
+function doDeletePhoto(g,i){
+  var p=(g.photos||[])[i];if(!p)return Promise.resolve();
+  return ref(g.id).update({photos:FV().arrayRemove(p),updatedAt:nowIso(),updatedBy:S.me});
+}
 function typing(){var a=document.activeElement;return !!(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&/^(text|tel|email|password)$/.test(a.type))))&&$('root')&&$('root').contains(a)&&a.id!=='q'}
 function softRender(){if(typing()){S.dirty=true;return}render()}
 document.addEventListener('focusout',function(){if(S.dirty){setTimeout(function(){if(!typing()){S.dirty=false;render()}},120)}});
@@ -255,7 +360,7 @@ function listRows(list){
   var h='';
   list.forEach(function(g){
     var inToday=S.today&&isIn(g,S.today);
-    h+='<div class="row"><div class="top"><div data-pick="'+esc(g.id)+'" style="flex:1;cursor:pointer"><div class="n">'+esc(guestName(g))+'</div><div class="m">'+esc(phoneTxt(g))+(g.src==='pre'?' · สะดวก '+PD[g.prefDate||'both']+' · ลงทะเบียน '+(g.pax||1)+' คน':'')+(g.budget?' · งบ '+esc(g.budget):'')+'</div><div style="margin-top:3px">'+tags(g)+'</div></div>'+
+    h+='<div class="row"><div class="top"><div data-pick="'+esc(g.id)+'" style="flex:1;cursor:pointer"><div class="n">'+esc(guestName(g))+nickHtml(g)+((g.photos&&g.photos.length)?'<span class="camtag">📷'+g.photos.length+'</span>':'')+'</div><div class="m">'+esc(phoneTxt(g))+(g.src==='pre'?' · สะดวก '+PD[g.prefDate||'both']+' · ลงทะเบียน '+(g.pax||1)+' คน':'')+(g.budget?' · งบ '+esc(g.budget):'')+'</div><div style="margin-top:3px">'+tags(g)+'</div></div>'+
       (inToday?'<span class="okmark">✓ มาแล้ว '+pin(g,S.today)+' คน</span>':'<button class="cinbtn" data-cin="'+esc(g.id)+'"'+(S.today?'':' disabled')+'>เช็คอิน</button>')+'</div></div>';
   });
   return h;
@@ -267,10 +372,12 @@ function desk(){
     h+='<button class="back" id="backList">‹ กลับไปรายการ</button><div class="card"><h3>เพิ่ม Walk-in ใหม่</h3><div class="chips" id="fType" style="margin-bottom:8px"><div class="chip'+(S.type===CU?' on':'')+'" data-v="'+CU+'">ลูกค้า</div><div class="chip'+(S.type===AG?' on':'')+'" data-v="'+AG+'">Property Agent</div></div>';
     if(S.type===AG)h+='<label>ชื่อ Agent <span class="req">*</span></label><input type="text" id="fName" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อบริษัท <span class="req">*</span></label><input type="text" id="fCompany" placeholder="ชื่อบริษัท">';
     else h+='<label>ชื่อลูกค้า <span class="req">*</span></label><input type="text" id="fName" placeholder="ชื่อ–นามสกุล">';
+    h+='<label>ชื่อเล่น'+(S.type===AG?' Agent':'ลูกค้า')+'</label><input type="text" id="fNick" placeholder="ชื่อเล่น (ถ้ามี)">';
     h+='<label>เบอร์โทรศัพท์ <span class="req">*</span></label><input type="tel" id="fPhone" placeholder="08x-xxx-xxxx" inputmode="numeric"><div class="hint" id="dupHint"></div>';
     h+='<label>มากี่คน</label>'+stepper();
     h+='<label>รู้จักงานนี้จากไหน</label>'+mediaChips();
     h+='<label>งบประมาณ <span class="hint" style="font-weight:400">(ถามได้ก็ใส่ ไม่ได้ข้ามไปก่อน)</span></label><div class="chips" id="nBudget">'+BUDGET.map(function(b){return '<div class="chip'+(S.nb===b?' on':'')+'" data-b="'+esc(b)+'">'+esc(b)+'</div>'}).join('')+'</div>';
+    h+=photoSection(null);
     h+='<label class="consent" style="margin-top:12px"><input type="checkbox" id="fPdpa"><span>แจ้ง PDPA แล้ว ลูกค้ายินยอมให้ติดต่อกลับ</span></label>';
     h+='<div style="display:flex;gap:8px"><button class="btn" id="fSave" style="flex:2">บันทึก'+(S.today?'และเช็คอิน':'')+'</button><button class="btn sec" id="fCancel" style="flex:1">ยกเลิก</button></div></div>';
     return h;
@@ -278,11 +385,11 @@ function desk(){
   if(!g){
     var q=S.q.trim().toLowerCase(),qd=digits(S.q);
     var list=G.filter(function(x){
-      if(q&&!(((x.name||'')+' '+(x.company||'')).toLowerCase().indexOf(q)>-1||(qd&&(x.phone||'').indexOf(qd)>-1)))return false;
+      if(q&&!(((x.name||'')+' '+(x.nickname||'')+' '+(x.company||'')).toLowerCase().indexOf(q)>-1||(qd&&(x.phone||'').indexOf(qd)>-1)))return false;
       if(S.flt==='todo')return S.today&&!isIn(x,S.today);
       if(S.flt==='in')return S.today&&isIn(x,S.today);
       return true}).sort(function(a,b){return guestName(a).localeCompare(guestName(b),'th')});
-    h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ บริษัท หรือเบอร์โทร">';
+    h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ ชื่อเล่น บริษัท หรือเบอร์โทร">';
     h+='<div class="flt"><button data-f="all" class="'+(S.flt==='all'?'on':'')+'">ทั้งหมด</button><button data-f="todo" class="'+(S.flt==='todo'?'on':'')+'">ยังไม่เช็คอินวันนี้</button><button data-f="in" class="'+(S.flt==='in'?'on':'')+'">เช็คอินแล้ว</button></div>';
     h+='<button class="btn sec" id="newBtn" style="margin-top:10px">+ ไม่เจอชื่อ → เพิ่ม Walk-in ใหม่</button>';
     h+='<div class="hint" style="margin:10px 0 0">'+list.length+' รายการ · แตะชื่อเพื่อกรอกข้อมูล หรือกด "เช็คอิน" ได้เลย</div>'+(G.length?listRows(list):'<div class="hint" style="margin-top:14px">ยังไม่มีรายชื่อ ผู้ดูแลนำเข้ารายชื่อจาก Google Form ได้ที่แท็บ "นำเข้า" หรือกด "เพิ่ม Walk-in ใหม่"</div>')+'</div>';
@@ -290,7 +397,7 @@ function desk(){
   }
   var hs=allHouses(g),inToday=S.today&&isIn(g,S.today);
   h+='<button class="back" id="backList">‹ กลับไปรายการ</button>';
-  h+='<div class="card"><div style="font-weight:700;font-size:18px">'+esc(guestName(g))+'</div><div style="margin:4px 0 10px">'+tags(g)+(inToday?'<span class="tag t-in">เช็คอินวันนี้แล้ว</span>':'<span class="tag t-no">ยังไม่เช็คอินวันนี้</span>')+'</div>';
+  h+='<div class="card"><div style="font-weight:700;font-size:18px">'+esc(guestName(g))+nickHtml(g)+'</div><div style="margin:4px 0 10px">'+tags(g)+(inToday?'<span class="tag t-in">เช็คอินวันนี้แล้ว</span>':'<span class="tag t-no">ยังไม่เช็คอินวันนี้</span>')+'</div>';
   h+='<div class="info"><span>เบอร์โทร</span><span>'+(g.phone?esc(g.phone):'<span style="color:var(--err)">'+esc(phoneTxt(g))+'</span>')+'</span><span>แบบบ้านที่สนใจ</span><span>'+(hs.length?esc(hs.map(hl).join(', ')):'ยังไม่ได้ระบุ')+'</span>';
   h+='<span>งบประมาณ</span><span>'+(g.budget?'<b>'+esc(g.budget)+'</b><br><span class="hint">ตั้งโดย '+esc(g.budgetBy||'')+'</span>':'<span style="color:var(--err)">ยังไม่ได้ถาม</span>')+'</span></div>';
   if(g.src==='pre')h+='<div class="gbox"><div class="gt">ข้อมูลจากฟอร์มลงทะเบียน (Google Form)</div><div class="info"><span>วันที่สะดวก</span><span>'+PD[g.prefDate||'both']+'</span><span>ช่วงเวลา</span><span>'+esc(slotsText(g)||'-')+'</span><span>ลงทะเบียนมา</span><span>'+(g.pax||1)+' คน</span><span>รู้จักงานจาก</span><span>'+esc(g.media||'-')+'</span><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='form'?'ยินยอมแล้วในฟอร์ม ✓':'ไม่พบบันทึกการยินยอม — แจ้ง PDPA ก่อนเก็บข้อมูลเพิ่ม')+'</span></div></div>';
@@ -299,7 +406,8 @@ function desk(){
   if(S.today&&!inToday)h+='<button class="btn" id="cinDetail">เช็คอินวันนี้ ('+DAYS[S.today].label+')</button>';
   h+='</div>';
   if(!g.phone)h+='<div class="card"><h3>เพิ่มเบอร์โทร</h3><div class="hint" style="margin-bottom:6px">รายชื่อนี้ยังไม่มีเบอร์ที่ใช้ได้ ถามเบอร์จากลูกค้าแล้วกรอก แล้วกดบันทึกด้านล่าง</div><input type="tel" id="aPhone" placeholder="08x-xxx-xxxx" inputmode="numeric"></div>';
-  if(g.type===AG)h+='<div class="card"><h3>ข้อมูล Agent</h3><label style="margin-top:0">ชื่อ Agent</label><input type="text" id="aName" value="'+esc(g.name||'')+'" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อบริษัท</label><input type="text" id="aCompany" value="'+esc(g.company||'')+'" placeholder="ชื่อบริษัท Agent"></div>';
+  if(g.type===AG)h+='<div class="card"><h3>ข้อมูล Agent</h3><label style="margin-top:0">ชื่อ Agent</label><input type="text" id="aName" value="'+esc(g.name||'')+'" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อเล่น Agent</label><input type="text" id="gNick" value="'+esc(g.nickname||'')+'" placeholder="ชื่อเล่น (ถ้ามี)"><label>ชื่อบริษัท</label><input type="text" id="aCompany" value="'+esc(g.company||'')+'" placeholder="ชื่อบริษัท Agent">'+photoSection(g)+'</div>';
+  else h+='<div class="card"><h3>ชื่อเล่น และรูปลูกค้า</h3><label style="margin-top:0">ชื่อเล่นลูกค้า</label><input type="text" id="gNick" value="'+esc(g.nickname||'')+'" placeholder="ชื่อเล่น (ถ้ามี)">'+photoSection(g)+'</div>';
   h+='<div class="card"><h3>บันทึกจากสตาฟทุกคน ('+(g.notes||[]).length+')</h3>';
   if(!(g.notes||[]).length)h+='<div class="hint">ยังไม่มีใครบันทึก คุณเป็นคนแรกได้เลย</div>';
   (g.notes||[]).slice().reverse().forEach(function(n){
@@ -439,10 +547,10 @@ function importView(){
   return h;
 }
 function exportCSV(){
-  var cols=['ประเภท','ที่มา','ชื่อ','บริษัท','เบอร์','วันที่สะดวก','ช่วงเวลา','ลงทะเบียน(คน)','มา 20 พ.ย.(คน)','มา 21 พ.ย.(คน)','ช่องทาง','งบประมาณ','แบบบ้าน','บันทึก'];
+  var cols=['ประเภท','ที่มา','ชื่อ','ชื่อเล่น','บริษัท','เบอร์','วันที่สะดวก','ช่วงเวลา','ลงทะเบียน(คน)','มา 20 พ.ย.(คน)','มา 21 พ.ย.(คน)','ช่องทาง','งบประมาณ','แบบบ้าน','บันทึก','รูปถ่าย(รูป)','ยินยอมถ่ายรูป (PDPA)'];
   var q=function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"'};
   var lines=[cols.map(q).join(',')];
-  G.forEach(function(g){lines.push([typeLabel(g.type),g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in',g.name,g.company,"'"+g.phone,PD[g.prefDate]||'',slotsText(g),g.pax||1,pin(g,'20')||'',pin(g,'21')||'',g.media,g.budget,allHouses(g).map(hl).join('; '),(g.notes||[]).map(function(n){return n.by+' '+fmtStamp(n.at)+': '+[n.detail,n.interest].filter(Boolean).join(' / ')}).join(' || ')].map(q).join(','))});
+  G.forEach(function(g){lines.push([typeLabel(g.type),g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in',g.name,g.nickname||'',g.company,"'"+g.phone,PD[g.prefDate]||'',slotsText(g),g.pax||1,pin(g,'20')||'',pin(g,'21')||'',g.media,g.budget,allHouses(g).map(hl).join('; '),(g.notes||[]).map(function(n){return n.by+' '+fmtStamp(n.at)+': '+[n.detail,n.interest].filter(Boolean).join(' / ')}).join(' || '),(g.photos||[]).length||'',g.photoConsent&&g.photoConsent.given?('ยินยอม '+fmtStamp(g.photoConsent.at)+' โดย '+(g.photoConsent.by||'')):''].map(q).join(','))});
   var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='event_guests_'+bangkokDate(nowMs())+'.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 }
@@ -451,15 +559,23 @@ function exportCSV(){
 function fail(e){console.error(e);toast('บันทึกไม่สำเร็จ: '+(e&&e.message?e.message:e))}
 document.addEventListener('click',function(e){
   var t=e.target,x;
+  if((x=t.closest('.viewer'))){x.remove();return}
+  if((x=t.closest('[data-view]'))){var v=document.createElement('div');v.className='viewer';v.innerHTML='<img src="'+esc(x.getAttribute('src'))+'" alt="รูปลูกค้า">';document.body.appendChild(v);return}
+  if(t.id==='pcYes'){S.pc='yes';render();toast('ลูกค้ายินยอมแล้ว ถ่าย/แนบรูปได้เลย');return}
+  if(t.id==='pcNo'){S.pc='no';S.ph=[];render();return}
+  if(t.id==='pcReset'){S.pc='';render();return}
+  if((x=t.closest('[data-delnew]'))){S.ph.splice(+x.dataset.delnew,1);render();return}
+  if((x=t.closest('[data-delsaved]'))){var gp=byId(S.open);if(!gp)return;if(!confirm('ลบรูปนี้ออกจากข้อมูลลูกค้า?'))return;
+    doDeletePhoto(gp,+x.dataset.delsaved).then(function(){toast('ลบรูปแล้ว')}).catch(fail);return}
   if(t.id==='logout'){if(unsub){unsub();unsub=null}auth.signOut();return}
-  if((x=t.closest('#tabs button'))){S.view=x.dataset.v;S.open=null;S.newOpen=false;S.noRestore=true;render();return}
+  if((x=t.closest('#tabs button'))){if(S.ph.length&&!confirm('มีรูปที่ยังไม่บันทึก ออกจากหน้านี้เลยไหม?'))return;S.view=x.dataset.v;S.open=null;S.newOpen=false;resetPhotoState();S.noRestore=true;render();return}
   if((x=t.closest('[data-f]'))){S.flt=x.dataset.f;render();return}
   if((x=t.closest('[data-dd]'))){S.dashDay=x.dataset.dd;render();return}
   if((x=t.closest('[data-cin]'))){var g=byId(x.dataset.cin);if(!g||!S.today)return toast(S.todayMsg||'ไม่ใช่วันงาน');
     doCheckin(g,S.today,g.pax||1).then(function(){toast('เช็คอิน '+guestName(g)+' · '+(g.pax||1)+' คน ✓')}).catch(fail);return}
-  if((x=t.closest('[data-pick]'))){var g2=byId(x.dataset.pick);if(!g2)return;S.open=g2.id;S.nh=[];S.nb=g2.budget||'';S.nm=g2.media||'';S.np=(S.today&&pin(g2,S.today))||g2.pax||1;S.noRestore=true;render();window.scrollTo(0,0);return}
-  if(t.id==='backList'||t.id==='fCancel'){S.open=null;S.newOpen=false;S.noRestore=true;render();window.scrollTo(0,0);return}
-  if(t.id==='newBtn'){S.newOpen=true;S.open=null;S.type=CU;S.np=1;S.nm='';S.nb='';render();return}
+  if((x=t.closest('[data-pick]'))){var g2=byId(x.dataset.pick);if(!g2)return;S.open=g2.id;S.nh=[];S.nb=g2.budget||'';S.nm=g2.media||'';S.np=(S.today&&pin(g2,S.today))||g2.pax||1;resetPhotoState();S.noRestore=true;render();window.scrollTo(0,0);return}
+  if(t.id==='backList'||t.id==='fCancel'){if(S.ph.length&&!confirm('มีรูปที่ยังไม่บันทึก ออกจากหน้านี้เลยไหม?'))return;S.open=null;S.newOpen=false;resetPhotoState();S.noRestore=true;render();window.scrollTo(0,0);return}
+  if(t.id==='newBtn'){S.newOpen=true;S.open=null;S.type=CU;S.np=1;S.nm='';S.nb='';resetPhotoState();render();return}
   if(t.id==='showAll'){S.showAll=true;render();return}
   if(t.id==='npMinus'||t.id==='npPlus'){S.np=Math.max(1,S.np+(t.id==='npPlus'?1:-1));$('npVal').textContent=S.np;return}
   if((x=t.closest('#nMedia .chip'))){S.nm=S.nm===x.dataset.m?'':x.dataset.m;[].forEach.call(document.querySelectorAll('#nMedia .chip'),function(b){b.classList.toggle('on',b.dataset.m===S.nm)});return}
@@ -469,7 +585,10 @@ document.addEventListener('click',function(e){
   if(t.id==='cinDetail'){var gd=byId(S.open);doCheckin(gd,S.today,S.np).then(function(){toast('เช็คอิน '+S.np+' คน ✓')}).catch(fail);return}
   if(t.id==='addNote'){
     var g3=byId(S.open);if(!g3)return;
-    var o={detail:$('nDetail').value.trim(),interest:$('nInterest').value.trim(),houses:S.nh.slice(),media:S.nm,pax:S.np};
+    if(S.busy)return toast('รอย่อรูปให้เสร็จก่อน');
+    var o={detail:$('nDetail').value.trim(),interest:$('nInterest').value.trim(),houses:S.nh.slice(),media:S.nm,pax:S.np,nickname:$('gNick')?$('gNick').value.trim():undefined};
+    if(S.pc==='yes'&&!(g3.photoConsent&&g3.photoConsent.given))o.photoConsent=consentRecord();
+    if(S.ph.length)o.photos=photoObjs();
     if(S.nb&&S.nb!==g3.budget)o.budgetSet=S.nb;
     if(g3.type===AG){o.name=$('aName').value.trim();o.company=$('aCompany').value.trim()}
     if($('aPhone')&&$('aPhone').value.trim()){var nph=normPhone($('aPhone').value);
@@ -479,14 +598,16 @@ document.addEventListener('click',function(e){
       o.phone=nph}
     if(S.today)o.checkinDay=S.today;
     t.disabled=true;
-    doSaveNote(g3,o).then(function(){S.open=null;S.q='';S.noRestore=true;toast('บันทึกแล้ว ✓');render();window.scrollTo(0,0)}).catch(function(er){t.disabled=false;fail(er)});return}
+    doSaveNote(g3,o).then(function(){S.open=null;S.q='';resetPhotoState();S.noRestore=true;toast('บันทึกแล้ว ✓');render();window.scrollTo(0,0)}).catch(function(er){t.disabled=false;fail(er)});return}
   if(t.id==='fSave'){
     var nm=$('fName').value.trim(),ph=normPhone($('fPhone').value),co=$('fCompany')?$('fCompany').value.trim():'';
     if(!nm)return toast(S.type===AG?'ใส่ชื่อ Agent':'ใส่ชื่อ');if(S.type===AG&&!co)return toast('ใส่ชื่อบริษัท');if(ph.length<9)return toast('ใส่เบอร์ให้ครบ');
     if(!$('fPdpa').checked)return toast('ต้องติ๊กแจ้ง PDPA');
+    if(S.busy)return toast('รอย่อรูปให้เสร็จก่อน');
     t.disabled=true;
-    doCreateWalkin({type:S.type,name:nm,company:co,phone:ph,pax:S.np,media:S.nm,budget:S.nb}).then(function(r){
-      S.newOpen=false;S.q='';S.flt='all';S.open=r.id;S.nh=[];S.noRestore=true;
+    doCreateWalkin({type:S.type,name:nm,nickname:$('fNick')?$('fNick').value.trim():'',company:co,phone:ph,pax:S.np,media:S.nm,budget:S.nb,
+      photos:S.ph.length?photoObjs():[],photoConsent:S.pc==='yes'?consentRecord():null}).then(function(r){
+      S.newOpen=false;S.q='';S.flt='all';S.open=r.id;S.nh=[];resetPhotoState();S.noRestore=true;
       var gg=byId(r.id);S.nb=gg?(gg.budget||''):S.nb;
       toast(r.existing?'เบอร์นี้มีอยู่แล้ว เปิดข้อมูลเดิมให้':'เพิ่มแล้ว ✓ กรอกข้อมูลต่อได้เลย');render();window.scrollTo(0,0);
     }).catch(function(er){t.disabled=false;fail(er)});return}
@@ -501,6 +622,7 @@ document.addEventListener('click',function(e){
   if(t.id==='expGo'){exportCSV();return}
 });
 document.addEventListener('change',function(e){
+  if(e.target.id==='phCam'||e.target.id==='phFile'){var fs=e.target.files;addPhotoFiles(fs);e.target.value='';return}
   if(e.target.id==='impFile'){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){S.imp=buildImport(String(r.result));S.noRestore=true;render()};r.readAsText(f,'utf-8')}
 });
 document.addEventListener('submit',function(e){
