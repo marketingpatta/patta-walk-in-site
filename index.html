@@ -3753,6 +3753,16 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // someone 400 days late isn't useful, and this keeps the list focused on genuinely
   // actionable, recent misses (today's due items plus the last couple of weeks).
   var FOLLOWUP_OVERDUE_GRACE_DAYS = 14;
+  // Customers that no longer need follow-up calls: projects that are sold out, and customers
+  // of salespeople whose book is closed. (Function with local literals on purpose: this runs
+  // from the very first render, before later "var" assignments in the script have executed.)
+  function isFollowupExcluded(rec){
+    var soldOutProjects = ['ELEMENT'];
+    var closedSalespeople = ['charada','breeze'];   // "Charada Breeze" -- ELEMENT, sold out
+    if(soldOutProjects.indexOf(rec.p) >= 0) return true;
+    var words = String(rec.sl || '').toLowerCase().split(/[^a-z]+/).filter(Boolean);
+    return words.some(function(w){ return closedSalespeople.indexOf(w) >= 0; });
+  }
   function computeFollowupDue(){
     var byCustomer = {};
     RAW.forEach(function(r){
@@ -3794,6 +3804,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var entry = byCustomer[key];
       var first = entry.first;
       if(state.project!=='ALL' && first.p!==state.project) return;
+      if(isFollowupExcluded(first)) return;
       FOLLOWUP_CHECKPOINTS.forEach(function(cp){
         if(entry.done[cp]) return;
         var dueDate = toISO(addDays(parseISO(first.d), +cp));
@@ -3924,7 +3935,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<td style="display:flex; gap:6px; flex-wrap:wrap;">'+
           '<button type="button" class="btn small primary log-followup-btn" data-idx="'+i+'">บันทึกการติดตาม</button>'+
           '<button type="button" class="btn small close-followup-btn" data-idx="'+i+'">จบการติดตาม</button>'+
-          (EMAILJS_CONFIGURED ? '<button type="button" class="btn small send-followup-email-btn" data-idx="'+i+'" title="'+(salesEmailByName[r.sl]?'ส่งอีเมลแจ้งเตือนไปที่ '+escapeHTML(salesEmailByName[r.sl]):'ยังไม่มีอีเมลของ '+escapeHTML(r.sl||'เซลคนนี้')+' — กด \\"จัดการอีเมลเซล\\" เพื่อเพิ่ม')+'">ส่งอีเมล</button>' : '')+
+          (EMAILJS_CONFIGURED ? '<button type="button" class="btn small send-followup-email-btn" data-idx="'+i+'" title="'+(followupItemEmails(r).every(Boolean)?'ส่งอีเมลแจ้งเตือนไปที่ '+escapeHTML(followupItemEmails(r).join(', ')):'ยังไม่มีอีเมลของ '+escapeHTML(r.sl||'เซลคนนี้')+' — กด “จัดการอีเมลเซล” เพื่อเพิ่ม')+'">ส่งอีเมล</button>' : '')+
         '</td>'+
         '</tr>';
     }).join('');
@@ -3976,14 +3987,63 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // ---- Email reminders for customers due for follow-up (via EmailJS -- see EMAILJS_CONFIG
   // near the top of this file). Groups by "sl" (the assigned salesperson) so one salesperson
   // with several due customers gets a single email listing all of them, not one per customer.
+  // The "sl" field is free text, so it sometimes names two people ("A / B", "A & B"), uses a
+  // nickname ("Jiwly", "Au", "Waan") or has a typo ("Kannik Au"). resolveSalespeople() turns it
+  // into the list of official names from SL_OPTIONS by looking for each person's known name
+  // words anywhere in the text, so a customer shared by two salespeople reaches BOTH of them.
+  // Words are matched whole (never as part of a longer word); unknown text resolves to [].
+  var SL_ALIASES = {
+    'Kannikar Namwaan':  ['kannikar','namwaan','namwan','waan','sol'],
+    'Tuchakorn Ple':     ['tuchakorn','ple'],
+    'Konkanokporn Jiw':  ['konkanokporn','jiw','jiwly'],
+    'Kannika Au':        ['kannika','kannik','kanika','au'],
+    'Supatsarin Salee':  ['supatsarin','salee'],
+    'Supanee Tao':       ['supanee','tao'],
+    'Danita Aey':        ['danita','aey'],
+    'Kanchana Summer':   ['kanchana','summer']
+  };
+  function resolveSalespeople(sl){
+    var found = [];
+    var words = String(sl || '').toLowerCase().split(/[^a-z]+/).filter(Boolean);
+    words.forEach(function(w){
+      Object.keys(SL_ALIASES).forEach(function(name){
+        if(SL_ALIASES[name].indexOf(w) >= 0 && found.indexOf(name) < 0) found.push(name);
+      });
+    });
+    return found;
+  }
+  // Customers of "Revadee Sai" (left the company) are shared out over the active salespeople.
+  // Stable: the same customer+project always lands on the same person.
+  function resolveItemSalespeople(item){
+    var names = resolveSalespeople(item.sl);
+    if(!names.length){
+      var words = String(item.sl || '').toLowerCase().split(/[^a-z]+/).filter(Boolean);
+      if(words.indexOf('revadee') >= 0){
+        var active = Object.keys(SL_ALIASES);
+        var s = customerKey(item) + '|' + (item.p || ''), hsh = 0;
+        for(var i = 0; i < s.length; i++) hsh = (hsh * 31 + s.charCodeAt(i)) >>> 0;
+        names = [active[hsh % active.length]];
+      }
+    }
+    return names;
+  }
   function groupFollowupItemsBySalesperson(items){
     var groups = {};
     items.forEach(function(item){
-      var name = item.sl || '';
-      if(!groups[name]) groups[name] = [];
-      groups[name].push(item);
+      var names = resolveItemSalespeople(item);
+      if(!names.length) names = [item.sl || ''];
+      names.forEach(function(name){
+        if(!groups[name]) groups[name] = [];
+        groups[name].push(item);
+      });
     });
     return groups;
+  }
+  // E-mail addresses for every salesperson named on an item (used for the row tooltip).
+  function followupItemEmails(item){
+    var names = resolveItemSalespeople(item);
+    if(!names.length) names = [item.sl || ''];
+    return names.map(function(n){ return salesEmailByName[n] || ''; });
   }
   function buildFollowupEmailContent(salespersonName, items){
     var lines = items.map(function(item){
@@ -4045,6 +4105,104 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     }
     sendFollowupEmailForItems(items, sendFollowupEmailsBtn);
   });
+
+  // ---- Daily digest hook ----------------------------------------------------------------
+  // Called by the scheduled ERP-sync task from the admin's signed-in Chrome:
+  //   await window.__pattaDigest({send:false})                       -> dry run (counts only)
+  //   await window.__pattaDigest({send:true, managers:[addr, ...]})   -> e-mails everybody
+  // Uses exactly the same due-list the team sees (live manual walk-ins, logged follow-ups and
+  // "จบการติดตาม" flags from Firestore), so reminders never chase customers already called.
+  // Admin-only; refuses to run until all three live collections have loaded.
+  var __feedReady = { w:false, f:false, c:false };
+  window.__pattaDigest = function(opts){
+    opts = opts || {};
+    var managers = (opts.managers || []).filter(Boolean);
+    function note(name, item){
+      var names = resolveItemSalespeople(item), extra = [];
+      var low = String(item.sl || '').toLowerCase();
+      if(/\bsol\b/.test(low)) extra.push('Sol ลาออกแล้ว โอนมาให้คุณดูแล');
+      if(/\brevadee\b/.test(low) && resolveSalespeople(item.sl).length === 0) extra.push('ลูกค้าเดิมของ Revadee (ลาออกแล้ว) โอนมาให้คุณดูแล');
+      var others = names.filter(function(n){ return n !== name; });
+      if(others.length) extra.push('ดูแลร่วมกับ ' + others.join(', '));
+      return extra.length ? ' [' + extra.join(' · ') + ']' : '';
+    }
+    function line(name, item){
+      return '- ' + item.nm + ' (' + item.p + ') ครบกำหนดติดตาม ' + item.__checkpoint + ' วัน'
+        + (item.overdueDays > 0 ? ' — เกินกำหนด ' + fmtInt(item.overdueDays) + ' วัน' : ' — ครบกำหนดวันนี้')
+        + (item.ph ? ' · โทร ' + item.ph : '') + note(name, item);
+    }
+    var FOOT = '\n\nบันทึกผลการติดตามได้ที่ปุ่ม "ครบกำหนดติดตาม" ในแดชบอร์ด: https://marketingpatta.github.io/patta-walk-in-site/\n(อีเมลนี้ส่งอัตโนมัติจากระบบ PATTA Walk-in Tracker)';
+    function sendOne(to, toName, subject, message){
+      return emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId,
+        { to_email: to, to_name: toName, subject: subject, message: message });
+    }
+    function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+    function run(){
+      var saved = state.project, due;
+      state.project = 'ALL';
+      try{ due = computeFollowupDue(); } finally { state.project = saved; }
+      var groups = groupFollowupItemsBySalesperson(due);
+      var names = Object.keys(groups);
+      var sendable = names.filter(function(n){ return n && salesEmailByName[n]; });
+      var unmapped = [];
+      names.filter(function(n){ return !(n && salesEmailByName[n]); }).forEach(function(n){
+        groups[n].forEach(function(it){ unmapped.push(it); });
+      });
+      var result = {
+        ok: true, totalDue: due.length,
+        perSalesperson: sendable.map(function(n){ return { name: n, count: groups[n].length }; }),
+        unmappedCount: unmapped.length,
+        unmappedSl: Array.from(new Set(unmapped.map(function(i){ return i.sl || '(ว่าง)'; }))),
+        sent: [], failed: []
+      };
+      if(!opts.send) { result.dryRun = true; return Promise.resolve(result); }
+      if(!EMAILJS_CONFIGURED || !window.emailjs) { result.ok = false; result.error = 'emailjs not configured'; return Promise.resolve(result); }
+      var today = new Date().toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
+      var jobs = [];
+      sendable.forEach(function(n){
+        jobs.push({ label: n, to: salesEmailByName[n], toName: n,
+          subject: 'ลูกค้าครบกำหนดติดตามวันนี้ของคุณ (' + groups[n].length + ' ราย) — ' + today,
+          message: 'สวัสดีคุณ ' + n + ',\n\nมีลูกค้าที่คุณดูแลครบกำหนดติดตาม ' + groups[n].length + ' ราย:\n\n'
+            + groups[n].map(function(it){ return line(n, it); }).join('\n') + FOOT });
+      });
+      if(unmapped.length){
+        managers.forEach(function(m){
+          jobs.push({ label: 'ไม่พบเซล -> ' + m, to: m, toName: 'ทีมการตลาด',
+            subject: 'ลูกค้าครบกำหนดติดตาม — ไม่พบอีเมลเซล (' + unmapped.length + ' ราย) — ' + today,
+            message: 'รายการต่อไปนี้ช่อง "เซล" ไม่ตรงกับเซลที่มีอยู่ในระบบ (ค่าที่พบ: ' + result.unmappedSl.join(', ')
+              + ')\nกรุณาแจ้งเซลที่เกี่ยวข้อง หรือเพิ่มชื่อใหม่ในระบบ:\n\n'
+              + unmapped.map(function(it){ return line('', it); }).join('\n') + FOOT });
+        });
+      }
+      if(due.length){
+        managers.forEach(function(m){
+          jobs.push({ label: 'สรุป -> ' + m, to: m, toName: 'ทีมการตลาด',
+            subject: 'สรุปการแจ้งเตือนติดตามลูกค้าวันนี้ (' + due.length + ' ราย) — ' + today,
+            message: 'ส่งแจ้งเตือนไปที่:\n' + result.perSalesperson.map(function(x){ return '- ' + x.name + ': ' + x.count + ' ราย'; }).join('\n')
+              + (unmapped.length ? '\n- ไม่พบเซล (ส่งให้ทีมการตลาด): ' + unmapped.length + ' ราย' : '') + FOOT });
+        });
+      }
+      return jobs.reduce(function(chain, job){
+        return chain.then(function(){ return sleep(1200); }).then(function(){
+          return sendOne(job.to, job.toName, job.subject, job.message)
+            .then(function(){ result.sent.push(job.label); })
+            .catch(function(err){ console.error('digest send failed', job.label, err); result.failed.push(job.label); });
+        });
+      }, Promise.resolve()).then(function(){ result.ok = result.failed.length === 0; return result; });
+    }
+    return new Promise(function(resolve){
+      var t0 = Date.now();
+      (function wait(){
+        var ready = currentUser && currentUser.isAdmin && __feedReady.w && __feedReady.f && __feedReady.c
+          && Object.keys(salesEmailByName).length > 0;
+        if(ready) return resolve(run());
+        if(Date.now() - t0 > 60000) return resolve({ ok:false, error:'not ready (sign in as admin and wait for data to load)',
+          signedIn: !!currentUser, admin: !!(currentUser && currentUser.isAdmin), feed: __feedReady,
+          emails: Object.keys(salesEmailByName).length });
+        setTimeout(wait, 500);
+      })();
+    });
+  };
 
   // ================= TREND CHART (SVG line) =================
   var trendChartEl = document.getElementById('trendChart');
@@ -7190,6 +7348,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       trashBtn.hidden = false;
       trashCountEl.textContent = fmtInt(deletedManualRecords.length);
       if(!trashModal.hidden) renderTrashModalRows();
+      __feedReady.w = true;
       onManualDataChanged();
     }, function(err){ console.error('manual_walkins subscription error:', err); });
   }
@@ -7214,6 +7373,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         });
       });
       followupLogRecords = next;
+      __feedReady.f = true;
       onManualDataChanged();
       if(!followupHistoryModal.hidden) renderFollowupHistoryRows();
     }, function(err){ console.error('manual_followups subscription error:', err); });
@@ -7231,6 +7391,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         next[body.key] = { closedAt: body.closedAt||'', closedBy: body.closedBy||'', _docId: doc.id };
       });
       followupClosedMap = next;
+      __feedReady.c = true;
       onManualDataChanged();
       if(cdTabRendered) renderCustomerTabRows();
     }, function(err){ console.error('manual_followup_closed subscription error:', err); });
