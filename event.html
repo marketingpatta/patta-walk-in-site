@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PATTA Grand Opening - โหมดอีเวนต์</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#1b2430;--mut:#667085;--line:#dde3ec;--pri:#1b3a6b;--pri2:#e4ebf6;--warn:#92400e;--warnbg:#fef3c7;--err:#b91c1c}
+@media (prefers-color-scheme:dark){:root{--bg:#10151d;--card:#1a212c;--ink:#e8ecf2;--mut:#9aa6b8;--line:#2b3547;--pri:#5b8fe0;--pri2:#1c2a42;--warnbg:#3a2e12;--warn:#fcd34d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;font-size:16px;line-height:1.55}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px 120px}
+header.ev{background:#1b3a6b;color:#fff;padding:12px 16px;margin:0 -16px;position:sticky;top:0;z-index:5}
+header.ev .t{font-weight:700;font-size:17px}
+header.ev .s{font-size:12px;opacity:.92;display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:2px;flex-wrap:wrap}
+header.ev a{color:#fff;text-decoration:underline;cursor:pointer}
+.pill{background:rgba(255,255,255,.18);border-radius:99px;padding:1px 10px}
+.pill.off{background:#b45309}
+.banner{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:13px}
+.tabs{display:flex;gap:6px;margin:12px 0 4px}
+.tabs button,.seg button{flex:1;padding:10px 4px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+.tabs button.on,.seg button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.seg{display:flex;gap:6px}
+.seg button{padding:7px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.card h3{margin:0 0 8px;font-size:15px;color:var(--mut);font-weight:600}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}
+.req{color:var(--err)}
+input[type=text],input[type=tel],input[type=email],input[type=password],textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--bg);color:var(--ink)}
+textarea{min-height:64px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border:1px solid var(--line);border-radius:99px;background:var(--bg);cursor:pointer;font-size:14px;user-select:none}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.pj{font-size:13px;font-weight:700;margin:10px 0 6px;color:var(--pri)}
+.hint{font-size:12px;color:var(--mut);margin-top:4px}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:var(--pri);color:#fff;font:inherit;font-weight:700;font-size:16px;cursor:pointer;margin-top:14px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.sec{background:var(--pri2);color:var(--pri)}
+.btn.link{background:none;color:var(--pri);margin-top:6px;padding:8px;font-size:14px;text-decoration:underline}
+.tag{display:inline-block;border-radius:6px;padding:0 8px;font-size:12px;font-weight:600;margin:0 4px 2px 0}
+.t-pre{background:#e0e7ff;color:#1e3a8a}.t-walk{background:#fef3c7;color:#92400e}
+.t-warn{background:#fef3c7;color:#92400e}.t-ag{background:#ede9fe;color:#5b21b6}.t-in{background:#dcfce7;color:#166534}.t-no{background:#f3f4f6;color:#6b7280}
+@media (prefers-color-scheme:dark){.t-warn{background:#78350f;color:#fde68a}.t-pre{background:#1e3a8a;color:#c7d2fe}.t-walk{background:#78350f;color:#fde68a}.t-ag{background:#4c1d95;color:#ddd6fe}.t-in{background:#14532d;color:#bbf7d0}.t-no{background:#374151;color:#d1d5db}}
+.back{background:none;border:0;color:var(--pri);font:inherit;font-weight:600;cursor:pointer;padding:6px 0}
+.note{border-left:3px solid var(--pri);background:var(--bg);border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0;font-size:14px;white-space:pre-wrap}
+.note .by{font-size:12px;color:var(--mut);margin-bottom:2px}
+.note b{font-size:12px;color:var(--mut);font-weight:600}
+.info{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+.info span:nth-child(odd){color:var(--mut)}
+.big{font-size:44px;font-weight:800;line-height:1.1}
+table{width:100%;border-collapse:collapse;font-size:14px;text-align:center}
+th,td{padding:10px 6px;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--mut);font-weight:600}
+td:first-child,th:first-child{text-align:left}
+tr.tot td{font-weight:700;border-bottom:0}
+.bar{height:10px;background:var(--bg);border-radius:6px;overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:var(--pri)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--bg);border-radius:12px;padding:12px;text-align:center}
+.kpi b{display:block;font-size:26px}
+.kpi span{font-size:12px;color:var(--mut)}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;display:none;z-index:9;max-width:90%;text-align:center}
+.consent{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13px;color:var(--mut)}
+.consent input{margin-top:5px;width:20px;height:20px;flex:none}
+.row2{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cinbtn{flex:none;border:0;border-radius:10px;background:var(--pri);color:#fff;font:inherit;font-weight:700;padding:10px 14px;cursor:pointer;font-size:14px}
+.cinbtn:disabled{opacity:.45}
+.okmark{flex:none;color:#166534;font-weight:700;font-size:13px}
+@media (prefers-color-scheme:dark){.okmark{color:#86efac}}
+.row{border-bottom:1px solid var(--line);padding:12px 0}
+.row:last-child{border:0}
+.row .n{font-weight:600}.row .m{font-size:13px;color:var(--mut)}
+.lab{font-weight:600;font-size:13px;margin:10px 0 4px;color:var(--mut)}
+.flt{display:flex;gap:6px;margin-top:10px}
+.flt button{flex:1;padding:7px 4px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;font:inherit;font-size:13px;cursor:pointer}
+.flt button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.save{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 16px;z-index:6}
+.save .in{max-width:480px;margin:0 auto}
+.save .btn{margin:0;font-size:17px;padding:15px}
+.stepper{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
+.stepper button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--pri);font:inherit;font-size:24px;font-weight:700;cursor:pointer}
+.stepper b{font-size:26px;min-width:34px;text-align:center}
+.gbox{background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:10px}
+.gbox .gt{font-size:12px;font-weight:700;color:var(--pri);margin-bottom:4px}
+.newbox input{margin-bottom:8px}
+.loading{text-align:center;color:var(--mut);padding:60px 0}
+.err{color:var(--err);font-size:13px;margin-top:8px}
+.gate{max-width:380px;margin:60px auto;padding:0 16px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+'use strict';
+var FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDYtAeOYth7J0bPZVunZ0RQpPAOM2K4eqA",
+    authDomain: "patta-walk-in.firebaseapp.com",
+    projectId: "patta-walk-in",
+    storageBucket: "patta-walk-in.firebasestorage.app",
+    messagingSenderId: "179665748747",
+    appId: "1:179665748747:web:4c81a7c55ffac3f0fb180e"
+  };
+
+/* ---------- Event settings ---------- */
+var EVENT_NAME='PATTA GRAND OPENING';
+var DAYS={'20':{date:'2026-11-20',label:'20 พ.ย. 69',short:'20 พ.ย.'},'21':{date:'2026-11-21',label:'21 พ.ย. 69',short:'21 พ.ย.'}};
+var PD={'20':'วันศุกร์ที่ 20','21':'วันเสาร์ที่ 21','both':'ทั้งสองวัน'};
+var EVENT_PROJECTS=['ARCADE Autograph','PATTA PILLAR'];
+var HOUSES={
+ 'ARCADE Autograph':['MILTON','LINDEN','WINDSOR'],
+ 'PATTA PILLAR':['LEGACY','MIRAGE','SERENE'],
+ 'HORIZON':['SUNNE','RAY','RAY PLUS','SHINE','SHINE PLUS'],
+ 'CASCADE':['WOODLAND','ARBOR','FOREST','WOODLAND PLUS','ARBOR PLUS','FOREST PLUS'],
+ 'CHIEFTAIN':['ASCOT','ASCOT PLUS','BEDFORD','CAMBRIDGE','CAMBRIDGE PLUS'],
+ 'PATTA RIVERINE':['LUCENT','SIRINE','VALE','MAIRAGE'],
+ 'PATTA TERRANE':['VENA','LUNA','MORA']
+};
+var ALL_PROJECTS=Object.keys(HOUSES);
+var MEDIA=['Facebook','Google','ป้ายโฆษณา','เพื่อน/คนรู้จักแนะนำ','Line OA','Agency','ขับรถผ่านโครงการ','อื่นๆ'];
+var BUDGET=['ต่ำกว่า 6 ล้าน','6-7 ล้าน','7-8 ล้าน','8-9 ล้าน','9-10 ล้าน','10-15 ล้าน','15-20 ล้าน','20-25 ล้าน','25-30 ล้าน','มากกว่า 30 ล้าน'];
+var CU='customer',AG='agent';
+function typeLabel(t){return t===AG?'Property Agent':'ลูกค้า'}
+
+var params=new URLSearchParams(location.search);
+var TEST=params.get('test')==='1';
+var COLL=TEST?'event_guests_test':'event_guests';
+
+/* ---------- State ---------- */
+var S={user:null,me:'',isAdmin:false,view:'desk',open:null,newOpen:false,flt:'all',q:'',dashDay:'all',type:CU,showAll:false,
+  nh:[],nb:'',nm:'',np:1,today:null,todayMsg:'',offsetMs:0,online:true,pending:false,ready:false,err:'',imp:null,noRestore:false};
+var G=[]; // guests from Firestore
+var auth=null,db=null,unsub=null;
+
+/* ---------- Helpers ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function $(id){return document.getElementById(id)}
+function digits(s){return String(s||'').replace(/\D/g,'')}
+function normPhone(s){var d=digits(s);if(d.indexOf('66')===0&&d.length===11)d='0'+d.slice(2);if(d.length===9&&d.charAt(0)!=='0')d='0'+d;return d}
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast._t);toast._t=setTimeout(function(){t.style.display='none'},2400)}
+function nowMs(){return Date.now()+S.offsetMs}
+function nowIso(){return new Date(nowMs()).toISOString()}
+function fmtStamp(iso){try{return new Date(iso).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return iso}}
+function bangkokDate(ms){return new Date(ms).toLocaleDateString('en-CA',{timeZone:'Asia/Bangkok'})}
+function computeToday(){
+  var forced=params.get('day');
+  if(S.isAdmin&&(forced==='20'||forced==='21')){S.today=forced;S.todayMsg='โหมดทดสอบ (ผู้ดูแล): ตั้งวันเป็น '+DAYS[forced].label;return}
+  var d=bangkokDate(nowMs()),found=null;
+  Object.keys(DAYS).forEach(function(k){if(DAYS[k].date===d)found=k});
+  S.today=found;
+  S.todayMsg=found?'':(d<DAYS['20'].date?'ยังไม่ถึงวันงาน (งานวันที่ 20–21 พ.ย. 69) เช็คอินยังไม่เปิด':'งานจบแล้ว เช็คอินปิดแล้ว');
+}
+function guestName(g){return g.type===AG?((g.company||'(ยังไม่มีชื่อบริษัท)')+(g.name?' · '+g.name:' · (ยังไม่มีชื่อ Agent)')):(g.name||'(ไม่มีชื่อ)')}
+function isIn(g,d){return !!(g.checkins&&g.checkins[d])}
+function pin(g,d){return isIn(g,d)?(g.checkins[d].pax||1):0}
+function pAll(g){return Math.max(pin(g,'20'),pin(g,'21'))}
+function pDay(g,d){return d==='all'?pAll(g):pin(g,d)}
+function byId(id){for(var i=0;i<G.length;i++)if(G[i].id===id)return G[i];return null}
+function allHouses(g){var s={};(g.notes||[]).forEach(function(n){(n.houses||[]).forEach(function(h){s[h]=1})});return Object.keys(s)}
+function hl(k){var p=k.split('|');return p[1]+' ('+p[0]+')'}
+function slotsText(g){return ['20','21'].filter(function(d){return g.slots&&g.slots[d]}).map(function(d){return DAYS[d].short+' '+g.slots[d]}).join(' · ')}
+function tags(g){
+  return '<span class="tag '+(g.src==='pre'?'t-pre':'t-walk')+'">'+(g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in')+'</span>'+(g.type===AG?'<span class="tag t-ag">Property Agent</span>':'')+(!g.phone?'<span class="tag t-warn">ต้องเช็กเบอร์</span>':'');
+}
+
+/* ---------- Data layer (Firestore) ---------- */
+function ref(id){return db.collection(COLL).doc(id)}
+function hashStr(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+function guestId(phone){return 'g_'+phone}
+// Guest without a usable phone gets a stable id from type+name so re-importing never duplicates them
+function guestIdFor(phone,type,nm){return phone&&phone.length>=9?'g_'+phone:'gn_'+hashStr(type+'|'+String(nm||'').toLowerCase().replace(/\s+/g,''))}
+var CO_RE=/บริษัท|บจก|บมจ|หจก|ห้างหุ้นส่วน|จำกัด|\bco\.?\b|ltd|limited|\binc\b|corp|group|กรุ๊ป|เรียล|realty|real estate|property|พร็อพ|เอเจนซี|agency|holding|development/i;
+function phoneTxt(g){return g.phone||('ไม่มีเบอร์'+(g.rawPhone?' (ที่กรอกมา: '+g.rawPhone+')':''))}
+function FV(){return firebase.firestore.FieldValue}
+function doCheckin(g,day,pax){
+  if(!S.today)return Promise.reject(new Error('ไม่ใช่วันงาน'));
+  var u={};u['checkins.'+day]={pax:pax,by:S.me,at:nowIso()};
+  return ref(g.id).update(u);
+}
+function doSaveNote(g,o){
+  var u={},note={by:S.me,at:nowIso(),detail:o.detail||'',interest:o.interest||'',houses:o.houses||[],budgetSet:o.budgetSet||''};
+  var has=note.detail||note.interest||note.houses.length||note.budgetSet;
+  if(has)u.notes=FV().arrayUnion(note);
+  if(o.budgetSet){u.budget=o.budgetSet;u.budgetBy=S.me;u.budgetAt=nowIso()}
+  if(o.media!==undefined)u.media=o.media;
+  if(o.phone){u.phone=o.phone;u.noPhone=false}
+  if(g.type===AG){u.name=o.name||'';u.company=o.company||''}
+  if(o.checkinDay)u['checkins.'+o.checkinDay]={pax:o.pax,by:S.me,at:nowIso()};
+  u.updatedAt=nowIso();u.updatedBy=S.me;
+  return ref(g.id).update(u);
+}
+function doCreateWalkin(o){
+  var id=guestId(o.phone);
+  return ref(id).get().then(function(snap){
+    if(snap.exists)return {existing:true,id:id};
+    var d={type:o.type,name:o.name,company:o.company||'',phone:o.phone,src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
+      checkins:{},notes:[],pdpa:{source:'onsite',by:S.me,at:nowIso()},createdBy:S.me,createdAt:nowIso()};
+    if(S.today)d.checkins[S.today]={pax:o.pax,by:S.me,at:nowIso()};
+    if(o.budget)d.notes=[{by:S.me,at:nowIso(),detail:'',interest:'',houses:[],budgetSet:o.budget}];
+    return ref(id).set(d).then(function(){return {existing:false,id:id}});
+  });
+}
+
+/* ---------- Render ---------- */
+// Never re-draw the page while someone is typing (a live update from another phone would
+// close the keyboard and drop the cursor). Draw as soon as the field loses focus.
+function typing(){var a=document.activeElement;return !!(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&/^(text|tel|email|password)$/.test(a.type))))&&$('root')&&$('root').contains(a)&&a.id!=='q'}
+function softRender(){if(typing()){S.dirty=true;return}render()}
+document.addEventListener('focusout',function(){if(S.dirty){setTimeout(function(){if(!typing()){S.dirty=false;render()}},120)}});
+function houseChips(sel,g){
+  var projs=S.showAll?ALL_PROJECTS:EVENT_PROJECTS.slice();
+  if(!S.showAll)allHouses(g).forEach(function(k){var p=k.split('|')[0];if(projs.indexOf(p)<0)projs.push(p)});
+  var h='<div id="nHouse">';
+  projs.forEach(function(p){h+='<div class="pj">'+esc(p)+'</div><div class="chips">'+HOUSES[p].map(function(m){var k=p+'|'+m;return '<div class="chip'+(sel.indexOf(k)>-1?' on':'')+'" data-h="'+esc(k)+'">'+esc(m)+'</div>'}).join('')+'</div>'});
+  h+='</div>';
+  if(!S.showAll)h+='<button class="btn link" id="showAll" style="margin-top:2px">+ โครงการอื่น</button>';
+  return h;
+}
+function mediaChips(){return '<div class="chips" id="nMedia">'+MEDIA.map(function(m){return '<div class="chip'+(S.nm===m?' on':'')+'" data-m="'+esc(m)+'">'+esc(m)+'</div>'}).join('')+'</div>'}
+function stepper(){return '<div class="stepper"><button id="npMinus">−</button><b id="npVal">'+S.np+'</b><button id="npPlus">+</button><span class="hint">คน</span></div>'}
+
+function render(){
+  var keep={};[].forEach.call(document.querySelectorAll('#root textarea,#root input[type=text],#root input[type=tel]'),function(x){if(x.id)keep[x.id]=x.value});
+  var el=$('root');
+  if(!S.ready){el.innerHTML='<div class="loading">กำลังเชื่อมต่อระบบ…</div>';return}
+  if(!S.user){el.innerHTML=loginView();return}
+  el.innerHTML=shell();
+  if(!S.noRestore)Object.keys(keep).forEach(function(id){var x=$(id);if(x)x.value=keep[id]});
+  S.noRestore=false;
+}
+function loginView(){
+  return '<div class="gate"><div class="card"><div style="font-weight:800;font-size:20px;color:var(--pri)">'+EVENT_NAME+'</div><div class="hint" style="margin-bottom:6px">โหมดอีเวนต์ · เข้าสู่ระบบด้วยบัญชีเดียวกับ PATTA Walk-in Tracker</div>'+
+  '<form id="loginForm"><label>อีเมล</label><input type="email" id="lgEmail" autocomplete="username" autocapitalize="off" required><label>รหัสผ่าน</label><input type="password" id="lgPw" autocomplete="current-password" required>'+
+  '<label class="consent" style="margin-top:10px"><input type="checkbox" id="lgRem" checked><span>จดจำฉันไว้ในเครื่องนี้ตลอดงาน</span></label>'+
+  '<div class="err" id="lgErr">'+esc(S.err)+'</div><button class="btn" type="submit">เข้าสู่ระบบ</button></form>'+
+  '<div class="hint" style="margin-top:12px">ยังไม่มีบัญชี หรือลืมรหัสผ่าน ติดต่อผู้ดูแลระบบ</div></div></div>';
+}
+function shell(){
+  var h='<div class="wrap"><header class="ev"><div class="t">'+EVENT_NAME+(TEST?' · ทดสอบ':'')+' · โหมดอีเวนต์</div><div class="s"><span>'+(S.today?'วันนี้ <b>'+DAYS[S.today].label+'</b> (อัตโนมัติ)':'<b>ไม่ใช่วันงาน</b>')+'</span><span><span class="pill'+(S.online?'':' off')+'">'+(S.online?(S.pending?'กำลังซิงก์…':'ออนไลน์'):'ออฟไลน์ (เก็บในเครื่องก่อน)')+'</span> '+esc(S.me)+' · <a id="logout">ออก</a></span></div></header>';
+  if(S.todayMsg)h+='<div class="banner">'+esc(S.todayMsg)+'</div>';
+  if(TEST)h+='<div class="banner">โหมดทดสอบ: ข้อมูลเก็บแยกจากข้อมูลจริง</div>';
+  h+='<div class="tabs" id="tabs"><button data-v="desk" class="'+(S.view==='desk'?'on':'')+'">บันทึกลูกค้า</button><button data-v="dash" class="'+(S.view==='dash'?'on':'')+'">แดชบอร์ด</button>'+(S.isAdmin?'<button data-v="imp" class="'+(S.view==='imp'?'on':'')+'">นำเข้า</button>':'')+'</div>';
+  if(S.err&&S.view!=='imp')h+='<div class="banner">'+esc(S.err)+'</div>';
+  h+=(S.view==='dash'?dash():S.view==='imp'?importView():desk())+'</div>';
+  return h;
+}
+
+function listRows(list){
+  var h='';
+  list.forEach(function(g){
+    var inToday=S.today&&isIn(g,S.today);
+    h+='<div class="row"><div class="top"><div data-pick="'+esc(g.id)+'" style="flex:1;cursor:pointer"><div class="n">'+esc(guestName(g))+'</div><div class="m">'+esc(phoneTxt(g))+(g.src==='pre'?' · สะดวก '+PD[g.prefDate||'both']+' · ลงทะเบียน '+(g.pax||1)+' คน':'')+(g.budget?' · งบ '+esc(g.budget):'')+'</div><div style="margin-top:3px">'+tags(g)+'</div></div>'+
+      (inToday?'<span class="okmark">✓ มาแล้ว '+pin(g,S.today)+' คน</span>':'<button class="cinbtn" data-cin="'+esc(g.id)+'"'+(S.today?'':' disabled')+'>เช็คอิน</button>')+'</div></div>';
+  });
+  return h;
+}
+
+function desk(){
+  var g=S.open?byId(S.open):null,h='';
+  if(S.newOpen){
+    h+='<button class="back" id="backList">‹ กลับไปรายการ</button><div class="card"><h3>เพิ่ม Walk-in ใหม่</h3><div class="chips" id="fType" style="margin-bottom:8px"><div class="chip'+(S.type===CU?' on':'')+'" data-v="'+CU+'">ลูกค้า</div><div class="chip'+(S.type===AG?' on':'')+'" data-v="'+AG+'">Property Agent</div></div>';
+    if(S.type===AG)h+='<label>ชื่อ Agent <span class="req">*</span></label><input type="text" id="fName" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อบริษัท <span class="req">*</span></label><input type="text" id="fCompany" placeholder="ชื่อบริษัท">';
+    else h+='<label>ชื่อลูกค้า <span class="req">*</span></label><input type="text" id="fName" placeholder="ชื่อ–นามสกุล">';
+    h+='<label>เบอร์โทรศัพท์ <span class="req">*</span></label><input type="tel" id="fPhone" placeholder="08x-xxx-xxxx" inputmode="numeric"><div class="hint" id="dupHint"></div>';
+    h+='<label>มากี่คน</label>'+stepper();
+    h+='<label>รู้จักงานนี้จากไหน</label>'+mediaChips();
+    h+='<label>งบประมาณ <span class="hint" style="font-weight:400">(ถามได้ก็ใส่ ไม่ได้ข้ามไปก่อน)</span></label><div class="chips" id="nBudget">'+BUDGET.map(function(b){return '<div class="chip'+(S.nb===b?' on':'')+'" data-b="'+esc(b)+'">'+esc(b)+'</div>'}).join('')+'</div>';
+    h+='<label class="consent" style="margin-top:12px"><input type="checkbox" id="fPdpa"><span>แจ้ง PDPA แล้ว ลูกค้ายินยอมให้ติดต่อกลับ</span></label>';
+    h+='<div style="display:flex;gap:8px"><button class="btn" id="fSave" style="flex:2">บันทึก'+(S.today?'และเช็คอิน':'')+'</button><button class="btn sec" id="fCancel" style="flex:1">ยกเลิก</button></div></div>';
+    return h;
+  }
+  if(!g){
+    var q=S.q.trim().toLowerCase(),qd=digits(S.q);
+    var list=G.filter(function(x){
+      if(q&&!(((x.name||'')+' '+(x.company||'')).toLowerCase().indexOf(q)>-1||(qd&&(x.phone||'').indexOf(qd)>-1)))return false;
+      if(S.flt==='todo')return S.today&&!isIn(x,S.today);
+      if(S.flt==='in')return S.today&&isIn(x,S.today);
+      return true}).sort(function(a,b){return guestName(a).localeCompare(guestName(b),'th')});
+    h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ บริษัท หรือเบอร์โทร">';
+    h+='<div class="flt"><button data-f="all" class="'+(S.flt==='all'?'on':'')+'">ทั้งหมด</button><button data-f="todo" class="'+(S.flt==='todo'?'on':'')+'">ยังไม่เช็คอินวันนี้</button><button data-f="in" class="'+(S.flt==='in'?'on':'')+'">เช็คอินแล้ว</button></div>';
+    h+='<button class="btn sec" id="newBtn" style="margin-top:10px">+ ไม่เจอชื่อ → เพิ่ม Walk-in ใหม่</button>';
+    h+='<div class="hint" style="margin:10px 0 0">'+list.length+' รายการ · แตะชื่อเพื่อกรอกข้อมูล หรือกด "เช็คอิน" ได้เลย</div>'+(G.length?listRows(list):'<div class="hint" style="margin-top:14px">ยังไม่มีรายชื่อ ผู้ดูแลนำเข้ารายชื่อจาก Google Form ได้ที่แท็บ "นำเข้า" หรือกด "เพิ่ม Walk-in ใหม่"</div>')+'</div>';
+    return h;
+  }
+  var hs=allHouses(g),inToday=S.today&&isIn(g,S.today);
+  h+='<button class="back" id="backList">‹ กลับไปรายการ</button>';
+  h+='<div class="card"><div style="font-weight:700;font-size:18px">'+esc(guestName(g))+'</div><div style="margin:4px 0 10px">'+tags(g)+(inToday?'<span class="tag t-in">เช็คอินวันนี้แล้ว</span>':'<span class="tag t-no">ยังไม่เช็คอินวันนี้</span>')+'</div>';
+  h+='<div class="info"><span>เบอร์โทร</span><span>'+(g.phone?esc(g.phone):'<span style="color:var(--err)">'+esc(phoneTxt(g))+'</span>')+'</span><span>แบบบ้านที่สนใจ</span><span>'+(hs.length?esc(hs.map(hl).join(', ')):'ยังไม่ได้ระบุ')+'</span>';
+  h+='<span>งบประมาณ</span><span>'+(g.budget?'<b>'+esc(g.budget)+'</b><br><span class="hint">ตั้งโดย '+esc(g.budgetBy||'')+'</span>':'<span style="color:var(--err)">ยังไม่ได้ถาม</span>')+'</span></div>';
+  if(g.src==='pre')h+='<div class="gbox"><div class="gt">ข้อมูลจากฟอร์มลงทะเบียน (Google Form)</div><div class="info"><span>วันที่สะดวก</span><span>'+PD[g.prefDate||'both']+'</span><span>ช่วงเวลา</span><span>'+esc(slotsText(g)||'-')+'</span><span>ลงทะเบียนมา</span><span>'+(g.pax||1)+' คน</span><span>รู้จักงานจาก</span><span>'+esc(g.media||'-')+'</span><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='form'?'ยินยอมแล้วในฟอร์ม ✓':'ไม่พบบันทึกการยินยอม — แจ้ง PDPA ก่อนเก็บข้อมูลเพิ่ม')+'</span></div></div>';
+  else h+='<div class="gbox"><div class="gt">Walk-in หน้างาน</div><div class="info"><span>PDPA</span><span>แจ้งตอนลงทะเบียนหน้างานแล้ว ✓</span></div></div>';
+  h+='<div style="margin-top:12px;font-weight:600;font-size:14px">มาวันนี้กี่คน'+(S.today?' ('+DAYS[S.today].label+')':'')+'</div>'+stepper();
+  if(S.today&&!inToday)h+='<button class="btn" id="cinDetail">เช็คอินวันนี้ ('+DAYS[S.today].label+')</button>';
+  h+='</div>';
+  if(!g.phone)h+='<div class="card"><h3>เพิ่มเบอร์โทร</h3><div class="hint" style="margin-bottom:6px">รายชื่อนี้ยังไม่มีเบอร์ที่ใช้ได้ ถามเบอร์จากลูกค้าแล้วกรอก แล้วกดบันทึกด้านล่าง</div><input type="tel" id="aPhone" placeholder="08x-xxx-xxxx" inputmode="numeric"></div>';
+  if(g.type===AG)h+='<div class="card"><h3>ข้อมูล Agent</h3><label style="margin-top:0">ชื่อ Agent</label><input type="text" id="aName" value="'+esc(g.name||'')+'" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อบริษัท</label><input type="text" id="aCompany" value="'+esc(g.company||'')+'" placeholder="ชื่อบริษัท Agent"></div>';
+  h+='<div class="card"><h3>บันทึกจากสตาฟทุกคน ('+(g.notes||[]).length+')</h3>';
+  if(!(g.notes||[]).length)h+='<div class="hint">ยังไม่มีใครบันทึก คุณเป็นคนแรกได้เลย</div>';
+  (g.notes||[]).slice().reverse().forEach(function(n){
+    h+='<div class="note"><div class="by">'+esc(n.by)+' · '+esc(fmtStamp(n.at))+'</div>'+(n.detail?'<div><b>รายละเอียดลูกค้า:</b> '+esc(n.detail)+'</div>':'')+((n.houses&&n.houses.length)?'<div><b>แบบบ้าน:</b> '+esc(n.houses.map(hl).join(', '))+'</div>':'')+(n.interest?'<div><b>ความสนใจ:</b> '+esc(n.interest)+'</div>':'')+(n.budgetSet?'<div><b>งบประมาณ:</b> '+esc(n.budgetSet)+'</div>':'')+'</div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><h3>เพิ่มข้อมูลจากที่คุณคุยเพิ่ม (ในชื่อ '+esc(S.me)+')</h3>';
+  h+='<label style="margin-top:0">งบประมาณ</label><div class="chips" id="nBudget">'+BUDGET.map(function(b){return '<div class="chip'+(S.nb===b?' on':'')+'" data-b="'+esc(b)+'">'+esc(b)+'</div>'}).join('')+'</div>';
+  h+='<label>รู้จักงานนี้จากไหน</label>'+mediaChips();
+  h+='<label>แบบบ้านที่สนใจ <span class="hint" style="font-weight:400">(เลือกได้หลายแบบ)</span></label>'+houseChips(S.nh,g);
+  h+='<label>รายละเอียดลูกค้า</label><textarea id="nDetail" placeholder="เป็นใคร มากับใคร อาชีพ มาจากไหน ทำไมถึงมาดูโครงการ"></textarea>';
+  h+='<label>รายละเอียดความสนใจ</label><textarea id="nInterest" placeholder="ชอบอะไร ไม่ชอบอะไร อยากให้เพิ่มเติมตรงไหน"></textarea>';
+  h+='<div class="hint">บันทึกใหม่จะต่อท้ายของเดิม ไม่ทับข้อมูลที่เพื่อนสตาฟเขียนไว้</div></div>';
+  h+='<div class="save"><div class="in"><button class="btn" id="addNote">บันทึก'+(S.today&&!inToday?' และเช็คอิน':'')+'</button></div></div>';
+  return h;
+}
+
+function dash(){
+  var dd=S.dashDay,lab=dd==='all'?'รวม 2 วัน (นับคนไม่ซ้ำ)':DAYS[dd].label;
+  var sumP=function(f){return G.filter(f).reduce(function(a,c){return a+pDay(c,dd)},0)};
+  var ppl=function(t,src){return sumP(function(c){return c.type===t&&c.src===src})};
+  var rc=function(t,src){return G.filter(function(c){return c.type===t&&c.src===src&&pDay(c,dd)>0}).length};
+  var rec=G.filter(function(c){return pDay(c,dd)>0}).length;
+  var all=sumP(function(){return true});
+  var cell=function(pv,rv){return '<b>'+pv+'</b> <span class="hint">('+rv+' ราย)</span>'};
+  var h='<div class="seg" style="margin:12px 0"><button data-dd="20" class="'+(dd==='20'?'on':'')+'">20 พ.ย.</button><button data-dd="21" class="'+(dd==='21'?'on':'')+'">21 พ.ย.</button><button data-dd="all" class="'+(dd==='all'?'on':'')+'">รวม</button></div>';
+  h+='<div class="card"><h3>ผู้เข้าร่วมงาน · '+lab+'</h3><div class="two"><div class="kpi"><b>'+all+'</b><span>จำนวนคน (มาจริง)</span></div><div class="kpi"><b>'+rec+'</b><span>จำนวนราย (รายชื่อที่เช็คอิน)</span></div></div>';
+  h+='<div class="hint" style="margin-top:8px">1 ราย = 1 รายชื่อ/1 เบอร์โทร อาจมาหลายคน เช่น ครอบครัว 3 คน = 1 ราย · ตารางด้านล่างแสดง "คน (ราย)"</div>';
+  h+='<table style="margin-top:12px"><tr><th></th><th>ลงทะเบียนมาแล้ว</th><th>Walk-in</th><th>รวม</th></tr>';
+  [CU,AG].forEach(function(t){var a=ppl(t,'pre'),b=ppl(t,'walk'),ra=rc(t,'pre'),rb=rc(t,'walk');h+='<tr><td>'+typeLabel(t)+'</td><td>'+cell(a,ra)+'</td><td>'+cell(b,rb)+'</td><td>'+cell(a+b,ra+rb)+'</td></tr>'});
+  h+='<tr class="tot"><td>รวม</td><td>'+cell(ppl(CU,'pre')+ppl(AG,'pre'),rc(CU,'pre')+rc(AG,'pre'))+'</td><td>'+cell(ppl(CU,'walk')+ppl(AG,'walk'),rc(CU,'walk')+rc(AG,'walk'))+'</td><td>'+cell(all,rec)+'</td></tr></table></div>';
+
+  var pre=G.filter(function(c){return c.src==='pre'});
+  var exp=pre.filter(function(c){return dd==='all'||c.prefDate===dd||c.prefDate==='both'||!c.prefDate});
+  var expP=exp.reduce(function(a,c){return a+(c.pax||1)},0);
+  var cameP=exp.reduce(function(a,c){return a+pDay(c,dd)},0);
+  h+='<div class="card"><h3>คนที่ลงทะเบียนล่วงหน้า · '+lab+'</h3><div class="two"><div class="kpi"><b>'+expP+'</b><span>แจ้งว่าจะมา (คน) · '+exp.length+' รายชื่อ</span></div><div class="kpi"><b>'+cameP+'</b><span>มาจริงแล้ว (คน)</span></div></div>';
+  h+='<div class="bar" style="margin-top:12px"><i style="width:'+Math.min(100,(expP?cameP/expP*100:0))+'%"></i></div><div class="hint">มาแล้ว '+Math.round(expP?cameP/expP*100:0)+'% ของที่ลงทะเบียน (นับเป็นจำนวนคน) · รายชื่อที่ยังไม่มา '+exp.filter(function(c){return pDay(c,dd)===0}).length+' ราย</div></div>';
+
+  (dd==='all'?['20','21']:[dd]).forEach(function(d){
+    var m={};pre.forEach(function(c){var sl=c.slots&&c.slots[d];if(sl){m[sl]=m[sl]||{reg:0,came:0};m[sl].reg+=(c.pax||1);m[sl].came+=pin(c,d)}});
+    var ks=Object.keys(m).sort();var mx=Math.max.apply(null,ks.map(function(k){return m[k].reg}).concat([1]));
+    h+='<div class="card"><h3>ช่วงเวลาที่ลงทะเบียน · '+DAYS[d].label+'</h3>';
+    if(!ks.length)h+='<div class="hint">ยังไม่มีข้อมูลช่วงเวลา</div>';
+    ks.forEach(function(k){h+='<div class="row2"><span>'+esc(k)+'</span><span><b>'+m[k].reg+'</b> คน · มาแล้ว <b>'+m[k].came+'</b></span></div><div class="bar"><i style="width:'+(m[k].reg/mx*100)+'%"></i></div>'});
+    h+='</div>';
+  });
+
+  var att=G.filter(function(c){return c.type===CU&&pDay(c,dd)>0});
+  var bc={},withB=0;att.forEach(function(c){if(c.budget){bc[c.budget]=(bc[c.budget]||0)+1;withB++}});
+  var bmx=Math.max.apply(null,Object.keys(bc).map(function(k){return bc[k]}).concat([1]));
+  h+='<div class="card"><h3>งบประมาณของลูกค้า · '+lab+'</h3><div class="two"><div class="kpi"><b>'+withB+'</b><span>ถามงบแล้ว</span></div><div class="kpi"><b style="color:'+(att.length-withB?'var(--err)':'inherit')+'">'+(att.length-withB)+'</b><span>ยังไม่ได้ถามงบ</span></div></div><div style="margin-top:12px"></div>';
+  if(!withB)h+='<div class="hint">ยังไม่มีข้อมูลงบ</div>';
+  BUDGET.forEach(function(b){if(bc[b])h+='<div class="row2"><span>'+esc(b)+'</span><b>'+bc[b]+' ราย</b></div><div class="bar"><i style="width:'+(bc[b]/bmx*100)+'%"></i></div>'});
+  h+='<div class="hint">นับเป็นรายชื่อ (ไม่ใช่จำนวนคน) เฉพาะลูกค้าที่เช็คอินแล้ว ไม่รวม Property Agent</div></div>';
+
+  var hc={},nCust=0;
+  G.forEach(function(c){var hs=allHouses(c);if(hs.length)nCust++;hs.forEach(function(k){hc[k]=(hc[k]||0)+1})});
+  var keys=Object.keys(hc).sort(function(a,b){return hc[b]-hc[a]});
+  h+='<div class="card"><h3>แบบบ้านที่ลูกค้าสนใจ (จากบันทึกของสตาฟทุกคน)</h3>';
+  if(!keys.length)h+='<div class="hint">ยังไม่มีข้อมูล</div>';
+  var mx2=Math.max(1,hc[keys[0]]||1);
+  keys.forEach(function(k){h+='<div class="row2"><span>'+esc(hl(k))+'</span><b>'+hc[k]+' ราย</b></div><div class="bar"><i style="width:'+(hc[k]/mx2*100)+'%"></i></div>'});
+  h+='<div class="hint">นับเป็นรายชื่อ · 1 ราย เลือกได้หลายแบบ · มีข้อมูลแล้ว '+nCust+' จาก '+G.length+' ราย</div></div>';
+
+  var mc={};G.forEach(function(c){var pv=pDay(c,dd);if(pv>0){var k=c.media||'ไม่ระบุ';mc[k]=(mc[k]||0)+pv}});
+  var mk=Object.keys(mc).sort(function(a,b){return mc[b]-mc[a]});var mmx=Math.max(1,mc[mk[0]]||1);
+  h+='<div class="card"><h3>รู้จักงานจากช่องทางไหน · '+lab+'</h3>';
+  if(!mk.length)h+='<div class="hint">ยังไม่มีข้อมูล</div>';
+  mk.forEach(function(k){h+='<div class="row2"><span>'+esc(k)+'</span><b>'+mc[k]+' คน</b></div><div class="bar"><i style="width:'+(mc[k]/mmx*100)+'%"></i></div>'});
+  h+='<div class="hint">นับจำนวนคนที่มาร่วมงานจริง</div></div>';
+  return h;
+}
+
+/* ---------- Admin: CSV import / export ---------- */
+function parseCSV(text){
+  var rows=[],row=[],f='',q=false;text=text.replace(/^﻿/,'');
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else{if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);f='';if(row.some(function(x){return x!==''}))rows.push(row);row=[]}else f+=c}}
+  row.push(f);if(row.some(function(x){return x!==''}))rows.push(row);return rows;
+}
+function mapHeaders(hdr){
+  var m={type:-1,name:-1,phone:-1,pref:-1,slot20:-1,slot21:-1,slotRaw:[],pax:-1,media:-1,pdpa:-1};
+  hdr.forEach(function(h,i){
+    var t=String(h);
+    if(m.type<0&&/Registrant Type|ประเภทผู้ลงทะเบียน/i.test(t))m.type=i;
+    else if(m.phone<0&&/Phone|เบอร์โทร/i.test(t))m.phone=i;
+    else if(m.pref<0&&/Preferred Date|วันที่สะดวก/i.test(t))m.pref=i;
+    else if(m.name<0&&/Full Name|Company Name|ชื่อ/i.test(t)&&!/ช่องทาง|How Did/i.test(t))m.name=i;
+    else if(/time slot|ช่วงเวลา/i.test(t)){if(m.slot20<0&&/ศุกร์|Friday/i.test(t))m.slot20=i;else if(m.slot21<0&&/เสาร์|Saturday/i.test(t))m.slot21=i;else m.slotRaw.push(i)}
+    else if(m.pax<0&&/How many|จำนวนผู้เข้าร่วม/i.test(t))m.pax=i;
+    else if(m.media<0&&/How Did You Hear|ช่องทางที่ได้รับ/i.test(t))m.media=i;
+    else if(m.pdpa<0&&/ยินยอม|consent|PDPA|พ.ร.บ.|คุ้มครองข้อมูล/i.test(t))m.pdpa=i;
+  });
+  return m;
+}
+function buildImport(text){
+  var rows=parseCSV(text);if(rows.length<2)return {error:'ไฟล์ไม่มีข้อมูล (มีแต่หัวคอลัมน์หรือว่างเปล่า)'};
+  var m=mapHeaders(rows[0]);
+  if(m.phone<0||m.name<0)return {error:'หาคอลัมน์ "ชื่อ" หรือ "เบอร์โทร" ไม่เจอ — ตรวจว่าเป็นไฟล์คำตอบจาก Google Form ที่ส่งออกเป็น CSV'};
+  var existing={};G.forEach(function(g){existing[g.id]=1});
+  var seen={},add=[],dupInFile=0,dupExisting=0,bad=[],noPhone=0;
+  rows.slice(1).forEach(function(r,idx){
+    var rawP=String(r[m.phone]||'').trim(),phone=normPhone(rawP),name=String(r[m.name]||'').trim();
+    if(!name){bad.push('แถว '+(idx+2)+': (ไม่มีชื่อ) / '+(rawP||'(ไม่มีเบอร์)'));return}
+    var okP=phone.length>=9&&phone.length<=11;if(!okP)phone='';
+    var tt=String(r[m.type]||''),isAg=/agent/i.test(tt);
+    var gid=guestIdFor(phone,isAg?AG:CU,name);
+    if(existing[gid]){dupExisting++;return}
+    if(seen[gid]){dupInFile++;return}seen[gid]=1;
+    if(!okP)noPhone++;
+    var isCo=isAg&&CO_RE.test(name);
+    var pr=String(r[m.pref]||''),pref='';
+    if(/both|ทั้งสอง/i.test(pr)||(/20/.test(pr)&&/21/.test(pr)))pref='both';else if(/Friday|ศุกร์|20/.test(pr))pref='20';else if(/Saturday|เสาร์|21/.test(pr))pref='21';
+    var slots={};if(m.slot20>=0&&r[m.slot20])slots['20']=String(r[m.slot20]).trim();if(m.slot21>=0&&r[m.slot21])slots['21']=String(r[m.slot21]).trim();
+    if(!slots['20']&&!slots['21']){var raw=m.slotRaw.map(function(i){return String(r[i]||'').trim()}).filter(Boolean)[0];if(raw){if(pref==='21')slots['21']=raw;else slots['20']=raw}}
+    var pax=m.pax>=0?parseInt(String(r[m.pax]).replace(/[^\d]/g,''),10):1;if(!(pax>0))pax=1;
+    var hasP=m.pdpa>=0&&String(r[m.pdpa]||'').trim()!=='';
+    add.push({_id:gid,noPhone:!okP,rawPhone:okP?'':rawP,type:isAg?AG:CU,name:isAg&&isCo?'':name,company:isCo?name:'',phone:phone,src:'pre',prefDate:pref,slots:slots,pax:pax,media:m.media>=0?String(r[m.media]||'').trim():'',budget:'',budgetBy:'',budgetAt:'',checkins:{},notes:[],pdpa:{source:hasP?'form':'none'},createdBy:S.me,createdAt:nowIso(),importedAt:nowIso()});
+  });
+  return {add:add,noPhone:noPhone,dupInFile:dupInFile,dupExisting:dupExisting,bad:bad,total:rows.length-1,map:m,hdr:rows[0]};
+}
+function importView(){
+  var h='<div class="card"><h3>นำเข้ารายชื่อจาก Google Form (เฉพาะผู้ดูแล)</h3><div class="hint" style="font-size:13px;color:var(--ink)">1) เปิดชีตคำตอบ → ไฟล์ → ดาวน์โหลด → ไฟล์ CSV<br>2) เลือกไฟล์ด้านล่าง ตรวจตัวอย่าง แล้วกดนำเข้า<br>นำเข้าซ้ำได้ ระบบข้ามรายชื่อที่มีอยู่แล้ว ไม่ทับข้อมูลที่สตาฟกรอก · แถวที่ไม่มีเบอร์หรือเบอร์ไม่ครบจะนำเข้าและติดป้าย "ต้องเช็กเบอร์" ให้สตาฟถามเบอร์แล้วกรอกที่หน้างาน</div><input type="file" id="impFile" accept=".csv,text/csv" style="margin-top:12px">';
+  if(S.imp){
+    if(S.imp.error)h+='<div class="err">'+esc(S.imp.error)+'</div>';
+    else{var I=S.imp,m=I.map;
+      h+='<div class="gbox" style="margin-top:12px"><div class="gt">ตรวจก่อนนำเข้า</div><div class="info"><span>แถวในไฟล์</span><span>'+I.total+'</span><span>นำเข้าใหม่</span><span><b>'+I.add.length+'</b> ราย</span><span>มีอยู่แล้ว ข้าม</span><span>'+I.dupExisting+'</span><span>เบอร์ซ้ำในไฟล์ ข้าม</span><span>'+I.dupInFile+'</span><span>ไม่มีเบอร์/เบอร์ไม่ครบ (นำเข้า ติดป้าย)</span><span>'+I.noPhone+'</span><span>ไม่มีชื่อ ข้าม</span><span>'+I.bad.length+'</span></div></div>';
+      var nm=function(i){return i>=0?esc(String(I.hdr[i]).slice(0,48)):'<span style="color:var(--err)">ไม่พบ</span>'};
+      h+='<div class="gbox"><div class="gt">คอลัมน์ที่จับคู่ได้ (ตรวจว่าถูกต้อง)</div><div class="info"><span>ประเภท</span><span>'+nm(m.type)+'</span><span>ชื่อ/บริษัท</span><span>'+nm(m.name)+'</span><span>เบอร์</span><span>'+nm(m.phone)+'</span><span>วันที่สะดวก</span><span>'+nm(m.pref)+'</span><span>ช่วงเวลา 20</span><span>'+nm(m.slot20)+'</span><span>ช่วงเวลา 21</span><span>'+nm(m.slot21)+'</span><span>จำนวนคน</span><span>'+nm(m.pax)+'</span><span>รู้จักงานจาก</span><span>'+nm(m.media)+'</span><span>PDPA</span><span>'+nm(m.pdpa)+'</span></div></div>';
+      if(I.bad.length)h+='<div class="hint">ข้ามเพราะไม่มีชื่อ: '+esc(I.bad.slice(0,8).join(' | '))+(I.bad.length>8?' …':'')+'</div>';
+      h+='<button class="btn" id="impGo"'+(I.add.length?'':' disabled')+'>นำเข้า '+I.add.length+' ราย</button>';
+    }
+  }
+  h+='</div><div class="card"><h3>สำรองข้อมูล</h3><div class="hint" style="font-size:13px;color:var(--ink)">ดาวน์โหลดรายชื่อและบันทึกทั้งหมดเป็นไฟล์ CSV เก็บไว้ได้ทุกเมื่อ</div><button class="btn sec" id="expGo">ดาวน์โหลด CSV ทั้งหมด</button></div>';
+  return h;
+}
+function exportCSV(){
+  var cols=['ประเภท','ที่มา','ชื่อ','บริษัท','เบอร์','วันที่สะดวก','ช่วงเวลา','ลงทะเบียน(คน)','มา 20 พ.ย.(คน)','มา 21 พ.ย.(คน)','ช่องทาง','งบประมาณ','แบบบ้าน','บันทึก'];
+  var q=function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"'};
+  var lines=[cols.map(q).join(',')];
+  G.forEach(function(g){lines.push([typeLabel(g.type),g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in',g.name,g.company,"'"+g.phone,PD[g.prefDate]||'',slotsText(g),g.pax||1,pin(g,'20')||'',pin(g,'21')||'',g.media,g.budget,allHouses(g).map(hl).join('; '),(g.notes||[]).map(function(n){return n.by+' '+fmtStamp(n.at)+': '+[n.detail,n.interest].filter(Boolean).join(' / ')}).join(' || ')].map(q).join(','))});
+  var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='event_guests_'+bangkokDate(nowMs())+'.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+}
+
+/* ---------- Events ---------- */
+function fail(e){console.error(e);toast('บันทึกไม่สำเร็จ: '+(e&&e.message?e.message:e))}
+document.addEventListener('click',function(e){
+  var t=e.target,x;
+  if(t.id==='logout'){if(unsub){unsub();unsub=null}auth.signOut();return}
+  if((x=t.closest('#tabs button'))){S.view=x.dataset.v;S.open=null;S.newOpen=false;S.noRestore=true;render();return}
+  if((x=t.closest('[data-f]'))){S.flt=x.dataset.f;render();return}
+  if((x=t.closest('[data-dd]'))){S.dashDay=x.dataset.dd;render();return}
+  if((x=t.closest('[data-cin]'))){var g=byId(x.dataset.cin);if(!g||!S.today)return toast(S.todayMsg||'ไม่ใช่วันงาน');
+    doCheckin(g,S.today,g.pax||1).then(function(){toast('เช็คอิน '+guestName(g)+' · '+(g.pax||1)+' คน ✓')}).catch(fail);return}
+  if((x=t.closest('[data-pick]'))){var g2=byId(x.dataset.pick);if(!g2)return;S.open=g2.id;S.nh=[];S.nb=g2.budget||'';S.nm=g2.media||'';S.np=(S.today&&pin(g2,S.today))||g2.pax||1;S.noRestore=true;render();window.scrollTo(0,0);return}
+  if(t.id==='backList'||t.id==='fCancel'){S.open=null;S.newOpen=false;S.noRestore=true;render();window.scrollTo(0,0);return}
+  if(t.id==='newBtn'){S.newOpen=true;S.open=null;S.type=CU;S.np=1;S.nm='';S.nb='';render();return}
+  if(t.id==='showAll'){S.showAll=true;render();return}
+  if(t.id==='npMinus'||t.id==='npPlus'){S.np=Math.max(1,S.np+(t.id==='npPlus'?1:-1));$('npVal').textContent=S.np;return}
+  if((x=t.closest('#nMedia .chip'))){S.nm=S.nm===x.dataset.m?'':x.dataset.m;[].forEach.call(document.querySelectorAll('#nMedia .chip'),function(b){b.classList.toggle('on',b.dataset.m===S.nm)});return}
+  if((x=t.closest('#nBudget .chip'))){S.nb=S.nb===x.dataset.b?'':x.dataset.b;[].forEach.call(document.querySelectorAll('#nBudget .chip'),function(b){b.classList.toggle('on',b.dataset.b===S.nb)});return}
+  if((x=t.closest('#nHouse .chip'))){var k=x.dataset.h,i=S.nh.indexOf(k);if(i>-1)S.nh.splice(i,1);else S.nh.push(k);x.classList.toggle('on');return}
+  if((x=t.closest('#fType .chip'))){S.type=x.dataset.v;render();return}
+  if(t.id==='cinDetail'){var gd=byId(S.open);doCheckin(gd,S.today,S.np).then(function(){toast('เช็คอิน '+S.np+' คน ✓')}).catch(fail);return}
+  if(t.id==='addNote'){
+    var g3=byId(S.open);if(!g3)return;
+    var o={detail:$('nDetail').value.trim(),interest:$('nInterest').value.trim(),houses:S.nh.slice(),media:S.nm,pax:S.np};
+    if(S.nb&&S.nb!==g3.budget)o.budgetSet=S.nb;
+    if(g3.type===AG){o.name=$('aName').value.trim();o.company=$('aCompany').value.trim()}
+    if($('aPhone')&&$('aPhone').value.trim()){var nph=normPhone($('aPhone').value);
+      if(nph.length<9)return toast('เบอร์ไม่ครบ ตรวจอีกครั้ง');
+      var dupG=G.filter(function(c){return c.phone===nph&&c.id!==g3.id})[0];
+      if(dupG)return toast('เบอร์นี้มีของ '+guestName(dupG)+' แล้ว');
+      o.phone=nph}
+    if(S.today)o.checkinDay=S.today;
+    t.disabled=true;
+    doSaveNote(g3,o).then(function(){S.open=null;S.q='';S.noRestore=true;toast('บันทึกแล้ว ✓');render();window.scrollTo(0,0)}).catch(function(er){t.disabled=false;fail(er)});return}
+  if(t.id==='fSave'){
+    var nm=$('fName').value.trim(),ph=normPhone($('fPhone').value),co=$('fCompany')?$('fCompany').value.trim():'';
+    if(!nm)return toast(S.type===AG?'ใส่ชื่อ Agent':'ใส่ชื่อ');if(S.type===AG&&!co)return toast('ใส่ชื่อบริษัท');if(ph.length<9)return toast('ใส่เบอร์ให้ครบ');
+    if(!$('fPdpa').checked)return toast('ต้องติ๊กแจ้ง PDPA');
+    t.disabled=true;
+    doCreateWalkin({type:S.type,name:nm,company:co,phone:ph,pax:S.np,media:S.nm,budget:S.nb}).then(function(r){
+      S.newOpen=false;S.q='';S.flt='all';S.open=r.id;S.nh=[];S.noRestore=true;
+      var gg=byId(r.id);S.nb=gg?(gg.budget||''):S.nb;
+      toast(r.existing?'เบอร์นี้มีอยู่แล้ว เปิดข้อมูลเดิมให้':'เพิ่มแล้ว ✓ กรอกข้อมูลต่อได้เลย');render();window.scrollTo(0,0);
+    }).catch(function(er){t.disabled=false;fail(er)});return}
+  if(t.id==='impGo'&&S.imp&&S.imp.add){
+    t.disabled=true;var list=S.imp.add.slice(),done=0;
+    (function next(){
+      if(!list.length){toast('นำเข้าสำเร็จ '+done+' ราย ✓');S.imp=null;render();return}
+      var chunk=list.splice(0,400),b=db.batch();
+      chunk.forEach(function(d){var id=d._id,c={};Object.keys(d).forEach(function(k){if(k!=='_id')c[k]=d[k]});b.set(ref(id),c)});
+      b.commit().then(function(){done+=chunk.length;next()}).catch(function(er){fail(er);t.disabled=false});
+    })();return}
+  if(t.id==='expGo'){exportCSV();return}
+});
+document.addEventListener('change',function(e){
+  if(e.target.id==='impFile'){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){S.imp=buildImport(String(r.result));S.noRestore=true;render()};r.readAsText(f,'utf-8')}
+});
+document.addEventListener('submit',function(e){
+  if(e.target.id==='loginForm'){e.preventDefault();S.err='';
+    var persist=$('lgRem').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION;
+    var em=$('lgEmail').value.trim(),pw=$('lgPw').value;
+    auth.setPersistence(persist).then(function(){return auth.signInWithEmailAndPassword(em,pw)}).catch(function(er){S.err='เข้าสู่ระบบไม่สำเร็จ: อีเมลหรือรหัสผ่านไม่ถูกต้อง';render()});
+  }
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='q'){S.q=e.target.value;var p=e.target.selectionStart;S.noRestore=false;render();var q=$('q');if(q){q.focus();q.setSelectionRange(p,p)}}
+  if(e.target.id==='fPhone'){var ph=normPhone(e.target.value),m=ph.length>=9&&G.filter(function(c){return c.phone===ph})[0];$('dupHint').innerHTML=m?'<span style="color:var(--err)">เบอร์นี้มีแล้ว: '+esc(guestName(m))+' — กดบันทึกเพื่อเปิดข้อมูลเดิม</span>':''}
+});
+window.addEventListener('online',function(){S.online=true;softRender()});
+window.addEventListener('offline',function(){S.online=false;softRender()});
+
+/* ---------- Boot ---------- */
+function startListen(){
+  if(unsub)unsub();
+  unsub=db.collection(COLL).onSnapshot({includeMetadataChanges:true},function(snap){
+    G=snap.docs.map(function(d){var o=d.data();o.id=d.id;return o});
+    S.pending=snap.metadata.hasPendingWrites;S.err='';softRender();
+  },function(err){S.err='โหลดรายชื่อไม่สำเร็จ: '+(err&&err.code==='permission-denied'?'ยังไม่ได้ตั้งสิทธิ์อ่าน/เขียนคอลเลกชันของโหมดอีเวนต์ (แจ้งผู้ดูแลระบบ)':(err&&err.message||err));render()});
+}
+function syncClock(){
+  return fetch(location.href.split('#')[0],{method:'HEAD',cache:'no-store'}).then(function(r){var d=r.headers.get('Date');if(d){var ms=Date.parse(d);if(!isNaN(ms))S.offsetMs=ms-Date.now()}}).catch(function(){});
+}
+function boot(){
+  try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();
+    db.enablePersistence({synchronizeTabs:true}).catch(function(){});
+  }catch(e){$('root').innerHTML='<div class="loading">เชื่อมต่อ Firebase ไม่สำเร็จ ลองรีเฟรชหน้านี้</div>';return}
+  S.online=navigator.onLine!==false;
+  auth.onAuthStateChanged(function(user){
+    if(!user){S.user=null;S.me='';S.ready=true;if(unsub){unsub();unsub=null}G=[];render();return}
+    db.collection('profiles').doc(user.uid).get().then(function(snap){
+      if(!snap.exists){auth.signOut();S.err='บัญชีนี้ไม่มีสิทธิ์ใช้งาน กรุณาติดต่อผู้ดูแลระบบ';return}
+      var p=snap.data()||{};
+      S.user=user;S.me=p.displayName||user.email;S.isAdmin=!!p.isAdmin;
+      syncClock().then(function(){computeToday();S.ready=true;startListen();render();
+        setInterval(function(){var was=S.today;computeToday();if(was!==S.today)softRender()},60000)});
+    }).catch(function(er){S.ready=true;S.err='โหลดข้อมูลผู้ใช้ไม่สำเร็จ: '+(er&&er.message||er);render()});
+  });
+}
+render();boot();
+})();
+</script>
+</body>
+</html>
