@@ -235,6 +235,7 @@
       <span class="chip" id="csmChip" hidden>งานซ่อม CSM <b id="csmStamp"></b></span>
       <span class="chip" id="svChip" hidden>แบบสอบถาม <b id="svStamp"></b></span>
       <a class="btn" href="home.html" style="text-decoration:none">☰ เมนูรวม</a><a class="btn" href="./">← Walk-in Tracker</a>
+      <a class="btn" href="juristic.html" id="jurLink" hidden style="text-decoration:none">ฟอร์มนิติ</a>
       <button class="btn" id="uploadBtn" hidden>อัปโหลดข้อมูลลูกบ้าน</button>
       <span class="chip" id="userChip"></span>
       <button class="btn" id="logoutBtn">ออกจากระบบ</button>
@@ -307,6 +308,12 @@
         <div class="tbl-wrap"><table><thead><tr><th>บ้าน</th><th>เจ้าของ</th><th class="num">รายการ</th><th class="num">ยังไม่ปิด</th><th>ล่าสุด</th></tr></thead><tbody id="svTop"></tbody></table></div>
       </div>
     </div>
+    <div class="card full"><div class="card-title">ระยะเวลาและคุณภาพงานซ่อม</div><div class="card-sub" id="slaSub"></div>
+      <div class="kpi-grid" id="slaKpis" style="margin:10px 0 14px"></div>
+      <div class="grid2" style="margin:0"><div><div class="card-sub" style="margin-bottom:6px">เสร็จตามกำหนด แยกตามหมวดงาน</div><div class="hbars" id="slaCat"></div></div>
+        <div><div class="card-sub" style="margin-bottom:6px">คะแนนประเมิน QA ในระบบ CSM รายใบงาน (เฉลี่ยเต็ม 5)</div><div class="hbars" id="slaQa"></div></div></div></div>
+    <div class="card full"><div class="card-title">ความพึงพอใจหลังการขาย</div><div class="card-sub" id="satSub"></div>
+      <div class="grid2" style="margin:0"><div class="hbars" id="satBars"></div><div id="satIssues"></div></div></div>
     <div class="note" id="svNote"></div>
   </section>
   <!-- ---------- community ---------- -->
@@ -330,6 +337,7 @@
       <div class="card"><div class="card-title">ต่อเติมแล้ว / อยากต่อเติม</div><div class="card-sub">โอกาสแนะนำผู้รับเหมาต่อเติมให้ลูกบ้าน</div><div class="hbars" id="cmExt"></div></div>
       <div class="card"><div class="card-title">ฟังก์ชันที่อยากได้เพิ่ม</div><div class="card-sub">ข้อมูลประกอบการออกแบบบ้านรุ่นต่อไป</div><div class="hbars" id="cmWant"></div></div>
     </div>
+    <div class="card full"><div class="card-title">ความยินยอม PDPA</div><div class="card-sub" id="cmConsentSub"></div><div class="hbars" id="cmConsent"></div></div>
     <div class="card full"><div class="card-title">ข้อเสนอแนะจากลูกบ้าน</div><div class="card-sub">ข้อ "ปัจจัยที่โครงการต้องพัฒนาและปรับปรุง" · กดเพื่อดูบ้าน</div><div id="cmImp"></div></div>
     <div class="card full">
       <div class="card-title">บ้านที่ยังไม่ได้ทำแบบสอบถาม</div>
@@ -670,12 +678,84 @@ function renderService(){
   var projLevel = rs.filter(function(r){ return /000$/.test(r.h); }).length;
   var notTransferred = rs.filter(function(r){ return !/000$/.test(r.h) && !houseById[r.h]; }).length;
   var noCsm = projSel && !csmProj[projSel];
+  renderSat(); renderSla();
   $('svNote').innerHTML =
     (noCsm ? '<b>' + esc(pname(projSel)) + '</b> ยังไม่มีงานแจ้งซ่อมในระบบ CSM · ' : '') +
     'ข้อมูลงานซ่อมมาจาก Mango CSM (มีเฉพาะ ' + Object.keys(csmProj).map(pname).join(', ') + ' เริ่มบันทึกตั้งแต่ ' + thDate(firstM) + ') · ' +
     (projLevel ? fmt(projLevel) + ' รายการแจ้งระดับโครงการ ไม่ระบุแปลง · ' : '') +
     (notTransferred ? fmt(notTransferred) + ' รายการเป็นแปลงที่ยังไม่มีสถานะโอนใน ERP · ' : '') +
     'ประกันคิดจากวันเริ่มประกันที่ลงทะเบียนใน Mango ถ้ามี ไม่งั้นใช้วันโอน (โครงสร้าง ' + S.warranty.structYears + ' ปี · งานอื่น ' + S.warranty.generalYears + ' ปี ตามมาสเตอร์ประกัน Mango)';
+}
+
+
+// repair timing & quality — dates from CSM; worker dates, sendbacks and QA from Khun Runruk's t_mg_csr_* tables
+function renderSla(){
+  var rs = R().filter(function(r){ return !/000$/.test(r.h); });
+  var withDue = rs.filter(function(r){ return r.done && r.due; });
+  var onTime = withDue.filter(function(r){ return r.done <= r.due; });
+  var late = withDue.filter(function(r){ return r.done > r.due; }).map(function(r){ return days(r.due, r.done); });
+  var wait = rs.filter(function(r){ return r.ws && r.d; }).map(function(r){ return days(r.d, r.ws); }).filter(function(v){ return v >= 0; });
+  var dur = rs.filter(function(r){ return r.ws && r.we; }).map(function(r){ return days(r.ws, r.we); }).filter(function(v){ return v >= 0; });
+  var openLate = rs.filter(function(r){ return r.st === 'open' && r.due && r.due < S.today; });
+  var rej = rs.filter(function(r){ return r.rej; });
+  var qa = rs.filter(function(r){ return r.qa; });
+  var qaAll = []; qa.forEach(function(r){ r.qa.forEach(function(v){ if(v != null) qaAll.push(v); }); });
+  var avg = function(a){ return a.length ? a.reduce(function(x,y){ return x+y; }, 0) / a.length : null; };
+  if(!rs.length){ $('slaSub').textContent = 'ไม่มีงานซ่อมในตัวกรองนี้'; $('slaKpis').innerHTML = ''; $('slaCat').innerHTML = ''; $('slaQa').innerHTML = ''; return; }
+  $('slaSub').textContent = 'งานซ่อม ' + fmt(rs.length) + ' รายการ · วันกำหนดและวันเสร็จจาก CSM · วันช่างเข้า-ออก การตีกลับ และคะแนน QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : ' (ยังไม่มีไฟล์)');
+  var md = function(a){ var m = median(a); return m == null ? '–' : (Math.round(m*10)/10).toString(); };
+  kpis($('slaKpis'), [
+    {l:'เสร็จตามกำหนด', v: withDue.length ? pct(onTime.length, withDue.length) + '%' : '–', s: fmt(onTime.length) + ' จาก ' + fmt(withDue.length) + ' รายการที่เสร็จแล้ว', cls: withDue.length && onTime.length/withDue.length < 0.7 ? 'warn' : ''},
+    {l:'เลยกำหนด (ค่ากลาง)', v: md(late), u: late.length ? 'วัน' : '', s: fmt(late.length) + ' รายการเสร็จช้ากว่ากำหนด'},
+    {l:'รอช่างเข้า (ค่ากลาง)', v: md(wait), u: wait.length ? 'วัน' : '', s: 'นับจากวันแจ้ง · ' + fmt(wait.length) + ' รายการ'},
+    {l:'ช่างใช้เวลาซ่อม (ค่ากลาง)', v: md(dur), u: dur.length ? 'วัน' : '', s: 'วันเริ่มถึงวันจบงาน'},
+    {l:'ค้างเกินกำหนด', v: fmt(openLate.length), u:'รายการ', s: 'ยังไม่ปิด และเลยวันกำหนดแล้ว', cls: openLate.length ? 'bad' : ''},
+    {l:'ถูกตีกลับ / QA', v: fmt(rej.length), u:'รายการ', s: 'QA เฉลี่ย ' + (qaAll.length ? avg(qaAll).toFixed(2) : '–') + '/5 จาก ' + fmt(qa.length) + ' ใบงาน'}
+  ]);
+  var byCat = {};
+  withDue.forEach(function(r){ var c = byCat[r.cat] = byCat[r.cat] || {n:0, ok:0}; c.n++; if(r.done <= r.due) c.ok++; });
+  $('slaCat').innerHTML = Object.keys(byCat).sort(function(a,b){ return byCat[b].n - byCat[a].n; }).map(function(k){
+    var c = byCat[k], w = c.ok*100/c.n;
+    return '<div class="hbar"><div class="lab">' + esc(k) + '</div><div class="track"><div class="fill" style="width:' + w + '%;background:' + (w >= 70 ? 'var(--good)' : w >= 50 ? 'var(--warning)' : 'var(--critical)') + '"></div></div><div class="val">' + Math.round(w) + '%<span>' + fmt(c.n) + '</span></div></div>';
+  }).join('') || '<div class="empty">ไม่มีข้อมูล</div>';
+  $('slaQa').innerHTML = qa.length ? [0,1,2,3].map(function(i){
+    var v = qa.map(function(r){ return r.qa[i]; }).filter(function(x){ return x != null; });
+    var a = avg(v);
+    return '<div class="hbar"><div class="lab">ข้อ ' + (i+1) + '</div><div class="track"><div class="fill" style="width:' + (a ? a*20 : 0) + '%;background:var(--good)"></div></div><div class="val">' + (a ? a.toFixed(2) : '–') + '<span>' + fmt(v.length) + '</span></div></div>';
+  }).join('') + '<div class="note" style="margin-top:8px">ระบบ CSM เก็บแค่เลขข้อ 1–4 ไม่มีข้อความคำถามในไฟล์ที่ดึงมา</div>' : '<div class="empty">ยังไม่มีคะแนน QA</div>';
+}
+
+// after-sales satisfaction survey (paper "แบบสอบถามความพึงพอใจหลังการขาย", keyed in by juristic staff)
+function renderSat(){
+  var hs = H().filter(function(h){ return h.sv && h.sv.sat; });
+  var topics = [['r1','ภาพรวมโครงการ / ความปลอดภัย'],['r2','คุณภาพงานก่อสร้าง'],['r3','พนักงานขาย'],['r4','เจ้าหน้าที่ QC ก่อสร้าง'],['r5','เจ้าหน้าที่ดูแลโครงการ']];
+  if(!hs.length){
+    $('satSub').textContent = 'ยังไม่มีแบบประเมินที่นิติบันทึก · ข้อมูลจะขึ้นเมื่อนิติกรอกส่วน "แบบประเมินความพึงพอใจหลังการขาย" ในฟอร์มนิติ';
+    $('satBars').innerHTML = '<div class="empty">ไม่มีข้อมูล</div>'; $('satIssues').innerHTML = ''; return;
+  }
+  var recd = hs.filter(function(h){ return h.sv.sat.rec; });
+  var yes = recd.filter(function(h){ return h.sv.sat.rec === 'แนะนำ'; }).length;
+  var iss = hs.filter(function(h){ return h.sv.sat.issue === 'ใช่'; });
+  $('satSub').textContent = 'ตอบ ' + fmt(hs.length) + ' หลัง · คะแนนเฉลี่ยเต็ม 5' +
+    (recd.length ? ' · แนะนำ PATTA ต่อ ' + pct(yes, recd.length) + '% (' + fmt(yes) + '/' + fmt(recd.length) + ')' : '') +
+    ' · พบปัญหาระหว่างก่อสร้าง ' + fmt(iss.length) + ' หลัง';
+  $('satBars').innerHTML = topics.map(function(t){
+    var v = hs.map(function(h){ return h.sv.sat[t[0]]; }).filter(function(x){ return x != null && x !== ''; }).map(Number);
+    var avg = v.length ? v.reduce(function(a,b){ return a+b; }, 0) / v.length : 0;
+    var c = !v.length ? 'var(--baseline)' : avg >= 4 ? 'var(--good)' : avg >= 3 ? 'var(--warning)' : 'var(--critical)';
+    return '<div class="hbar"><div class="lab">' + esc(t[1]) + '</div><div class="track"><div class="fill" style="width:' + (avg*20) + '%;background:' + c + '"></div></div><div class="val">' + (v.length ? avg.toFixed(1) : '–') + '<span>' + fmt(v.length) + ' หลัง</span></div></div>';
+  }).join('');
+  var notes = hs.filter(function(h){ return h.sv.sat.issueText || h.sv.sat.suggest || h.sv.sat.rec === 'ไม่แนะนำ'; });
+  $('satIssues').innerHTML = notes.length ? notes.map(function(h){
+    var s = h.sv.sat;
+    return '<div class="rep"><div class="rhead"><a href="#" class="hid" data-id="' + h.id + '" style="color:var(--accent-ink);text-decoration:none">' + h.id + '</a>' +
+      (s.rec === 'ไม่แนะนำ' ? '<span class="pill bad">ไม่แนะนำ</span>' : s.issue === 'ใช่' ? '<span class="pill warn">พบปัญหา</span>' : '') + '</div>' +
+      (s.issueText ? '<div class="rsubj" style="font-weight:500">' + esc(s.issueText) + '</div>' : '') +
+      (s.suggest ? '<div class="rdet">ข้อเสนอแนะ: ' + esc(s.suggest) + '</div>' : '') + '</div>';
+  }).join('') : '<div class="empty">ไม่มีปัญหาหรือข้อเสนอแนะที่ลูกค้าระบุ</div>';
+  Array.prototype.forEach.call($('satIssues').querySelectorAll('a[data-id]'), function(a){
+    a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); });
+  });
 }
 
 // ---------- community ----------
@@ -698,7 +778,7 @@ function renderCommunity(){
   var projsWith = {}; S.houses.forEach(function(h){ if(svOf(h)) projsWith[h.p] = 1; });
 
   kpis($('cmKpis'), [
-    {l:'ทำแบบสอบถามแล้ว', v:fmt(surveyed.length), u:'/ ' + fmt(hs.length) + ' หลัง', s: pct(surveyed.length, hs.length) + '% ของบ้านที่โอนแล้ว'},
+    {l:'ทำแบบสอบถามแล้ว', v:fmt(surveyed.length), u:'/ ' + fmt(hs.length) + ' หลัง', s: pct(surveyed.length, hs.length) + '% · นิติอัปเดตแล้ว ' + fmt(surveyed.filter(function(h){ return h.sv.src === 'juristic'; }).length) + ' หลัง'},
     {l:'อยู่ประจำ', v:pct(occ['อยู่ประจำ']||0, withOcc.length) + '%', s: fmt(occ['อยู่ประจำ']||0) + ' จาก ' + fmt(withOcc.length) + ' หลังที่ตอบ'},
     {l:'ปล่อยเช่า', v:pct(occ['ปล่อยเช่า']||0, withOcc.length) + '%', s: fmt(occ['ปล่อยเช่า']||0) + ' หลัง'},
     {l:'ครอบครัวมีบุตร', v:fmt(kidsHomes.length), u:'หลัง', s: fmt(kidsHomes.reduce(function(a,h){ return a + (+h.sv.kids||0); }, 0)) + ' คน'},
@@ -745,6 +825,10 @@ function renderCommunity(){
   $('cmCarSub').textContent = 'ตอบ ' + fmt(cars.length) + ' หลัง · รวม ' + fmt(totalCars) + ' คัน (เฉลี่ย ' + (cars.length ? (totalCars/cars.length).toFixed(1) : '–') + ' คัน/หลัง) · ใช้ดูที่จอดรถในโครงการ';
   var cb = count(cars, function(h){ var n = +h.sv.cars; return n >= 3 ? '3 คันขึ้นไป' : n + ' คัน'; });
   hbars($('cmCar'), ['0 คัน','1 คัน','2 คัน','3 คันขึ้นไป'].filter(function(k){ return cb[k]; }).map(function(k){ return {l:k, v:cb[k]}; }));
+  var vb = sortedEntries(listCount(surveyed, 'vbrands')), vt = sortedEntries(listCount(surveyed, 'vtypes'));
+  if(vb.length || vt.length) $('cmCar').insertAdjacentHTML('beforeend', '<div class="note" style="margin-top:10px">' +
+    (vt.length ? 'ประเภท: ' + vt.map(function(e){ return esc(e[0]) + ' ' + e[1]; }).join(' · ') : '') + (vt.length && vb.length ? '<br>' : '') +
+    (vb.length ? 'ยี่ห้อ: ' + vb.slice(0,8).map(function(e){ return esc(e[0]) + ' ' + e[1]; }).join(' · ') : '') + ' <span style="opacity:.7">(จากฟอร์มนิติ)</span></div>');
 
   var petAns = surveyed.filter(function(h){ return h.sv.pets !== undefined && h.sv.pets !== ''; });
   $('cmPetSub').textContent = 'ตอบ ' + fmt(petAns.length) + ' หลัง';
@@ -774,9 +858,17 @@ function renderCommunity(){
     a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); });
   });
 
+  var jur = hs.filter(function(h){ return h.sv && h.sv.src === 'juristic'; });
+  $('cmConsentSub').textContent = 'บันทึกผ่านฟอร์มนิติ ' + fmt(jur.length) + ' หลัง · แบบสอบถามเดิมไม่มีข้อนี้ · ใช้คัดรายชื่อก่อนติดต่อเรื่องกิจกรรมหรือแนะนำเพื่อน';
+  var ck = [['data','บริหารหมู่บ้าน / ติดต่อแจ้งเรื่อง'],['photo','เก็บรูปลูกบ้าน (ความปลอดภัย)'],['activity','ติดต่อเรื่องกิจกรรมชุมชน'],['marketing','รับข่าวสาร/สิทธิพิเศษจาก PATTA']];
+  $('cmConsent').innerHTML = jur.length ? ck.map(function(c){
+    var y = jur.filter(function(h){ return h.sv.consent && h.sv.consent[c[0]]; }).length;
+    return '<div class="hbar"><div class="lab">' + esc(c[1]) + '</div><div class="track"><div class="fill" style="width:' + (y*100/jur.length) + '%;background:var(--good)"></div></div><div class="val">' + fmt(y) + '<span>/' + fmt(jur.length) + '</span></div></div>';
+  }).join('') : '<div class="empty">ยังไม่มีบ้านที่นิติบันทึกความยินยอม</div>';
+
   renderTodo();
   var noSurvey = Object.keys(count(S.houses,'p')).filter(function(p){ return !projsWith[p]; });
-  $('cmNote').innerHTML = 'ที่มา: ไฟล์แบบสอบถามวันโอนกรรมสิทธิ์ของทีมขาย (ไฟล์รวมในไซต์ทีมขาย + ไฟล์อัปเดตของ CASCADE และ CHIEFTAIN) อัปเดต ' + esc((S.surveyUpdated||'').slice(0,10) || '–') +
+  $('cmNote').innerHTML = 'ที่มา: ฟอร์มนิติ (juristic.html) ถ้ามี ไม่งั้นใช้ไฟล์แบบสอบถามวันโอนกรรมสิทธิ์ของทีมขาย (ไฟล์รวมในไซต์ทีมขาย + ไฟล์อัปเดตของ CASCADE และ CHIEFTAIN) อัปเดต ' + esc((S.surveyUpdated||'').slice(0,10) || '–') +
     ' · ไม่ได้ดึงชื่อ เบอร์โทร อีเมล และทะเบียนรถ · บ้านเลขที่จับคู่กับรหัสแปลงจากเลขหลังทับ' +
     (noSurvey.length ? ' · ยังไม่มีแบบสอบถาม: ' + noSurvey.map(pname).join(', ') : '');
 }
@@ -831,22 +923,33 @@ function openHouse(id){
   if(h){
     html += '<div style="font-weight:600;margin:6px 0 8px">แบบสอบถามวันโอนกรรมสิทธิ์</div>';
     if(sv && sv.surveyed === 'Y'){
+      html += '<div class="muted" style="margin:-4px 0 8px">' + (sv.src === 'juristic' ? 'บันทึกโดยนิติ ' + thDate(sv.updatedAt) : 'จากไฟล์แบบสอบถามวันโอนกรรมสิทธิ์') + '</div>';
       var lines = [
+        ['บ้านเลขที่', sv.addr || ''],
         ['การอยู่อาศัย', [sv.occ, sv.stay, sv.moved === 'N' ? 'ยังไม่ได้เข้าอยู่' : ''].filter(Boolean).join(' · ')],
         ['ผู้พักอาศัย', sv.people ? sv.people + ' คน' : ''],
         ['บุตร', sv.kids !== undefined ? (sv.kids === '0' ? 'ไม่มี' : sv.kids + ' คน') + (sv.school ? ' · ' + sv.school : '') : (sv.school || '')],
         ['ผู้สูงอายุ', sv.elder || ''], ['แม่บ้าน/พี่เลี้ยง', sv.maid || ''], ['คนขับรถ', sv.driver || ''],
         ['สัตว์เลี้ยง', sv.pets !== undefined ? (sv.pets === '0' ? 'ไม่มี' : sv.pets + ' ตัว' + (sv.pet_type ? ' (' + sv.pet_type + ')' : '')) : ''],
         ['รถยนต์', sv.cars !== undefined ? sv.cars + ' คัน' + (sv.motos ? ' · จักรยานยนต์ ' + sv.motos + ' คัน' : '') : ''],
+        ['รถที่ใช้', [(sv.vtypes||'').split('|').join(', '), (sv.vbrands||'').split('|').join(', ')].filter(Boolean).join(' · ')],
         ['เหตุผลที่ซื้อ', (sv.factors||'').split('|').join(', ')], ['ต่อเติม', (sv.extend||'').split('|').join(', ')],
         ['อยากได้เพิ่ม', (sv.want||'').split('|').join(', ')], ['ส่วนกลางที่ชอบ', (sv.like||'').split('|').join(', ')],
         ['ข้อเสนอแนะ', sv.improve || '']
       ].filter(function(l){ return l[1]; });
       html += '<div class="kv">' + lines.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
+      if(sv.sat){
+        var st = sv.sat, nm = ['ภาพรวมโครงการ','งานก่อสร้าง','พนักงานขาย','QC ก่อสร้าง','ดูแลโครงการ'];
+        var sl = [['คะแนน (เต็ม 5)', ['r1','r2','r3','r4','r5'].map(function(k, i){ return st[k] != null ? nm[i] + ' ' + st[k] : ''; }).filter(Boolean).join(' · ')],
+                  ['ปัญหาระหว่างก่อสร้าง', st.issue === 'ใช่' ? (st.issueText || 'พบปัญหา') : st.issue === 'ไม่ใช่' ? 'ไม่พบ' : ''],
+                  ['ข้อเสนอแนะ', st.suggest || ''], ['แนะนำ PATTA ต่อ', st.rec || '']].filter(function(l){ return l[1]; });
+        html += '<div style="font-weight:600;margin:6px 0 8px">ความพึงพอใจหลังการขาย</div><div class="kv">' + sl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
+      }
     } else {
       html += '<div class="muted" style="margin-bottom:16px">' + (sv ? 'มีชื่อในไฟล์แบบสอบถาม แต่ยังไม่ได้ทำ' : 'ยังไม่มีข้อมูลแบบสอบถาม') + '</div>';
     }
   }
+  if(h && currentUser && currentUser.isAdmin) html += '<div style="font-weight:600;margin:6px 0 8px">ไฟล์จากนิติ</div><div id="dFiles" class="muted" style="margin-bottom:16px">กำลังโหลด…</div>';
   html += '<div style="font-weight:600;margin:6px 0 8px">ประวัติแจ้งซ่อม (' + reps.length + ' รายการ)</div>';
   html += reps.length ? reps.map(function(r){
     var pill = r.st === 'closed' ? '<span class="pill good">ปิดแล้ว ' + thDate(r.sign) + '</span>' : r.st === 'done' ? '<span class="pill warn">รอลูกค้าเซ็นปิด</span>' : '<span class="pill bad">กำลังดำเนินการ</span>';
@@ -857,6 +960,32 @@ function openHouse(id){
   }).join('') : '<div class="muted">ยังไม่มีงานแจ้งซ่อมในระบบ CSM</div>';
   $('dBody').innerHTML = html;
   $('scrim').hidden = false; $('drawer').hidden = false;
+  if(h && currentUser && currentUser.isAdmin && db) loadHouseFiles(id);
+}
+// admin only: questionnaire scans and resident photos uploaded from juristic.html
+function loadHouseFiles(id){
+  db.collection('resident_files').where('h', '==', id).get().then(function(qs){
+    var fs = []; qs.forEach(function(d){ var f = d.data(); f.id = d.id; fs.push(f); });
+    var el = $('dFiles'); if(!el) return;
+    if(!fs.length){ el.textContent = 'ยังไม่มีไฟล์'; return; }
+    el.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px">' + fs.map(function(f){
+      return '<a href="#" data-f="' + f.id + '" title="' + esc(f.name) + '" style="display:block;width:92px;text-decoration:none;color:var(--text-secondary);font-size:11px">' +
+        (f.thumb ? '<img src="' + f.thumb + '" style="width:92px;height:72px;object-fit:cover;border-radius:8px;display:block" alt="">' : '<div style="width:92px;height:72px;border-radius:8px;background:var(--surface-2);display:grid;place-items:center;font-size:24px">📄</div>') +
+        '<div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (f.kind === 'photo' ? 'รูปลูกบ้าน' : 'แบบสอบถาม') + '</div></a>';
+    }).join('') + '</div>';
+    Array.prototype.forEach.call(el.querySelectorAll('a[data-f]'), function(a){
+      a.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var f = fs.filter(function(x){ return x.id === a.getAttribute('data-f'); })[0];
+        db.collection('resident_file_chunks').where('f', '==', f.id).get().then(function(cq){
+          var parts = []; cq.forEach(function(d){ var c = d.data(); parts[c.i] = c.data; });
+          var bin = atob(parts.join('')), arr = new Uint8Array(bin.length);
+          for(var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          window.open(URL.createObjectURL(new Blob([arr], {type:f.mime})), '_blank');
+        });
+      });
+    });
+  }).catch(function(err){ var el = $('dFiles'); if(el) el.textContent = 'โหลดไฟล์ไม่สำเร็จ: ' + fbMsg(err); });
 }
 function closeHouse(){ $('scrim').hidden = true; $('drawer').hidden = true; }
 $('dClose').addEventListener('click', closeHouse);
@@ -885,6 +1014,8 @@ function renderAll(){
 
 function setSnapshot(snap){
   S = snap;
+  // warranty / overdue counts follow the viewer's real date, not the day the file was built
+  var _n = new Date(); S.today = _n.getFullYear() + '-' + String(_n.getMonth()+1).padStart(2,'0') + '-' + String(_n.getDate()).padStart(2,'0');
   houseById = {}; repairsByHouse = {};
   S.houses.forEach(function(h){ houseById[h.id] = h; });
   S.repairs.forEach(function(r){ (repairsByHouse[r.h] = repairsByHouse[r.h] || []).push(r); });
@@ -915,7 +1046,20 @@ function loadSnapshot(){
     var snap = JSON.parse(parts.meta.json);
     snap.houses = parts.houses ? JSON.parse(parts.houses.json) : [];
     snap.repairs = parts.repairs ? JSON.parse(parts.repairs.json) : [];
-    setSnapshot(snap);
+    // live answers recorded by juristic staff (juristic.html) override the questionnaire file
+    return db.collection('resident_records').get().then(function(rs){
+      var byId = {}; snap.houses.forEach(function(h){ byId[h.id] = h; });
+      snap.juristicCount = 0;
+      rs.forEach(function(d){
+        var r = d.data(), h = byId[d.id];
+        if(!h) return;
+        var sv = {surveyed:'Y', src:'juristic', updatedAt: r.updatedAt && r.updatedAt.toDate ? r.updatedAt.toDate().toISOString().slice(0,10) : ''};
+        ['occ','stay','people','kids','school','bus','elder','pets','pet_type','maid','driver','cars','motos','factors','extend','want','like','improve','addr','lang','maid_n','driver_n','vtypes','vbrands','svdate'].forEach(function(k){ if(r[k] !== undefined && r[k] !== '') sv[k] = String(r[k]); });
+        if(r.occ === 'ยังไม่เข้าอยู่'){ sv.moved = 'N'; delete sv.occ; }
+        sv.consent = r.consent || {}; sv.files = r.files || {}; if(r.sat) sv.sat = r.sat;
+        h.sv = sv; snap.juristicCount++;
+      });
+    }).catch(function(err){ console.warn('resident_records', err); }).then(function(){ setSnapshot(snap); });
   }).catch(function(err){
     console.error(err);
     $('loading').hidden = true; $('noData').hidden = false;
@@ -940,7 +1084,7 @@ function onUser(user){
     }
     currentUser = {uid:user.uid, email:user.email, name:p.displayName || user.email, isAdmin:!!p.isAdmin};
     $('userChip').textContent = currentUser.name;
-    $('uploadBtn').hidden = !currentUser.isAdmin;
+    $('uploadBtn').hidden = !currentUser.isAdmin; $('jurLink').hidden = !currentUser.isAdmin;
     $('gate').hidden = true; $('app').hidden = false;
     loadSnapshot();
   }).catch(function(err){
@@ -1001,6 +1145,13 @@ $('upGo').addEventListener('click', function(){
   b.set(db.collection(COLL).doc('houses'), {json: JSON.stringify(pending.houses), updatedAt: stamp, updatedBy: by});
   b.set(db.collection(COLL).doc('repairs'), {json: JSON.stringify(pending.repairs), updatedAt: stamp, updatedBy: by});
   b.set(db.collection(COLL).doc('meta'), {json: JSON.stringify(meta), updatedAt: stamp, updatedBy: by});
+  var perP = {};
+  pending.houses.forEach(function(h){
+    var x = {id:h.id, ow:h.ow, td:h.td, co:h.co};
+    if(h.sv) x.sv = h.sv;
+    (perP[h.p] = perP[h.p] || []).push(x);
+  });
+  Object.keys(perP).forEach(function(p){ b.set(db.collection('juristic_houses').doc(p), {json: JSON.stringify(perP[p]), updatedAt: stamp, updatedBy: by}); });
   b.commit().then(function(){
     $('upOk').textContent = 'อัปโหลดเรียบร้อย'; $('upOk').hidden = false;
     setTimeout(function(){ $('upModal').hidden = true; loadSnapshot(); }, 700);
