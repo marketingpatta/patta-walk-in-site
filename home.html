@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>PATTA เมนูรวมระบบ</title>
-<!-- PATTA hub: menu page shown before the individual dashboards.
+<!-- PATTA hub: menu page shown before the individual dashboards (permissions set in index.html > จัดการผู้ใช้งาน > เข้าถึงแท็บใดได้บ้าง).
      Contains NO customer data. Same Firebase project / accounts as the Walk-in Tracker.
      A card is shown only if the signed-in profile may open that system:
-       Walk-in Tracker  -> any profile
-       Event Mode       -> any profile
+       Walk-in Tracker  -> admin, or at least one Tracker tab ticked
+       Event Mode       -> admin, or profile whose "tabs" list includes "event"
        PATTA ลูกบ้าน     -> admin, or profile whose "tabs" list includes "residents"
      To add a system: add one object to CARDS below. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -127,16 +127,19 @@ var ICONS = {
 };
 function isAdmin(p){ return !!(p && p.isAdmin); }
 function hasTab(p, k){ return Array.isArray(p && p.tabs) && p.tabs.indexOf(k) >= 0; }
+// Tracker access = at least one of the Tracker's own tabs ticked in "จัดการผู้ใช้งาน"
+var TRACKER_TABS = ['overview','trends','salesstatus','projectprofile','salesperf','customerdata'];
+function hasAnyTrackerTab(p){ return TRACKER_TABS.some(function(k){ return hasTab(p,k); }); }
 var CARDS = [
   { key:'tracker', color:'var(--c1)', href:'./', title:'PATTA Walk-in Tracker',
     desc:'ลูกค้า Walk-in รายโครงการ ผลงานเซล สถานะการขาย และการติดตามลูกค้า',
-    tag:'ทีมขาย / การตลาด', allow:function(p){ return !!p; } },
+    tag:'ทีมขาย / การตลาด', allow:function(p){ return isAdmin(p) || hasAnyTrackerTab(p); } },
   { key:'residents', color:'var(--c2)', href:'residents.html', title:'PATTA ลูกบ้าน',
     desc:'ลูกค้าที่รับโอนกรรมสิทธิ์แล้ว ภาพรวมลูกบ้าน งานหลังการขาย การแจ้งซ่อม และประกัน',
     tag:'หลังการขาย', allow:function(p){ return isAdmin(p) || hasTab(p,'residents'); } },
   { key:'event', color:'var(--c3)', href:'event.html', title:'PATTA Event Mode',
     desc:'เช็คอินหน้างานอีเวนต์ รายชื่อลงทะเบียนล่วงหน้า Walk-in หน้างาน และบันทึกลูกค้า',
-    tag:'งาน 20–21 พ.ย. 2569', allow:function(p){ return !!p; } }
+    tag:'งาน 20–21 พ.ย. 2569', allow:function(p){ return isAdmin(p) || hasTab(p,'event'); } }
 ];
 
 function $(id){ return document.getElementById(id); }
