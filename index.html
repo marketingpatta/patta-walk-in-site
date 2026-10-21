@@ -769,6 +769,10 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div class="form-error" id="firstAdminError" hidden></div>
       <button type="submit" class="btn primary auth-submit" id="firstAdminSubmitBtn">สร้างบัญชีผู้ดูแลระบบ</button>
     </form>
+    <div id="noTrackerAccess" hidden>
+      <div class="form-error" style="margin-bottom:14px">บัญชีนี้ยังไม่ได้รับสิทธิ์เข้า Walk-in Tracker<br>กรุณาติดต่อแอดมิน หรือเลือกระบบอื่นจากเมนูรวม</div>
+      <div style="display:flex; gap:8px; justify-content:center;"><button type="button" class="btn" id="noTrackerHub">☰ เมนูรวม</button><button type="button" class="btn" id="noTrackerLogout">ออกจากระบบ</button></div>
+    </div>
     <div id="authUnavailable" class="form-error" hidden>ไม่สามารถเชื่อมต่อระบบล็อกอินได้ในขณะนี้ กรุณาลองรีเฟรชหน้านี้อีกครั้ง</div>
   </div>
 </div>
@@ -7485,6 +7489,14 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       }
       var body = snap.data() || {};
       currentUser = { uid: user.uid, email: user.email, displayName: body.displayName || user.email, isAdmin: !!body.isAdmin, tabs: allowedTabsFor({isAdmin: !!body.isAdmin, tabs: body.tabs}) };
+      var __trackerKeys = ['overview','trends','salesstatus','projectprofile','salesperf','customerdata'];
+      if(!currentUser.isAdmin && !currentUser.tabs.some(function(k){ return __trackerKeys.indexOf(k) >= 0; })){
+        authLoading.hidden = true; authForm.hidden = true; firstAdminForm.hidden = true; authUnavailable.hidden = true;
+        document.getElementById('noTrackerAccess').hidden = false;
+        authGate.hidden = false;
+        return;
+      }
+      document.getElementById('noTrackerAccess').hidden = true;
       applyLoggedInUI();
       authGate.hidden = true;
       wireManualListener();
@@ -7535,6 +7547,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       authUnavailable.textContent = 'เชื่อมต่อฐานข้อมูลไม่สำเร็จ: ' + firebaseErrMsg(err);
     });
 
+    document.getElementById('noTrackerHub').addEventListener('click', function(){ location.href = 'home.html'; });
+    document.getElementById('noTrackerLogout').addEventListener('click', function(){ authSvc.signOut(); });
     authSvc.onAuthStateChanged(function(user){
       authResolved = true;
       authSubmitBtn.disabled = false;
@@ -7542,6 +7556,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       unwireLiveData();
       if(!user){
         currentUser = null;
+        document.getElementById('noTrackerAccess').hidden = true;
         authGate.hidden = false;
         authUserChip.hidden = true; manageUsersBtn.hidden = true; manageSalesEmailsBtn.hidden = true; uploadBackendBtn.hidden = true; document.getElementById('tabBtnCustomerData').hidden = true; logoutBtn.hidden = true;
         trashBtn.hidden = true; addEntryBtn.hidden = true; followupHistoryBtn.hidden = true;
