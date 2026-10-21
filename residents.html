@@ -232,7 +232,7 @@
     </div>
     <div class="top-actions">
       <span class="chip" id="erpChip" hidden>ERP <b id="erpStamp"></b></span>
-      <span class="chip" id="csmChip" hidden>งานซ่อม CSM <b id="csmStamp"></b></span>
+      <span class="chip" id="csmChip" hidden>งานซ่อม CSM ข้อมูลถึง <b id="csmLatest"></b> · ดึงเมื่อ <b id="csmStamp"></b></span>
       <span class="chip" id="svChip" hidden>แบบสอบถาม <b id="svStamp"></b></span>
       <a class="btn" href="home.html" style="text-decoration:none">☰ เมนูรวม</a><a class="btn" href="./">← Walk-in Tracker</a>
       <a class="btn" href="juristic.html" id="jurLink" hidden style="text-decoration:none">ฟอร์มนิติ</a>
@@ -683,7 +683,7 @@ function renderService(){
   renderSat(); renderSla(); renderWar();
   $('svNote').innerHTML =
     (noCsm ? '<b>' + esc(pname(projSel)) + '</b> ยังไม่มีงานแจ้งซ่อมในระบบ CSM · ' : '') +
-    'ข้อมูลงานซ่อมมาจาก Mango CSM (มีเฉพาะ ' + Object.keys(csmProj).map(pname).join(', ') + ' เริ่มบันทึกตั้งแต่ ' + thDate(firstM) + ') · ' +
+    'ข้อมูลงานซ่อมมาจาก Mango CSM (มีเฉพาะ ' + Object.keys(csmProj).map(pname).join(', ') + ' เริ่มบันทึกตั้งแต่ ' + thDate(firstM) + (S.csmLatest ? ' ถึง ' + thDate(S.csmLatest) : '') + ') · ' +
     (projLevel ? fmt(projLevel) + ' รายการแจ้งระดับโครงการ ไม่ระบุแปลง · ' : '') +
     (notTransferred ? fmt(notTransferred) + ' รายการเป็นแปลงที่ยังไม่มีสถานะโอนใน ERP · ' : '') +
     'ประกันคิดจากวันเริ่มประกันที่ลงทะเบียนใน Mango ถ้ามี ไม่งั้นใช้วันโอน (โครงสร้าง ' + S.warranty.structYears + ' ปี · งานอื่น ' + S.warranty.generalYears + ' ปี ตามมาสเตอร์ประกัน Mango)';
@@ -709,7 +709,7 @@ function renderSla(){
   var qaAll = []; qa.forEach(function(r){ r.qa.forEach(function(v){ if(v != null) qaAll.push(v); }); });
   var avg = function(a){ return a.length ? a.reduce(function(x,y){ return x+y; }, 0) / a.length : null; };
   if(!rs.length){ $('slaSub').textContent = 'ไม่มีงานซ่อมในตัวกรองนี้'; $('slaKpis').innerHTML = ''; $('slaCat').innerHTML = ''; $('slaQa').innerHTML = ''; return; }
-  $('slaSub').textContent = 'นับรายบรรทัดงานซ่อม ' + fmt(rs.length) + ' รายการ · "กำหนด" คือ SLA ที่ระบบ CSM ตั้งให้อัตโนมัติ = วันแจ้ง + 10 วัน งานด่วน 3 วัน (ไม่ใช่วันนัดลูกค้า) · งานที่ยังไม่ปิดนับถึงวันนี้ · วันช่างเข้า-ออก การตีกลับ และ QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : '');
+  $('slaSub').textContent = (S.csmLatest ? 'ข้อมูลงานซ่อมถึง ' + thDate(S.csmLatest) + ' (ใบงานล่าสุดในระบบ CSM) · ' : '') + 'นับรายบรรทัดงานซ่อม ' + fmt(rs.length) + ' รายการ · "กำหนด" คือ SLA ที่ระบบ CSM ตั้งให้อัตโนมัติ = วันแจ้ง + 10 วัน งานด่วน 3 วัน (ไม่ใช่วันนัดลูกค้า) · งานที่ยังไม่ปิดนับถึงวันนี้ · วันช่างเข้า-ออก การตีกลับ และ QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : '');
   var f1 = function(v){ return v == null ? '–' : (Math.round(v*10)/10).toString(); };
   kpis($('slaKpis'), [
     {l:'เลย SLA', v: withDue.length ? pct(lateL.length, withDue.length) + '%' : '–', s: fmt(lateL.length) + ' จาก ' + fmt(withDue.length) + ' รายการ · ยังไม่ปิด ' + fmt(openLate.length), cls: withDue.length && lateL.length/withDue.length > 0.3 ? 'warn' : ''},
@@ -1060,7 +1060,7 @@ function setSnapshot(snap){
   S.houses.forEach(function(h){ houseById[h.id] = h; });
   S.repairs.forEach(function(r){ (repairsByHouse[r.h] = repairsByHouse[r.h] || []).push(r); });
   if(S.erpUpdated){ $('erpStamp').textContent = S.erpUpdated.slice(0,16); $('erpChip').hidden = false; }
-  if(S.csmUpdated){ $('csmStamp').textContent = S.csmUpdated.slice(0,16); $('csmChip').hidden = false; }
+  if(S.csmUpdated){ $('csmStamp').textContent = S.csmUpdated.slice(0,16); $('csmLatest').textContent = S.csmLatest ? thDate(S.csmLatest) : '–'; $('csmChip').hidden = false; }
   if(S.surveyUpdated){ $('svStamp').textContent = S.surveyUpdated.slice(0,10); $('svChip').hidden = false; }
   $('loading').hidden = true; $('noData').hidden = true;
   renderAll();
