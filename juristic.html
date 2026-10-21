@@ -226,7 +226,7 @@
   </div>
   <div class="tools">
     <input class="search" id="q" placeholder="ค้นหารหัสบ้าน บ้านเลขที่ หรือชื่อ">
-    <select id="fStatus"><option value="">ทุกหลัง</option><option value="todo">ยังไม่มีข้อมูล</option><option value="done">มีข้อมูลแล้ว</option><option value="nophoto">ยังไม่มีรูปลูกบ้าน</option></select>
+    <select id="fStatus"><option value="">ทุกหลัง</option><option value="todo">ยังไม่มีข้อมูล</option><option value="done">มีข้อมูลแล้ว</option><option value="nophoto">ยังไม่มีรูปลูกบ้าน</option><option value="nosat">ยังไม่มีแบบประเมินหลังการขาย</option><option value="wardue">ถึงรอบประเมินประกันครบปี</option></select>
   </div>
   <div id="loading" class="empty">กำลังโหลดรายชื่อบ้าน…</div>
   <div class="list" id="list"></div>
@@ -240,7 +240,7 @@
       <button class="x" id="fClose" aria-label="ปิด">×</button>
     </div>
     <nav class="jump" id="jump">
-      <a href="#s_files">ไฟล์</a><a href="#s_contact">ผู้ติดต่อ</a><a href="#s_q">แบบสอบถามวันโอน</a><a href="#s_sat">ความพึงพอใจ</a><a href="#s_pdpa">PDPA</a>
+      <a href="#s_files">ไฟล์</a><a href="#s_contact">ผู้ติดต่อ</a><a href="#s_q">แบบสอบถามวันโอน</a><a href="#s_sat">พึงพอใจหลังการขาย</a><a href="#s_war">ประกันครบปี</a><a href="#s_pdpa">PDPA</a>
     </nav>
     <form class="sheet-body" id="form" autocomplete="off">
       <div class="prefill" id="prefillNote" hidden></div>
@@ -328,6 +328,20 @@
           <div class="sub" id="w_issue"><textarea id="s_issueText" class="inp" rows="2" placeholder="ปัญหาที่ลูกค้าระบุ"></textarea></div></div>
         <div class="q"><div class="qt"><b>2.2</b> ข้อเสนอแนะต่อผลิตภัณฑ์และบริการ</div><textarea id="s_suggest" class="inp" rows="2"></textarea></div>
         <div class="q"><div class="qt"><b>2.3</b> จะแนะนำ PATTA ให้เพื่อนหรือคนรู้จักไหม</div><div class="opts" data-r="s_rec"></div></div>
+        <div class="q"><div class="qt">วันที่ลูกค้าลงชื่อ</div><input type="date" id="s_date" class="inp" style="max-width:220px"></div>
+      </details>
+
+      <!-- 1-year warranty satisfaction survey (แบบประเมินความพึงพอใจการให้บริการประกันครบปี) -->
+      <details class="section part" id="s_war">
+        <summary><span class="section-title">แบบประเมินประกันครบปี</span><span class="muted" id="warSum"> · ทำเมื่อเก็บงานประกันครบ 1 ปี</span></summary>
+        <div class="section-sub" style="margin-top:6px">5 = พึงพอใจมากที่สุด · 1 = น้อยมาก · กดซ้ำเพื่อล้าง</div>
+        <div class="q"><div class="qt"><b>1.1</b> ภาพรวมโครงการ สภาพแวดล้อม ความปลอดภัย และงานบริการโดยรวม</div><div class="rate" data-s="w1"></div></div>
+        <div class="q"><div class="qt"><b>1.2</b> คุณภาพโดยรวมของบ้าน หลังอยู่อาศัยครบ 1 ปี</div><div class="rate" data-s="w2"></div></div>
+        <div class="q"><div class="qt"><b>1.3</b> การแก้ไขและซ่อมแซมระหว่างเก็บงานประกัน</div><div class="rate" data-s="w3"></div></div>
+        <div class="q"><div class="qt"><b>1.4</b> เจ้าหน้าที่ดูแลโครงการ (Customer Service)</div><div class="rate" data-s="w4"></div><input id="w_cso" class="inp" placeholder="ชื่อเจ้าหน้าที่ดูแลโครงการ"></div>
+        <div class="q"><div class="qt"><b>1.5</b> เจ้าหน้าที่ควบคุมงานก่อสร้าง (QC)</div><div class="rate" data-s="w5"></div><input id="w_qc" class="inp" placeholder="ชื่อเจ้าหน้าที่ควบคุมงานก่อสร้าง"></div>
+        <div class="q"><div class="qt"><b>2.</b> ข้อเสนอแนะเพิ่มเติม</div><textarea id="w_suggest" class="inp" rows="2"></textarea></div>
+        <div class="q"><div class="qt">วันที่ลูกค้าลงชื่อ</div><input type="date" id="w_date" class="inp" style="max-width:220px"></div>
       </details>
 
       <div class="section" id="s_pdpa">
@@ -525,6 +539,8 @@ function renderList(){
     if(st === 'todo' && r) return false;
     if(st === 'done' && !r) return false;
     if(st === 'nophoto' && photoCount(h.id)) return false;
+    if(st === 'nosat' && r && r.sat) return false;
+    if(st === 'wardue' && !warDue(h)) return false;
     return true;
   });
   $('list').innerHTML = rows.length ? rows.map(function(h){
@@ -532,7 +548,7 @@ function renderList(){
     var pill = r ? '<span class="pill good">มีข้อมูล · ' + esc(r.occ || '') + '</span>' : (h.sv && h.sv.surveyed === 'Y' ? '<span class="pill warn">มีแบบสอบถามเดิม ยังไม่ยืนยัน</span>' : '<span class="pill mute">ยังไม่มีข้อมูล</span>');
     return '<button class="hcard" data-id="' + h.id + '"><span class="hid">' + h.id + (r && r.addr ? ' <span class="muted" style="font-family:inherit;font-weight:400">· ' + esc(r.addr) + '</span>' : '') + '</span>' +
       '<span class="ow">' + esc((c && c.name) || h.ow || '–') + '</span>' +
-      '<span>' + pill + '</span>' +
+      '<span>' + pill + (r && r.sat ? ' <span class="pill good">พึงพอใจ</span>' : '') + (r && r.war ? ' <span class="pill good">ประกันครบปี</span>' : (warDue(h) ? ' <span class="pill warn">ถึงรอบประกันครบปี</span>' : '')) + '</span>' +
       '<span class="muted">' + (h.td ? 'โอน ' + thDate(h.td) : '') + (nf ? ' · ไฟล์ ' + nf + (np ? ' (รูป ' + np + ')' : '') : '') + '</span></button>';
   }).join('') : '<div class="empty">ไม่พบบ้านตามเงื่อนไข</div>';
   Array.prototype.forEach.call($('list').querySelectorAll('.hcard'), function(b){ b.addEventListener('click', function(){ openForm(b.getAttribute('data-id')); }); });
@@ -648,6 +664,8 @@ function syncVis(){
   $('facCnt').textContent = nf ? 'เลือกแล้ว ' + nf + '/3' : ''; $('facCnt').className = 'cnt' + (nf > 3 ? ' over' : '');
   var sc = ['r1','r2','r3','r4','r5'].map(getS).filter(function(x){ return x != null; });
   $('satSum').textContent = sc.length ? ' · ให้คะแนนแล้ว ' + sc.length + '/5 ข้อ' + (getR('s_rec') ? ' · ' + getR('s_rec') : '') : ' · ถ้ามีกระดาษแผ่นนี้';
+  var wc = ['w1','w2','w3','w4','w5'].map(getS).filter(function(x){ return x != null; });
+  $('warSum').textContent = wc.length ? ' · ให้คะแนนแล้ว ' + wc.length + '/5 ข้อ' : (cur && warDue(cur) ? ' · ถึงรอบประเมินแล้ว' : ' · ทำเมื่อเก็บงานประกันครบ 1 ปี');
   var ok = $('k_photo').checked;
   ['lbPhotoCam','lbPhoto'].forEach(function(id){ $(id).style.opacity = ok ? '' : '.45'; $(id).style.pointerEvents = ok ? '' : 'none'; });
   $('photoLock').hidden = ok;
@@ -676,6 +694,12 @@ function getVehicles(){
 }
 $('addVeh').addEventListener('click', function(){ addVehicle(); });
 
+// 1-year warranty evaluation is due from 11 months to 2 years after transfer, until it is recorded
+function warDue(h){
+  if(!h || !h.td || (recs[h.id] && recs[h.id].war)) return false;
+  var d = new Date(h.td + 'T00:00:00'), old = new Date(); d.setMonth(d.getMonth() + 11); old.setFullYear(old.getFullYear() - 2);
+  return d <= new Date() && new Date(h.td + 'T00:00:00') >= old;          // โอนมาแล้ว 11 เดือน ถึง 2 ปี
+}
 // ---------- open / save ----------
 function setVal(id, v){ var el = $(id); if(el) el.value = v == null ? '' : v; }
 function normHelp(v){ if(!v) return ''; if(/^ไม่มี/.test(v)) return 'ไม่มี'; if(/ไม่ได้พัก/.test(v)) return 'มี แต่ไม่ได้พักในโครงการ'; return 'มี (พักในโครงการ)'; }
@@ -703,6 +727,11 @@ function openForm(id){
   setVal('s_sales', s.sales); setVal('s_qc', s.qc); setVal('s_cso', s.cso); setVal('s_issueText', s.issueText); setVal('s_suggest', s.suggest);
   setR('s_issue', s.issue); setR('s_rec', s.rec);
   $('s_sat').open = !!(r && r.sat);
+  setVal('s_date', s.date);
+  var w = (r && r.war) || {};
+  ['w1','w2','w3','w4','w5'].forEach(function(k){ setS(k, w[k]); });
+  setVal('w_cso', w.cso); setVal('w_qc', w.qc); setVal('w_suggest', w.suggest); setVal('w_date', w.date);
+  $('s_war').open = !!(r && r.war) || warDue(h);
 
   setVal('c_name', c.name); setR('c_rel', c.rel); setVal('c_phone', c.phone); setVal('c_line', c.line); setVal('c_email', c.email);
   setVal('c_rentuntil', c.rentUntil); setVal('c_busplate', c.busPlate);
@@ -763,8 +792,11 @@ $('fSave').addEventListener('click', function(){
   rec.vbrands = vehicles.map(function(v){ return v.brand; }).filter(Boolean).join('|');
   var sat = {r1:getS('r1'), r2:getS('r2'), r3:getS('r3'), r4:getS('r4'), r5:getS('r5'),
              sales:$('s_sales').value.trim(), qc:$('s_qc').value.trim(), cso:$('s_cso').value.trim(),
-             issue:getR('s_issue'), issueText: getR('s_issue') === 'ใช่' ? $('s_issueText').value.trim() : '', suggest:$('s_suggest').value.trim(), rec:getR('s_rec')};
+             issue:getR('s_issue'), issueText: getR('s_issue') === 'ใช่' ? $('s_issueText').value.trim() : '', suggest:$('s_suggest').value.trim(), rec:getR('s_rec'), date:$('s_date').value};
   rec.sat = Object.keys(sat).some(function(k){ return sat[k] !== null && sat[k] !== ''; }) ? sat : null;
+  var war = {w1:getS('w1'), w2:getS('w2'), w3:getS('w3'), w4:getS('w4'), w5:getS('w5'),
+             cso:$('w_cso').value.trim(), qc:$('w_qc').value.trim(), suggest:$('w_suggest').value.trim(), date:$('w_date').value};
+  rec.war = Object.keys(war).some(function(k){ return war[k] !== null && war[k] !== ''; }) ? war : null;
 
   var con = {p:p, id:id, name:$('c_name').value.trim(), rel:getR('c_rel'), phone:phone, line:$('c_line').value.trim(), email:$('c_email').value.trim(),
              rentUntil: occ === 'ปล่อยเช่า' ? $('c_rentuntil').value : '', busPlate: rec.bus === 'มี' ? $('c_busplate').value.trim() : '',

@@ -310,10 +310,12 @@
     </div>
     <div class="card full"><div class="card-title">ระยะเวลาและคุณภาพงานซ่อม</div><div class="card-sub" id="slaSub"></div>
       <div class="kpi-grid" id="slaKpis" style="margin:10px 0 14px"></div>
-      <div class="grid2" style="margin:0"><div><div class="card-sub" style="margin-bottom:6px">เสร็จตามกำหนด แยกตามหมวดงาน</div><div class="hbars" id="slaCat"></div></div>
+      <div class="grid2" style="margin:0"><div><div class="card-sub" style="margin-bottom:6px">ปิดภายใน SLA 10 วัน แยกตามหมวดงาน</div><div class="hbars" id="slaCat"></div></div>
         <div><div class="card-sub" style="margin-bottom:6px">คะแนนประเมิน QA ในระบบ CSM รายใบงาน (เฉลี่ยเต็ม 5)</div><div class="hbars" id="slaQa"></div></div></div></div>
     <div class="card full"><div class="card-title">ความพึงพอใจหลังการขาย</div><div class="card-sub" id="satSub"></div>
       <div class="grid2" style="margin:0"><div class="hbars" id="satBars"></div><div id="satIssues"></div></div></div>
+    <div class="card full"><div class="card-title">ความพึงพอใจประกันครบปี</div><div class="card-sub" id="warSub"></div>
+      <div class="grid2" style="margin:0"><div class="hbars" id="warBars"></div><div id="warNotes"></div></div></div>
     <div class="note" id="svNote"></div>
   </section>
   <!-- ---------- community ---------- -->
@@ -678,7 +680,7 @@ function renderService(){
   var projLevel = rs.filter(function(r){ return /000$/.test(r.h); }).length;
   var notTransferred = rs.filter(function(r){ return !/000$/.test(r.h) && !houseById[r.h]; }).length;
   var noCsm = projSel && !csmProj[projSel];
-  renderSat(); renderSla();
+  renderSat(); renderSla(); renderWar();
   $('svNote').innerHTML =
     (noCsm ? '<b>' + esc(pname(projSel)) + '</b> ยังไม่มีงานแจ้งซ่อมในระบบ CSM · ' : '') +
     'ข้อมูลงานซ่อมมาจาก Mango CSM (มีเฉพาะ ' + Object.keys(csmProj).map(pname).join(', ') + ' เริ่มบันทึกตั้งแต่ ' + thDate(firstM) + ') · ' +
@@ -690,30 +692,35 @@ function renderService(){
 
 // repair timing & quality — dates from CSM; worker dates, sendbacks and QA from Khun Runruk's t_mg_csr_* tables
 function renderSla(){
+  // definitions match Khun Runruk's CSM aging report (csm_repair_aging.py): unit = repair line,
+  // overdue/age use today for lines not closed yet; CSM sets due = report date + 10 days automatically (system SLA)
   var rs = R().filter(function(r){ return !/000$/.test(r.h); });
-  var withDue = rs.filter(function(r){ return r.done && r.due; });
-  var onTime = withDue.filter(function(r){ return r.done <= r.due; });
-  var late = withDue.filter(function(r){ return r.done > r.due; }).map(function(r){ return days(r.due, r.done); });
+  var endOf = function(r){ return r.done || S.today; };
+  var slaOf = function(r){ return r.sla || r.due; };
+  var withDue = rs.filter(function(r){ return slaOf(r); });
+  var lateL = withDue.filter(function(r){ return endOf(r) > slaOf(r); });
+  var lateD = lateL.map(function(r){ return days(slaOf(r), endOf(r)); });
+  var age = rs.filter(function(r){ return r.d; }).map(function(r){ return days(r.d, endOf(r)); }).filter(function(v){ return v >= 0; });
   var wait = rs.filter(function(r){ return r.ws && r.d; }).map(function(r){ return days(r.d, r.ws); }).filter(function(v){ return v >= 0; });
   var dur = rs.filter(function(r){ return r.ws && r.we; }).map(function(r){ return days(r.ws, r.we); }).filter(function(v){ return v >= 0; });
-  var openLate = rs.filter(function(r){ return r.st === 'open' && r.due && r.due < S.today; });
+  var openLate = lateL.filter(function(r){ return !r.done; });
   var rej = rs.filter(function(r){ return r.rej; });
   var qa = rs.filter(function(r){ return r.qa; });
   var qaAll = []; qa.forEach(function(r){ r.qa.forEach(function(v){ if(v != null) qaAll.push(v); }); });
   var avg = function(a){ return a.length ? a.reduce(function(x,y){ return x+y; }, 0) / a.length : null; };
   if(!rs.length){ $('slaSub').textContent = 'ไม่มีงานซ่อมในตัวกรองนี้'; $('slaKpis').innerHTML = ''; $('slaCat').innerHTML = ''; $('slaQa').innerHTML = ''; return; }
-  $('slaSub').textContent = 'งานซ่อม ' + fmt(rs.length) + ' รายการ · วันกำหนดและวันเสร็จจาก CSM · วันช่างเข้า-ออก การตีกลับ และคะแนน QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : ' (ยังไม่มีไฟล์)');
-  var md = function(a){ var m = median(a); return m == null ? '–' : (Math.round(m*10)/10).toString(); };
+  $('slaSub').textContent = 'นับรายบรรทัดงานซ่อม ' + fmt(rs.length) + ' รายการ · "กำหนด" คือ SLA ที่ระบบ CSM ตั้งให้อัตโนมัติ = วันแจ้ง + 10 วัน งานด่วน 3 วัน (ไม่ใช่วันนัดลูกค้า) · งานที่ยังไม่ปิดนับถึงวันนี้ · วันช่างเข้า-ออก การตีกลับ และ QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : '');
+  var f1 = function(v){ return v == null ? '–' : (Math.round(v*10)/10).toString(); };
   kpis($('slaKpis'), [
-    {l:'เสร็จตามกำหนด', v: withDue.length ? pct(onTime.length, withDue.length) + '%' : '–', s: fmt(onTime.length) + ' จาก ' + fmt(withDue.length) + ' รายการที่เสร็จแล้ว', cls: withDue.length && onTime.length/withDue.length < 0.7 ? 'warn' : ''},
-    {l:'เลยกำหนด (ค่ากลาง)', v: md(late), u: late.length ? 'วัน' : '', s: fmt(late.length) + ' รายการเสร็จช้ากว่ากำหนด'},
-    {l:'รอช่างเข้า (ค่ากลาง)', v: md(wait), u: wait.length ? 'วัน' : '', s: 'นับจากวันแจ้ง · ' + fmt(wait.length) + ' รายการ'},
-    {l:'ช่างใช้เวลาซ่อม (ค่ากลาง)', v: md(dur), u: dur.length ? 'วัน' : '', s: 'วันเริ่มถึงวันจบงาน'},
-    {l:'ค้างเกินกำหนด', v: fmt(openLate.length), u:'รายการ', s: 'ยังไม่ปิด และเลยวันกำหนดแล้ว', cls: openLate.length ? 'bad' : ''},
+    {l:'เลย SLA', v: withDue.length ? pct(lateL.length, withDue.length) + '%' : '–', s: fmt(lateL.length) + ' จาก ' + fmt(withDue.length) + ' รายการ · ยังไม่ปิด ' + fmt(openLate.length), cls: withDue.length && lateL.length/withDue.length > 0.3 ? 'warn' : ''},
+    {l:'เลยกำหนดเฉลี่ย', v: f1(avg(lateD)), u: lateD.length ? 'วัน' : '', s: 'ค่ากลาง ' + f1(median(lateD)) + ' วัน · นานสุด ' + (lateD.length ? Math.max.apply(null, lateD) : '–') + ' วัน'},
+    {l:'อายุงาน แจ้ง→ปิด', v: f1(avg(age)), u: age.length ? 'วัน' : '', s: 'ค่ากลาง ' + f1(median(age)) + ' วัน'},
+    {l:'รอช่างเข้าเฉลี่ย', v: f1(avg(wait)), u: wait.length ? 'วัน' : '', s: 'ค่ากลาง ' + f1(median(wait)) + ' วัน · ' + fmt(wait.length) + ' รายการ'},
+    {l:'ช่างซ่อมเฉลี่ย', v: f1(avg(dur)), u: dur.length ? 'วัน' : '', s: 'ค่ากลาง ' + f1(median(dur)) + ' วัน (เริ่ม→จบงาน)'},
     {l:'ถูกตีกลับ / QA', v: fmt(rej.length), u:'รายการ', s: 'QA เฉลี่ย ' + (qaAll.length ? avg(qaAll).toFixed(2) : '–') + '/5 จาก ' + fmt(qa.length) + ' ใบงาน'}
   ]);
   var byCat = {};
-  withDue.forEach(function(r){ var c = byCat[r.cat] = byCat[r.cat] || {n:0, ok:0}; c.n++; if(r.done <= r.due) c.ok++; });
+  withDue.forEach(function(r){ var c = byCat[r.cat] = byCat[r.cat] || {n:0, ok:0}; c.n++; if(endOf(r) <= slaOf(r)) c.ok++; });
   $('slaCat').innerHTML = Object.keys(byCat).sort(function(a,b){ return byCat[b].n - byCat[a].n; }).map(function(k){
     var c = byCat[k], w = c.ok*100/c.n;
     return '<div class="hbar"><div class="lab">' + esc(k) + '</div><div class="track"><div class="fill" style="width:' + w + '%;background:' + (w >= 70 ? 'var(--good)' : w >= 50 ? 'var(--warning)' : 'var(--critical)') + '"></div></div><div class="val">' + Math.round(w) + '%<span>' + fmt(c.n) + '</span></div></div>';
@@ -723,6 +730,33 @@ function renderSla(){
     var a = avg(v);
     return '<div class="hbar"><div class="lab">ข้อ ' + (i+1) + '</div><div class="track"><div class="fill" style="width:' + (a ? a*20 : 0) + '%;background:var(--good)"></div></div><div class="val">' + (a ? a.toFixed(2) : '–') + '<span>' + fmt(v.length) + '</span></div></div>';
   }).join('') + '<div class="note" style="margin-top:8px">ระบบ CSM เก็บแค่เลขข้อ 1–4 ไม่มีข้อความคำถามในไฟล์ที่ดึงมา</div>' : '<div class="empty">ยังไม่มีคะแนน QA</div>';
+}
+
+// 1-year warranty satisfaction (paper "แบบประเมินความพึงพอใจการให้บริการประกันครบปี", keyed in by juristic staff)
+function renderWar(){
+  var all = H();
+  var hs = all.filter(function(h){ return h.sv && h.sv.war; });
+  var due = all.filter(function(h){
+    if(!h.td || (h.sv && h.sv.war)) return false;
+    var d = new Date(h.td + 'T00:00:00'); d.setMonth(d.getMonth() + 11);
+    return d.toISOString().slice(0,10) <= S.today && h.td >= String(+S.today.slice(0,4) - 2) + S.today.slice(4);
+  });
+  var topics = [['w1','ภาพรวมโครงการ / ความปลอดภัย'],['w2','คุณภาพบ้านหลังอยู่ครบ 1 ปี'],['w3','การซ่อมระหว่างประกัน'],['w4','เจ้าหน้าที่ดูแลโครงการ'],['w5','เจ้าหน้าที่ควบคุมงานก่อสร้าง']];
+  $('warSub').textContent = 'นิติบันทึกแล้ว ' + fmt(hs.length) + ' หลัง · ถึงรอบประเมินแต่ยังไม่มีข้อมูล ' + fmt(due.length) + ' หลัง (โอนมาแล้ว 11 เดือน–2 ปี) · คะแนนเฉลี่ยเต็ม 5';
+  if(!hs.length){ $('warBars').innerHTML = '<div class="empty">ยังไม่มีแบบประเมินที่นิติบันทึก</div>'; $('warNotes').innerHTML = ''; return; }
+  $('warBars').innerHTML = topics.map(function(t){
+    var v = hs.map(function(h){ return h.sv.war[t[0]]; }).filter(function(x){ return x != null && x !== ''; }).map(Number);
+    var a = v.length ? v.reduce(function(x,y){ return x+y; }, 0) / v.length : 0;
+    var c = !v.length ? 'var(--baseline)' : a >= 4 ? 'var(--good)' : a >= 3 ? 'var(--warning)' : 'var(--critical)';
+    return '<div class="hbar"><div class="lab">' + esc(t[1]) + '</div><div class="track"><div class="fill" style="width:' + (a*20) + '%;background:' + c + '"></div></div><div class="val">' + (v.length ? a.toFixed(1) : '–') + '<span>' + fmt(v.length) + ' หลัง</span></div></div>';
+  }).join('');
+  var notes = hs.filter(function(h){ return h.sv.war.suggest; });
+  $('warNotes').innerHTML = notes.length ? notes.map(function(h){
+    return '<div class="rep"><div class="rhead"><a href="#" class="hid" data-id="' + h.id + '" style="color:var(--accent-ink);text-decoration:none">' + h.id + '</a></div><div class="rdet">' + esc(h.sv.war.suggest) + '</div></div>';
+  }).join('') : '<div class="empty">ไม่มีข้อเสนอแนะที่ลูกค้าระบุ</div>';
+  Array.prototype.forEach.call($('warNotes').querySelectorAll('a[data-id]'), function(a){
+    a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); });
+  });
 }
 
 // after-sales satisfaction survey (paper "แบบสอบถามความพึงพอใจหลังการขาย", keyed in by juristic staff)
@@ -945,6 +979,12 @@ function openHouse(id){
                   ['ข้อเสนอแนะ', st.suggest || ''], ['แนะนำ PATTA ต่อ', st.rec || '']].filter(function(l){ return l[1]; });
         html += '<div style="font-weight:600;margin:6px 0 8px">ความพึงพอใจหลังการขาย</div><div class="kv">' + sl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
       }
+      if(sv.war){
+        var wr = sv.war, wn = ['ภาพรวมโครงการ','คุณภาพบ้าน 1 ปี','การซ่อมประกัน','ดูแลโครงการ','ควบคุมงานก่อสร้าง'];
+        var wl = [['คะแนน (เต็ม 5)', ['w1','w2','w3','w4','w5'].map(function(k, i){ return wr[k] != null ? wn[i] + ' ' + wr[k] : ''; }).filter(Boolean).join(' · ')],
+                  ['ข้อเสนอแนะ', wr.suggest || ''], ['วันที่ประเมิน', wr.date ? thDate(wr.date) : '']].filter(function(l){ return l[1]; });
+        html += '<div style="font-weight:600;margin:6px 0 8px">ประเมินประกันครบปี</div><div class="kv">' + wl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
+      }
     } else {
       html += '<div class="muted" style="margin-bottom:16px">' + (sv ? 'มีชื่อในไฟล์แบบสอบถาม แต่ยังไม่ได้ทำ' : 'ยังไม่มีข้อมูลแบบสอบถาม') + '</div>';
     }
@@ -1056,7 +1096,7 @@ function loadSnapshot(){
         var sv = {surveyed:'Y', src:'juristic', updatedAt: r.updatedAt && r.updatedAt.toDate ? r.updatedAt.toDate().toISOString().slice(0,10) : ''};
         ['occ','stay','people','kids','school','bus','elder','pets','pet_type','maid','driver','cars','motos','factors','extend','want','like','improve','addr','lang','maid_n','driver_n','vtypes','vbrands','svdate'].forEach(function(k){ if(r[k] !== undefined && r[k] !== '') sv[k] = String(r[k]); });
         if(r.occ === 'ยังไม่เข้าอยู่'){ sv.moved = 'N'; delete sv.occ; }
-        sv.consent = r.consent || {}; sv.files = r.files || {}; if(r.sat) sv.sat = r.sat;
+        sv.consent = r.consent || {}; sv.files = r.files || {}; if(r.sat) sv.sat = r.sat; if(r.war) sv.war = r.war;
         h.sv = sv; snap.juristicCount++;
       });
     }).catch(function(err){ console.warn('resident_records', err); }).then(function(){ setSnapshot(snap); });
