@@ -76,6 +76,47 @@
   .muted{ color:var(--text-muted); font-size:14px; }
   .empty{ padding:36px 20px; text-align:center; background:var(--surface); border:1px dashed var(--border-strong); border-radius:16px; color:var(--text-secondary); }
   .foot{ margin-top:30px; font-size:12px; color:var(--text-muted); }
+
+  /* ---- admin: permission matrix ---- */
+  :root{ --warn-bg:#fff4dc; --warn:#8a5a00; --good-bg:#e3f6ec; --good:#0b6b3f; --soft-bg:#eef2f8; --soft:#3a5a8c; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --warn-bg:#3a2d10; --warn:#f0c46a; --good-bg:#10301f; --good:#7ddba8; --soft-bg:#18222f; --soft:#9cc0f0; } }
+  .perm{ margin-top:38px; }
+  .perm h2{ font-size:18px; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .badge{ font-size:12px; border-radius:999px; padding:3px 10px; font-weight:600; display:inline-block; }
+  .b-good{ background:var(--good-bg); color:var(--good); } .b-warn{ background:var(--warn-bg); color:var(--warn); } .b-soft{ background:var(--soft-bg); color:var(--soft); }
+  .perm .lead{ margin:0 0 12px; font-size:14px; }
+  .perm .tools{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .perm .tools input[type=search]{ font:inherit; font-size:14px; padding:7px 11px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-primary); min-width:220px; }
+  .perm-layout{ display:grid; grid-template-columns:1fr 290px; gap:16px; align-items:start; }
+  @media(max-width:860px){ .perm-layout{ grid-template-columns:1fr; } }
+  .panel{ background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  .panel table{ width:100%; border-collapse:collapse; }
+  .panel th,.panel td{ padding:10px 12px; text-align:center; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .panel th{ font-size:12.5px; color:var(--text-secondary); font-weight:600; background:var(--surface-2); }
+  .panel th.l,.panel td.l{ text-align:left; }
+  .panel th .dot{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+  .panel tr.row{ cursor:pointer; }
+  .panel tr.sel td{ background:var(--accent-wash); }
+  .panel tr.changed .nm::after{ content:" • แก้ไขแล้ว"; color:var(--warn); font-size:11.5px; font-weight:600; }
+  .panel .nm{ font-weight:600; } .panel .em{ color:var(--text-muted); font-size:12px; word-break:break-all; }
+  .adm{ font-size:11px; background:var(--soft-bg); color:var(--soft); border-radius:6px; padding:1px 7px; margin-left:6px; }
+  input[type=checkbox].sw{ appearance:none; -webkit-appearance:none; width:42px; height:24px; border-radius:999px; background:var(--border-strong); position:relative; cursor:pointer; transition:.15s; vertical-align:middle; margin:0; }
+  input[type=checkbox].sw::after{ content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; transition:.15s; }
+  input[type=checkbox].sw:checked{ background:var(--c); } input[type=checkbox].sw:checked::after{ left:21px; }
+  input[type=checkbox].sw:disabled{ opacity:.55; cursor:not-allowed; }
+  input[type=checkbox].sw:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+  .tabsbtn{ display:block; margin:5px auto 0; font:inherit; font-size:11.5px; color:var(--accent); background:none; border:0; cursor:pointer; padding:0; }
+  .panel tr.tabrow td{ background:var(--surface-2); text-align:left; }
+  .ptabs{ display:flex; flex-wrap:wrap; gap:6px 14px; padding:2px 0; }
+  .ptabs label{ display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; }
+  .pside{ padding:16px; } .pside h3{ margin:0 0 2px; font-size:15px; } .pside .who{ color:var(--text-secondary); font-size:13px; margin-bottom:12px; }
+  .mini{ display:flex; flex-direction:column; gap:8px; }
+  .mc{ border:1px solid var(--border); border-top:4px solid var(--c); border-radius:10px; padding:9px 12px; background:var(--surface); }
+  .mc b{ font-size:14px; } .mc div{ font-size:12px; color:var(--text-secondary); }
+  .nonebox{ padding:16px; text-align:center; border:1px dashed var(--border-strong); border-radius:10px; color:var(--text-secondary); font-size:13px; }
+  .pnote{ font-size:12.5px; color:var(--text-secondary); margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .pbar{ position:fixed; left:0; right:0; bottom:0; background:var(--surface); border-top:1px solid var(--border-strong); padding:12px 18px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; z-index:5; }
+  .ptoast{ position:fixed; left:50%; top:18px; transform:translateX(-50%); background:var(--text-primary); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:13.5px; z-index:9; max-width:90vw; }
 </style>
 </head>
 <body>
@@ -106,6 +147,32 @@
   <p class="lead">แสดงเฉพาะระบบที่บัญชีของคุณมีสิทธิ์เข้าใช้ ถ้าไม่เห็นระบบที่ต้องการ ให้ติดต่อแอดมินเพื่อขอสิทธิ์</p>
   <div class="grid" id="cards"></div>
   <div class="empty" id="emptyMsg" hidden>บัญชีนี้ยังไม่มีระบบที่เข้าใช้ได้ กรุณาติดต่อแอดมิน</div>
+  <div class="perm" id="permSec" hidden>
+    <h2>จัดการสิทธิ์เข้าระบบ <span class="badge b-soft">เห็นเฉพาะแอดมิน</span></h2>
+    <p class="lead">เปิดสวิตช์ = คนนี้เข้าระบบนั้นได้ และจะเห็นการ์ดในเมนูรวม · กดที่ชื่อเพื่อดูว่าคนนั้นจะเห็นอะไรในเมนู</p>
+    <div class="tools">
+      <input type="search" id="permQ" placeholder="ค้นหาชื่อหรืออีเมล" aria-label="ค้นหาผู้ใช้">
+      <span class="badge b-good">ล็อกจริง = ปิดทั้งหน้าและข้อมูล</span>
+      <span class="badge b-warn">ซ่อนหน้า = ปิดหน้าเว็บ แต่ข้อมูลหลังบ้านยังไม่ถูกล็อก</span>
+    </div>
+    <div id="permLoading" class="muted">กำลังโหลดรายชื่อผู้ใช้…</div>
+    <div class="perm-layout" id="permBody" hidden>
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th class="l">ผู้ใช้</th>
+            <th><span class="dot" style="background:var(--c1)"></span>Walk-in Tracker<br><span class="badge b-warn">ซ่อนหน้า</span></th>
+            <th><span class="dot" style="background:var(--c2)"></span>PATTA ลูกบ้าน<br><span class="badge b-good">ล็อกจริง</span></th>
+            <th><span class="dot" style="background:var(--c3)"></span>Event Mode<br><span class="badge b-warn">ซ่อนการ์ด</span></th>
+          </tr></thead>
+          <tbody id="permRows"></tbody>
+        </table>
+      </div>
+      <div class="panel pside" id="permSide"></div>
+    </div>
+    <div class="err" id="permErr" hidden></div>
+  </div>
+  <div class="pbar" id="permBar" hidden><span id="permBarTxt"></span><button class="btn" id="permUndo" type="button">ยกเลิกการแก้ไข</button><button class="btn primary" id="permSave" type="button">บันทึกสิทธิ์</button></div>
   <div class="foot">PATTA Development · หน้านี้ไม่มีข้อมูลลูกค้า ข้อมูลทั้งหมดอยู่หลังการล็อกอินของแต่ละระบบ</div>
 </div>
 
@@ -170,10 +237,132 @@ function renderCards(p){
   $('emptyMsg').hidden = shown > 0;
 }
 
+
+// ---- admin: permission matrix (writes profiles/<uid>.tabs only) ----
+var P_SYS = [
+  {k:'tracker',   name:'Walk-in Tracker',  c:'var(--c1)', desc:'ลูกค้า Walk-in ผลงานเซล การติดตามลูกค้า'},
+  {k:'residents', name:'PATTA ลูกบ้าน',    c:'var(--c2)', desc:'ลูกบ้านที่รับโอนแล้ว งานหลังการขาย'},
+  {k:'event',     name:'PATTA Event Mode', c:'var(--c3)', desc:'เช็คอินหน้างานอีเวนต์'}
+];
+var P_TABS = [['overview','ภาพรวม'],['trends','เทรน & แนวโน้มลูกค้า'],['salesstatus','สถานะการขาย'],['projectprofile','โปรไฟล์โครงการ'],['salesperf','Sales Performance'],['customerdata','ข้อมูลลูกค้าเพิ่มเติม']];
+var P_TRACKER_KEYS = P_TABS.map(function(t){ return t[0]; });
+var P_DEFAULT = ['overview','trends','salesstatus','projectprofile','salesperf'];   // same default as index.html
+var permUsers = [], permBase = {}, permOpen = {}, permSel = null, permSaving = false, permLoaded = false;
+function pEsc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function pKey(tabs){ return JSON.stringify(tabs.slice().sort()); }
+function pHasTracker(u){ return u.tabs.some(function(k){ return P_TRACKER_KEYS.indexOf(k) >= 0; }); }
+function pOn(u, k){ return u.admin ? true : (k === 'tracker' ? pHasTracker(u) : u.tabs.indexOf(k) >= 0); }
+function pChanged(u){ return !u.admin && pKey(u.tabs) !== permBase[u.uid]; }
+function pToast(msg){
+  var el = document.createElement('div'); el.className = 'ptoast'; el.textContent = msg; document.body.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 4200);
+}
+function loadPerms(){
+  $('permLoading').hidden = false; $('permBody').hidden = true; $('permErr').hidden = true;
+  db.collection('profiles').get().then(function(qs){
+    permUsers = []; permBase = {};
+    qs.forEach(function(d){
+      var b = d.data() || {};
+      var u = { uid:d.id, email:b.email || '', name:b.displayName || b.email || d.id, admin:!!b.isAdmin,
+                tabs:Array.isArray(b.tabs) ? b.tabs.slice() : P_DEFAULT.slice() };
+      permUsers.push(u); permBase[u.uid] = pKey(u.tabs);
+    });
+    permUsers.sort(function(a, b){ return (b.admin - a.admin) || a.name.localeCompare(b.name, 'th'); });
+    if(!permSel && permUsers.length) permSel = (permUsers.filter(function(u){ return !u.admin; })[0] || permUsers[0]).uid;
+    permLoaded = true; $('permLoading').hidden = true; $('permBody').hidden = false; renderPerms();
+  }).catch(function(err){
+    $('permLoading').hidden = true; $('permErr').hidden = false;
+    $('permErr').textContent = 'โหลดรายชื่อผู้ใช้ไม่สำเร็จ: ' + fbMsg(err);
+  });
+}
+function renderPerms(){
+  var q = $('permQ').value.trim().toLowerCase();
+  var list = permUsers.filter(function(u){ return !q || (u.name + ' ' + u.email).toLowerCase().indexOf(q) >= 0; });
+  $('permRows').innerHTML = list.map(function(u){
+    var h = '<tr class="row' + (u.uid === permSel ? ' sel' : '') + (pChanged(u) ? ' changed' : '') + '" data-uid="' + pEsc(u.uid) + '">' +
+      '<td class="l"><div class="nm">' + pEsc(u.name) + (u.admin ? '<span class="adm">แอดมิน</span>' : '') + '</div><div class="em">' + pEsc(u.email) + '</div></td>';
+    P_SYS.forEach(function(s){
+      var on = pOn(u, s.k);
+      h += '<td style="--c:' + s.c + '"><input type="checkbox" class="sw" data-uid="' + pEsc(u.uid) + '" data-k="' + s.k + '"' + (on ? ' checked' : '') + (u.admin ? ' disabled' : '') + ' aria-label="' + pEsc(u.name + ' เข้า ' + s.name) + '">';
+      if(s.k === 'tracker' && !u.admin && on){
+        var n = u.tabs.filter(function(k){ return P_TRACKER_KEYS.indexOf(k) >= 0; }).length;
+        h += '<button type="button" class="tabsbtn" data-tabs="' + pEsc(u.uid) + '">เลือกแท็บ (' + n + '/6) ' + (permOpen[u.uid] ? '▴' : '▾') + '</button>';
+      }
+      if(u.admin) h += '<div class="em">เห็นทุกระบบ</div>';
+      h += '</td>';
+    });
+    h += '</tr>';
+    if(permOpen[u.uid] && !u.admin && pHasTracker(u)){
+      h += '<tr class="tabrow"><td colspan="4"><div class="ptabs">' + P_TABS.map(function(t){
+        return '<label><input type="checkbox" data-tab="' + t[0] + '" data-uid="' + pEsc(u.uid) + '"' + (u.tabs.indexOf(t[0]) >= 0 ? ' checked' : '') + '> ' + pEsc(t[1]) + '</label>';
+      }).join('') + '</div></td></tr>';
+    }
+    return h;
+  }).join('') || '<tr><td colspan="4" class="muted" style="padding:20px">ไม่พบผู้ใช้</td></tr>';
+  var u = permUsers.filter(function(x){ return x.uid === permSel; })[0];
+  if(u){
+    var cards = P_SYS.filter(function(s){ return pOn(u, s.k); });
+    $('permSide').innerHTML = '<h3>สิ่งที่คนนี้จะเห็นในเมนูรวม</h3><div class="who">' + pEsc(u.name) + '</div>' +
+      (cards.length ? '<div class="mini">' + cards.map(function(s){
+        var n = u.tabs.filter(function(k){ return P_TRACKER_KEYS.indexOf(k) >= 0; }).length;
+        return '<div class="mc" style="--c:' + s.c + '"><b>' + s.name + '</b><div>' + s.desc + (s.k === 'tracker' && !u.admin ? ' · ' + n + ' แท็บ' : '') + '</div></div>';
+      }).join('') + '</div>' : '<div class="nonebox">ไม่เห็นการ์ดใดเลย<br>จะเห็นข้อความ "ติดต่อแอดมินเพื่อขอสิทธิ์"</div>') +
+      '<div class="pnote">' + (!u.admin && !pHasTracker(u) ? 'ถ้าพิมพ์ลิงก์ Tracker ตรงๆ จะเจอหน้า "ยังไม่ได้รับสิทธิ์เข้า Walk-in Tracker"' : 'ภาพนี้จำลองหน้าเมนูรวมของคนนี้ตามสวิตช์ที่ตั้งอยู่ตอนนี้') + '</div>';
+  }
+  var n = permUsers.filter(pChanged).length;
+  $('permBar').hidden = n === 0;
+  $('permBarTxt').textContent = 'มีการแก้ไขสิทธิ์ ' + n + ' คน (ยังไม่ได้บันทึก)';
+  $('permSave').disabled = permSaving; $('permUndo').disabled = permSaving;
+}
+function pUser(uid){ return permUsers.filter(function(x){ return x.uid === uid; })[0]; }
+function pSetKey(u, k, on){
+  var i = u.tabs.indexOf(k);
+  if(on && i < 0) u.tabs.push(k);
+  if(!on && i >= 0) u.tabs.splice(i, 1);
+}
+$('permRows').addEventListener('click', function(e){
+  var t = e.target, u;
+  if(t.matches('input.sw')){
+    u = pUser(t.dataset.uid); if(!u || u.admin) return;
+    if(t.dataset.k === 'tracker'){
+      if(t.checked){ P_DEFAULT.forEach(function(k){ pSetKey(u, k, true); }); }
+      else { P_TRACKER_KEYS.forEach(function(k){ pSetKey(u, k, false); }); permOpen[u.uid] = false; }
+    } else { pSetKey(u, t.dataset.k, t.checked); }
+    permSel = u.uid; renderPerms(); return;
+  }
+  if(t.matches('input[data-tab]')){
+    u = pUser(t.dataset.uid); if(!u) return;
+    pSetKey(u, t.dataset.tab, t.checked);
+    if(!pHasTracker(u)) permOpen[u.uid] = false;     // unticking the last tab = Tracker off
+    permSel = u.uid; renderPerms(); return;
+  }
+  if(t.matches('.tabsbtn')){ permOpen[t.dataset.tabs] = !permOpen[t.dataset.tabs]; renderPerms(); return; }
+  var tr = t.closest('tr.row'); if(tr){ permSel = tr.dataset.uid; renderPerms(); }
+});
+$('permQ').addEventListener('input', renderPerms);
+$('permUndo').addEventListener('click', function(){ if(!permLoaded) return; loadPerms(); });
+$('permSave').addEventListener('click', function(){
+  var ch = permUsers.filter(pChanged); if(!ch.length || permSaving) return;
+  permSaving = true; renderPerms();
+  Promise.all(ch.map(function(u){
+    return db.collection('profiles').doc(u.uid).update({ tabs: u.tabs.slice() })
+      .then(function(){ permBase[u.uid] = pKey(u.tabs); return null; })
+      .catch(function(err){ return u.name + ': ' + fbMsg(err); });
+  })).then(function(res){
+    var bad = res.filter(Boolean);
+    permSaving = false; renderPerms();
+    pToast(bad.length ? 'บันทึกไม่สำเร็จ ' + bad.length + ' คน — ' + bad[0] : 'บันทึกสิทธิ์ ' + ch.length + ' คนแล้ว');
+  });
+});
+function initPerms(p){
+  if(!isAdmin(p)){ $('permSec').hidden = true; $('permBar').hidden = true; return; }
+  $('permSec').hidden = false; loadPerms();
+}
+
 var auth, db;
 function onUser(user){
   if(!user){
-    $('app').hidden = true; $('gate').hidden = false;
+    $('app').hidden = true; $('gate').hidden = false; $('permSec').hidden = true; $('permBar').hidden = true;
     $('gateLoading').hidden = true; $('loginForm').hidden = false; $('noAccess').hidden = true;
     return;
   }
@@ -188,6 +377,7 @@ function onUser(user){
     $('userChip').textContent = name;
     $('hello').textContent = 'สวัสดี ' + name;
     renderCards(p);
+    initPerms(p);
     $('gate').hidden = true; $('app').hidden = false;
   }).catch(function(err){
     $('gateLoading').hidden = true; $('loginForm').hidden = true; $('noAccess').hidden = false;
