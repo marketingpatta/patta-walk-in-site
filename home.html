@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PATTA เมนูรวมระบบ</title>
+<!-- PATTA hub: menu page shown before the individual dashboards.
+     Contains NO customer data. Same Firebase project / accounts as the Walk-in Tracker.
+     A card is shown only if the signed-in profile may open that system:
+       Walk-in Tracker  -> any profile
+       Event Mode       -> any profile
+       PATTA ลูกบ้าน     -> admin, or profile whose "tabs" list includes "residents"
+     To add a system: add one object to CARDS below. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#f6f6f3; --surface:#ffffff; --surface-2:#eeede8;
+    --border:rgba(11,11,11,0.10); --border-strong:rgba(11,11,11,0.18);
+    --text-primary:#101012; --text-secondary:#54544d; --text-muted:#8b897f;
+    --accent:#2a78d6; --accent-ink:#184f95; --accent-wash:rgba(42,120,214,0.10);
+    --critical:#d03b3b; --critical-wash:rgba(208,59,59,0.10);
+    --c1:#2a78d6; --c2:#1baf7a; --c3:#eb6834;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 4px 14px rgba(11,11,11,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#0d0d0c; --surface:#1a1a19; --surface-2:#232320;
+      --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.20);
+      --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8d82;
+      --accent:#5a9be6; --accent-ink:#a9cbf5; --accent-wash:rgba(90,155,230,0.16);
+      --critical:#ef6b6b; --critical-wash:rgba(239,107,107,0.14);
+      --shadow:none;
+    }
+  }
+  *{ box-sizing:border-box; }
+  [hidden]{ display:none !important; }
+  html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--text-primary); font-family:'IBM Plex Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif; font-size:15px; line-height:1.5; min-height:100vh; }
+  .wrap{ max-width:980px; margin:0 auto; padding:28px 20px 56px; }
+  .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:30px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .logo{ width:40px; height:40px; border-radius:11px; background:var(--accent); color:#fff; font-weight:700; display:grid; place-items:center; letter-spacing:.5px; }
+  h1{ margin:0; font-size:20px; font-weight:700; }
+  .subtitle{ color:var(--text-secondary); font-size:13px; }
+  .who{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .chip{ border:1px solid var(--border); background:var(--surface); border-radius:999px; padding:5px 12px; font-size:13px; color:var(--text-secondary); }
+  .btn{ font:inherit; font-size:13px; padding:7px 14px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-primary); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
+  .btn:hover{ background:var(--surface-2); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+  .btn.primary:hover{ filter:brightness(1.07); }
+  .hello{ font-size:26px; font-weight:700; margin:0 0 4px; }
+  .lead{ color:var(--text-secondary); margin:0 0 22px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:16px; }
+  a.card{ display:flex; flex-direction:column; gap:10px; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px; box-shadow:var(--shadow); border-top:4px solid var(--cc,var(--accent)); transition:transform .12s ease, border-color .12s ease; }
+  a.card:hover{ transform:translateY(-2px); border-color:var(--border-strong); border-top-color:var(--cc,var(--accent)); }
+  a.card:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+  .ico{ width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:color-mix(in srgb,var(--cc,var(--accent)) 14%,transparent); color:var(--cc,var(--accent)); }
+  .ico svg{ width:24px; height:24px; }
+  .card h2{ margin:2px 0 0; font-size:18px; font-weight:700; }
+  .card p{ margin:0; color:var(--text-secondary); font-size:14px; flex:1; }
+  .tag{ align-self:flex-start; font-size:12px; font-weight:600; color:var(--cc,var(--accent)); background:color-mix(in srgb,var(--cc,var(--accent)) 12%,transparent); border-radius:999px; padding:2px 10px; }
+  .go{ color:var(--cc,var(--accent)); font-weight:600; font-size:14px; }
+  .gate{ min-height:100vh; display:grid; place-items:center; padding:20px; }
+  .gate-card{ width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:26px; box-shadow:var(--shadow); }
+  .field{ display:block; font-size:13px; color:var(--text-secondary); margin-top:12px; }
+  .field input{ display:block; width:100%; margin-top:5px; font:inherit; font-size:15px; padding:9px 11px; border-radius:9px; border:1px solid var(--border-strong); background:var(--bg); color:var(--text-primary); }
+  .err{ margin-top:12px; padding:9px 12px; border-radius:9px; background:var(--critical-wash); color:var(--critical); font-size:13px; }
+  .muted{ color:var(--text-muted); font-size:14px; }
+  .empty{ padding:36px 20px; text-align:center; background:var(--surface); border:1px dashed var(--border-strong); border-radius:16px; color:var(--text-secondary); }
+  .foot{ margin-top:30px; font-size:12px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="brand" style="margin-bottom:14px"><div class="logo">PT</div><div><h1>PATTA เมนูรวมระบบ</h1><div class="subtitle">ใช้บัญชีเดียวกับ PATTA Walk-in Tracker</div></div></div>
+    <div id="gateLoading" class="muted">กำลังตรวจสอบการเข้าสู่ระบบ…</div>
+    <form id="loginForm" hidden>
+      <label class="field">อีเมล<input type="email" id="loginEmail" autocomplete="username" required></label>
+      <label class="field">รหัสผ่าน<input type="password" id="loginPwd" autocomplete="current-password" required></label>
+      <div style="margin-top:18px"><button class="btn primary" type="submit" id="loginBtn" style="width:100%;justify-content:center;padding:10px">เข้าสู่ระบบ</button></div>
+      <div class="err" id="loginErr" hidden></div>
+    </form>
+    <div id="noAccess" hidden>
+      <div class="err" id="noAccessMsg"></div>
+      <div style="margin-top:14px"><button class="btn" id="noAccessLogout">ออกจากระบบ</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <div class="top">
+    <div class="brand"><div class="logo">PT</div><div><h1>PATTA เมนูรวมระบบ</h1><div class="subtitle">เลือกระบบที่ต้องการเปิด</div></div></div>
+    <div class="who"><span class="chip" id="userChip"></span><button class="btn" id="logoutBtn">ออกจากระบบ</button></div>
+  </div>
+  <p class="hello" id="hello"></p>
+  <p class="lead">แสดงเฉพาะระบบที่บัญชีของคุณมีสิทธิ์เข้าใช้ ถ้าไม่เห็นระบบที่ต้องการ ให้ติดต่อแอดมินเพื่อขอสิทธิ์</p>
+  <div class="grid" id="cards"></div>
+  <div class="empty" id="emptyMsg" hidden>บัญชีนี้ยังไม่มีระบบที่เข้าใช้ได้ กรุณาติดต่อแอดมิน</div>
+  <div class="foot">PATTA Development · หน้านี้ไม่มีข้อมูลลูกค้า ข้อมูลทั้งหมดอยู่หลังการล็อกอินของแต่ละระบบ</div>
+</div>
+
+<script>
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDYtAeOYth7J0bPZVunZ0RQpPAOM2K4eqA",
+  authDomain: "patta-walk-in.firebaseapp.com",
+  projectId: "patta-walk-in",
+  storageBucket: "patta-walk-in.firebasestorage.app",
+  messagingSenderId: "179665748747",
+  appId: "1:179665748747:web:4c81a7c55ffac3f0fb180e"
+};
+
+// ---- Systems shown on the menu (add a new object here to add a card) ----
+var ICONS = {
+  tracker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><rect x="5" y="11" width="3.5" height="7" rx="1"/><rect x="10.25" y="6" width="3.5" height="12" rx="1"/><rect x="15.5" y="9" width="3.5" height="9" rx="1"/></svg>',
+  residents:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>',
+  event:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="m9.5 15 2 2 3.5-4"/></svg>'
+};
+function isAdmin(p){ return !!(p && p.isAdmin); }
+function hasTab(p, k){ return Array.isArray(p && p.tabs) && p.tabs.indexOf(k) >= 0; }
+var CARDS = [
+  { key:'tracker', color:'var(--c1)', href:'./', title:'PATTA Walk-in Tracker',
+    desc:'ลูกค้า Walk-in รายโครงการ ผลงานเซล สถานะการขาย และการติดตามลูกค้า',
+    tag:'ทีมขาย / การตลาด', allow:function(p){ return !!p; } },
+  { key:'residents', color:'var(--c2)', href:'residents.html', title:'PATTA ลูกบ้าน',
+    desc:'ลูกค้าที่รับโอนกรรมสิทธิ์แล้ว ภาพรวมลูกบ้าน งานหลังการขาย การแจ้งซ่อม และประกัน',
+    tag:'หลังการขาย', allow:function(p){ return isAdmin(p) || hasTab(p,'residents'); } },
+  { key:'event', color:'var(--c3)', href:'event.html', title:'PATTA Event Mode',
+    desc:'เช็คอินหน้างานอีเวนต์ รายชื่อลงทะเบียนล่วงหน้า Walk-in หน้างาน และบันทึกลูกค้า',
+    tag:'งาน 20–21 พ.ย. 2569', allow:function(p){ return !!p; } }
+];
+
+function $(id){ return document.getElementById(id); }
+function fbMsg(err){
+  var c = err && err.code || '';
+  if(c === 'auth/invalid-credential' || c === 'auth/wrong-password' || c === 'auth/user-not-found' || c === 'auth/invalid-email') return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+  if(c === 'auth/too-many-requests') return 'ลองผิดหลายครั้งเกินไป กรุณารอสักครู่แล้วลองใหม่';
+  if(c === 'auth/network-request-failed') return 'เชื่อมต่ออินเทอร์เน็ตไม่ได้';
+  if(c === 'permission-denied') return 'ไม่มีสิทธิ์อ่านข้อมูล';
+  return (err && err.message) ? err.message : 'เกิดข้อผิดพลาด';
+}
+
+function renderCards(p){
+  var box = $('cards'); box.textContent = '';
+  var shown = 0;
+  CARDS.forEach(function(c){
+    if(!c.allow(p)) return;
+    shown++;
+    var a = document.createElement('a'); a.className = 'card'; a.href = c.href; a.style.setProperty('--cc', c.color);
+    var ico = document.createElement('div'); ico.className = 'ico'; ico.innerHTML = ICONS[c.key] || '';
+    var h = document.createElement('h2'); h.textContent = c.title;
+    var d = document.createElement('p'); d.textContent = c.desc;
+    var t = document.createElement('span'); t.className = 'tag'; t.textContent = c.tag;
+    var g = document.createElement('span'); g.className = 'go'; g.textContent = 'เปิดระบบ →';
+    a.appendChild(ico); a.appendChild(h); a.appendChild(d); a.appendChild(t); a.appendChild(g);
+    box.appendChild(a);
+  });
+  $('emptyMsg').hidden = shown > 0;
+}
+
+var auth, db;
+function onUser(user){
+  if(!user){
+    $('app').hidden = true; $('gate').hidden = false;
+    $('gateLoading').hidden = true; $('loginForm').hidden = false; $('noAccess').hidden = true;
+    return;
+  }
+  db.collection('profiles').doc(user.uid).get().then(function(snap){
+    var p = snap.exists ? (snap.data() || {}) : null;
+    if(!p){
+      $('gateLoading').hidden = true; $('loginForm').hidden = true; $('noAccess').hidden = false;
+      $('noAccessMsg').textContent = 'บัญชีนี้ยังไม่ได้ลงทะเบียนในระบบ กรุณาติดต่อแอดมิน';
+      return;
+    }
+    var name = p.displayName || user.email;
+    $('userChip').textContent = name;
+    $('hello').textContent = 'สวัสดี ' + name;
+    renderCards(p);
+    $('gate').hidden = true; $('app').hidden = false;
+  }).catch(function(err){
+    $('gateLoading').hidden = true; $('loginForm').hidden = true; $('noAccess').hidden = false;
+    $('noAccessMsg').textContent = 'ตรวจสอบสิทธิ์ไม่สำเร็จ: ' + fbMsg(err);
+  });
+}
+
+try{
+  if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  auth = firebase.auth(); db = firebase.firestore();
+  auth.onAuthStateChanged(onUser);
+}catch(e){
+  $('gateLoading').textContent = 'เชื่อมต่อ Firebase ไม่สำเร็จ กรุณารีเฟรชหน้านี้';
+}
+$('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  $('loginErr').hidden = true; $('loginBtn').disabled = true;
+  auth.signInWithEmailAndPassword($('loginEmail').value.trim(), $('loginPwd').value).catch(function(err){
+    $('loginErr').textContent = fbMsg(err); $('loginErr').hidden = false;
+  }).then(function(){ $('loginBtn').disabled = false; });
+});
+$('logoutBtn').addEventListener('click', function(){ auth.signOut(); });
+$('noAccessLogout').addEventListener('click', function(){ auth.signOut(); });
+</script>
+</body>
+</html>

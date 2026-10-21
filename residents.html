@@ -218,7 +218,7 @@
     </form>
     <div id="noAccess" hidden>
       <div class="err" id="noAccessMsg"></div>
-      <div style="margin-top:14px;display:flex;gap:8px"><a class="btn" href="./">ไปหน้า Walk-in Tracker</a><button class="btn" id="noAccessLogout">ออกจากระบบ</button></div>
+      <div style="margin-top:14px;display:flex;gap:8px"><a class="btn" href="home.html" style="text-decoration:none">☰ เมนูรวม</a><a class="btn" href="./">ไปหน้า Walk-in Tracker</a><button class="btn" id="noAccessLogout">ออกจากระบบ</button></div>
     </div>
   </div>
 </div>
@@ -233,7 +233,8 @@
     <div class="top-actions">
       <span class="chip" id="erpChip" hidden>ERP <b id="erpStamp"></b></span>
       <span class="chip" id="csmChip" hidden>งานซ่อม CSM <b id="csmStamp"></b></span>
-      <a class="btn" href="./">← Walk-in Tracker</a>
+      <span class="chip" id="svChip" hidden>แบบสอบถาม <b id="svStamp"></b></span>
+      <a class="btn" href="home.html" style="text-decoration:none">☰ เมนูรวม</a><a class="btn" href="./">← Walk-in Tracker</a>
       <button class="btn" id="uploadBtn" hidden>อัปโหลดข้อมูลลูกบ้าน</button>
       <span class="chip" id="userChip"></span>
       <button class="btn" id="logoutBtn">ออกจากระบบ</button>
@@ -243,8 +244,8 @@
   <div class="tabs" role="tablist">
     <button class="tab on" data-tab="overview">ภาพรวมลูกบ้าน</button>
     <button class="tab" data-tab="service">หลังการขาย</button>
-    <button class="tab" disabled title="รอเก็บข้อมูลจากฟอร์มลงทะเบียนลูกบ้าน">ชุมชน<span class="soon">เร็ว ๆ นี้</span></button>
-    <button class="tab" disabled title="รอเก็บข้อมูลจากฟอร์มลงทะเบียนลูกบ้าน">แนะนำต่อ / ขายต่อ<span class="soon">เร็ว ๆ นี้</span></button>
+    <button class="tab" data-tab="community">ชุมชน</button>
+    <button class="tab" disabled title="กำลังพัฒนา">แนะนำต่อ / ขายต่อ<span class="soon">เร็ว ๆ นี้</span></button>
   </div>
 
   <div class="filters" id="projFilter"></div>
@@ -307,6 +308,37 @@
       </div>
     </div>
     <div class="note" id="svNote"></div>
+  </section>
+  <!-- ---------- community ---------- -->
+  <section id="tab-community" hidden>
+    <div class="kpi-grid" id="cmKpis"></div>
+    <div class="grid3">
+      <div class="card"><div class="card-title">การอยู่อาศัย</div><div class="card-sub">จากแบบสอบถามวันโอนกรรมสิทธิ์</div><div class="hbars" id="cmOcc"></div><div class="note" id="cmOccNote"></div></div>
+      <div class="card"><div class="card-title">จำนวนผู้พักอาศัย</div><div class="card-sub" id="cmPplSub"></div><div class="hbars" id="cmPpl"></div></div>
+      <div class="card"><div class="card-title">ในบ้านมีใครบ้าง</div><div class="card-sub">นับเฉพาะบ้านที่ตอบข้อนั้น</div><div class="hbars" id="cmHh"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="card"><div class="card-title">โรงเรียนของบุตร</div><div class="card-sub" id="cmSchSub"></div><div class="hbars" id="cmSch"></div></div>
+      <div class="card"><div class="card-title">รถยนต์ต่อหลัง</div><div class="card-sub" id="cmCarSub"></div><div class="hbars" id="cmCar"></div></div>
+      <div class="card"><div class="card-title">สัตว์เลี้ยง</div><div class="card-sub" id="cmPetSub"></div><div class="hbars" id="cmPet"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-title">เหตุผลที่ตัดสินใจซื้อ</div><div class="card-sub">ตอบได้หลายข้อ · 10 อันดับแรก · ใช้วางแผนสื่อของโครงการใหม่</div><div class="hbars" id="cmFac"></div></div>
+      <div class="card"><div class="card-title">ส่วนกลางที่ชอบ</div><div class="card-sub">ตอบได้หลายข้อ</div><div class="hbars" id="cmLike"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-title">ต่อเติมแล้ว / อยากต่อเติม</div><div class="card-sub">โอกาสแนะนำผู้รับเหมาต่อเติมให้ลูกบ้าน</div><div class="hbars" id="cmExt"></div></div>
+      <div class="card"><div class="card-title">ฟังก์ชันที่อยากได้เพิ่ม</div><div class="card-sub">ข้อมูลประกอบการออกแบบบ้านรุ่นต่อไป</div><div class="hbars" id="cmWant"></div></div>
+    </div>
+    <div class="card full"><div class="card-title">ข้อเสนอแนะจากลูกบ้าน</div><div class="card-sub">ข้อ "ปัจจัยที่โครงการต้องพัฒนาและปรับปรุง" · กดเพื่อดูบ้าน</div><div id="cmImp"></div></div>
+    <div class="card full">
+      <div class="card-title">บ้านที่ยังไม่ได้ทำแบบสอบถาม</div>
+      <div class="card-sub" id="cmTodoSub"></div>
+      <div class="hbars" id="cmTodoProj" style="margin-bottom:12px"></div>
+      <div class="tbl-wrap"><table><thead><tr><th>บ้าน</th><th>โครงการ</th><th>เจ้าของ</th><th>วันโอน</th><th>สถานะ</th></tr></thead><tbody id="cmTodo"></tbody></table></div>
+      <div class="pager"><span id="cmTodoCount"></span><span><button class="btn" id="tPrev">ก่อนหน้า</button> <button class="btn" id="tNext">ถัดไป</button></span></div>
+    </div>
+    <div class="note" id="cmNote"></div>
   </section>
 </div>
 
@@ -439,7 +471,7 @@ function renderFilter(){
   }).join('');
   $('projFilter').innerHTML = html;
   Array.prototype.forEach.call($('projFilter').querySelectorAll('.pchip'), function(b){
-    b.addEventListener('click', function(){ projSel = b.getAttribute('data-p'); hPage = 0; renderAll(); });
+    b.addEventListener('click', function(){ projSel = b.getAttribute('data-p'); hPage = 0; tPage = 0; renderAll(); });
   });
 }
 
@@ -646,6 +678,132 @@ function renderService(){
     'ประกันคิดจากวันเริ่มประกันที่ลงทะเบียนใน Mango ถ้ามี ไม่งั้นใช้วันโอน (โครงสร้าง ' + S.warranty.structYears + ' ปี · งานอื่น ' + S.warranty.generalYears + ' ปี ตามมาสเตอร์ประกัน Mango)';
 }
 
+// ---------- community ----------
+var tPage = 0;
+function svOf(h){ return h.sv && h.sv.surveyed === 'Y' ? h.sv : null; }
+function help(v){ if(!v) return ''; if(/^ไม่มี/.test(v)) return 'no'; return /ไม่ได้พัก/.test(v) ? 'out' : 'in'; }
+function listCount(list, field){
+  var m = {};
+  list.forEach(function(h){ (h.sv[field] || '').split('|').forEach(function(x){ x = x.trim(); if(x) m[x] = (m[x]||0) + 1; }); });
+  return m;
+}
+function renderCommunity(){
+  var hs = H();
+  var surveyed = hs.filter(svOf);
+  var withOcc = surveyed.filter(function(h){ return h.sv.occ; });
+  var occ = count(withOcc, function(h){ return h.sv.occ; });
+  var kidsHomes = surveyed.filter(function(h){ return +h.sv.kids > 0; });
+  var petHomes = surveyed.filter(function(h){ return +h.sv.pets > 0; });
+  var notIn = surveyed.filter(function(h){ return h.sv.moved === 'N'; }).length;
+  var projsWith = {}; S.houses.forEach(function(h){ if(svOf(h)) projsWith[h.p] = 1; });
+
+  kpis($('cmKpis'), [
+    {l:'ทำแบบสอบถามแล้ว', v:fmt(surveyed.length), u:'/ ' + fmt(hs.length) + ' หลัง', s: pct(surveyed.length, hs.length) + '% ของบ้านที่โอนแล้ว'},
+    {l:'อยู่ประจำ', v:pct(occ['อยู่ประจำ']||0, withOcc.length) + '%', s: fmt(occ['อยู่ประจำ']||0) + ' จาก ' + fmt(withOcc.length) + ' หลังที่ตอบ'},
+    {l:'ปล่อยเช่า', v:pct(occ['ปล่อยเช่า']||0, withOcc.length) + '%', s: fmt(occ['ปล่อยเช่า']||0) + ' หลัง'},
+    {l:'ครอบครัวมีบุตร', v:fmt(kidsHomes.length), u:'หลัง', s: fmt(kidsHomes.reduce(function(a,h){ return a + (+h.sv.kids||0); }, 0)) + ' คน'},
+    {l:'มีสัตว์เลี้ยง', v:fmt(petHomes.length), u:'หลัง', s: fmt(petHomes.reduce(function(a,h){ return a + (+h.sv.pets||0); }, 0)) + ' ตัว'}
+  ]);
+
+  var occOrder = ['อยู่ประจำ','ปล่อยเช่า','ไม่ประจำ'];
+  var occColor = {'อยู่ประจำ':'var(--good)','ปล่อยเช่า':'var(--warning)','ไม่ประจำ':'var(--p-PTD)'};
+  hbars($('cmOcc'), occOrder.filter(function(k){ return occ[k]; }).map(function(k){ return {l:k, v:occ[k], c:occColor[k]}; })
+    .concat(Object.keys(occ).filter(function(k){ return occOrder.indexOf(k) < 0; }).map(function(k){ return {l:k, v:occ[k], c:'var(--baseline)'}; })));
+  var stay = count(withOcc.filter(function(h){ return h.sv.occ === 'ไม่ประจำ' && h.sv.stay; }), function(h){ return h.sv.stay; });
+  $('cmOccNote').innerHTML = (notIn ? '<b>' + fmt(notIn) + '</b> หลังแจ้งว่ายังไม่ได้เข้าอยู่ตอนทำแบบสอบถาม · ' : '') +
+    (Object.keys(stay).length ? 'กลุ่มไม่ประจำมาพัก: ' + sortedEntries(stay).map(function(e){ return esc(e[0]) + ' ' + e[1]; }).join(' · ') : 'กลุ่มปล่อยเช่าและไม่ประจำ คือบ้านที่ควรเช็กกับนิติฯ ว่าใครอยู่จริง');
+
+  var ppl = surveyed.filter(function(h){ return +h.sv.people > 0; });
+  $('cmPplSub').textContent = 'ตอบ ' + fmt(ppl.length) + ' หลัง · รวม ' + fmt(ppl.reduce(function(a,h){ return a + (+h.sv.people); }, 0)) + ' คน';
+  var pb = count(ppl, function(h){ var n = +h.sv.people; return n >= 6 ? '6 คนขึ้นไป' : n + ' คน'; });
+  hbars($('cmPpl'), ['1 คน','2 คน','3 คน','4 คน','5 คน','6 คนขึ้นไป'].filter(function(k){ return pb[k]; }).map(function(k){ return {l:k, v:pb[k]}; }));
+
+  function hhRow(label, field, test){
+    var ans = surveyed.filter(function(h){ return h.sv[field]; });
+    var yes = ans.filter(test).length;
+    return {l:label, v:yes, total:ans.length};
+  }
+  var hh = [
+    hhRow('มีบุตร', 'kids', function(h){ return +h.sv.kids > 0; }),
+    hhRow('ผู้สูงอายุพักประจำ', 'elder', function(h){ return h.sv.elder === 'พักประจำ'; }),
+    hhRow('ผู้สูงอายุมาเยี่ยม', 'elder', function(h){ return h.sv.elder === 'มาเยี่ยม'; }),
+    hhRow('แม่บ้าน/พี่เลี้ยง', 'maid', function(h){ return help(h.sv.maid) === 'in' || help(h.sv.maid) === 'out'; }),
+    hhRow('คนขับรถ', 'driver', function(h){ return help(h.sv.driver) === 'in' || help(h.sv.driver) === 'out'; }),
+    hhRow('รถรับส่งนักเรียน', 'bus', function(h){ return h.sv.bus === 'มี'; })
+  ];
+  $('cmHh').innerHTML = hh.map(function(r){
+    var w = r.total ? r.v*100/r.total : 0;
+    return '<div class="hbar"><div class="lab">' + esc(r.l) + '</div><div class="track"><div class="fill" style="width:' + w + '%;background:var(--accent)"></div></div><div class="val">' + fmt(r.v) + '<span>/' + fmt(r.total) + '</span></div></div>';
+  }).join('');
+
+  var sch = surveyed.filter(function(h){ return h.sv.school; });
+  $('cmSchSub').textContent = 'บ้านที่ระบุโรงเรียน ' + fmt(sch.length) + ' หลัง · ใช้วางแผนรถรับส่งและกิจกรรมครอบครัว';
+  hbars($('cmSch'), sortedEntries(count(sch, function(h){ return h.sv.school; })).slice(0,10).map(function(e){ return {l:e[0], v:e[1]}; }));
+
+  var cars = surveyed.filter(function(h){ return h.sv.cars !== undefined && h.sv.cars !== ''; });
+  var totalCars = cars.reduce(function(a,h){ return a + (+h.sv.cars||0); }, 0);
+  $('cmCarSub').textContent = 'ตอบ ' + fmt(cars.length) + ' หลัง · รวม ' + fmt(totalCars) + ' คัน (เฉลี่ย ' + (cars.length ? (totalCars/cars.length).toFixed(1) : '–') + ' คัน/หลัง) · ใช้ดูที่จอดรถในโครงการ';
+  var cb = count(cars, function(h){ var n = +h.sv.cars; return n >= 3 ? '3 คันขึ้นไป' : n + ' คัน'; });
+  hbars($('cmCar'), ['0 คัน','1 คัน','2 คัน','3 คันขึ้นไป'].filter(function(k){ return cb[k]; }).map(function(k){ return {l:k, v:cb[k]}; }));
+
+  var petAns = surveyed.filter(function(h){ return h.sv.pets !== undefined && h.sv.pets !== ''; });
+  $('cmPetSub').textContent = 'ตอบ ' + fmt(petAns.length) + ' หลัง';
+  var ptype = count(petHomes.filter(function(h){ return h.sv.pet_type; }), function(h){ return h.sv.pet_type; });
+  var petRows = [{l:'ไม่มีสัตว์เลี้ยง', v:petAns.length - petHomes.length, c:'var(--baseline)'}];
+  var unknownType = petHomes.length - Object.keys(ptype).reduce(function(a,k){ return a + ptype[k]; }, 0);
+  sortedEntries(ptype).forEach(function(e){ petRows.push({l:e[0], v:e[1]}); });
+  if(unknownType) petRows.push({l:'มี (ไม่ระบุชนิด)', v:unknownType});
+  hbars($('cmPet'), petRows);
+
+  function top(field, n){ return sortedEntries(listCount(surveyed, field)).slice(0, n || 10).map(function(e){ return {l:e[0], v:e[1]}; }); }
+  var nFac = surveyed.filter(function(h){ return h.sv.factors; }).length;
+  hbars($('cmFac'), top('factors'), {total:nFac});
+  hbars($('cmLike'), top('like'), {total:surveyed.filter(function(h){ return h.sv.like; }).length});
+  hbars($('cmExt'), top('extend'), {total:surveyed.filter(function(h){ return h.sv.extend; }).length});
+  hbars($('cmWant'), top('want'), {total:surveyed.filter(function(h){ return h.sv.want; }).length});
+
+  var imp = surveyed.filter(function(h){ return h.sv.improve; });
+  var impGroups = {};
+  imp.forEach(function(h){ (impGroups[h.sv.improve] = impGroups[h.sv.improve] || []).push(h); });
+  var impList = sortedEntries(count(imp, function(h){ return h.sv.improve; }));
+  $('cmImp').innerHTML = impList.length ? impList.map(function(e){
+    var ids = impGroups[e[0]].map(function(h){ return '<a href="#" class="hid" data-id="' + h.id + '" style="color:var(--accent-ink);text-decoration:none">' + h.id + '</a>'; }).join(' ');
+    return '<div class="rep"><div class="rsubj" style="font-weight:500">' + esc(e[0]) + '</div><div class="rdet">' + (e[1] > 1 ? e[1] + ' หลัง · ' : '') + ids + '</div></div>';
+  }).join('') : '<div class="empty">ยังไม่มีข้อเสนอแนะในตัวกรองนี้</div>';
+  Array.prototype.forEach.call($('cmImp').querySelectorAll('a[data-id]'), function(a){
+    a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); });
+  });
+
+  renderTodo();
+  var noSurvey = Object.keys(count(S.houses,'p')).filter(function(p){ return !projsWith[p]; });
+  $('cmNote').innerHTML = 'ที่มา: ไฟล์แบบสอบถามวันโอนกรรมสิทธิ์ของทีมขาย (ไฟล์รวมในไซต์ทีมขาย + ไฟล์อัปเดตของ CASCADE และ CHIEFTAIN) อัปเดต ' + esc((S.surveyUpdated||'').slice(0,10) || '–') +
+    ' · ไม่ได้ดึงชื่อ เบอร์โทร อีเมล และทะเบียนรถ · บ้านเลขที่จับคู่กับรหัสแปลงจากเลขหลังทับ' +
+    (noSurvey.length ? ' · ยังไม่มีแบบสอบถาม: ' + noSurvey.map(pname).join(', ') : '');
+}
+
+function renderTodo(){
+  var hs = H();
+  var todo = hs.filter(function(h){ return !svOf(h); }).sort(function(a,b){ return (b.td||'').localeCompare(a.td||''); });
+  var byP = count(todo, 'p');
+  var allP = count(hs, 'p');
+  $('cmTodoSub').textContent = fmt(todo.length) + ' จาก ' + fmt(hs.length) + ' หลัง · เรียงจากโอนล่าสุด (ตามง่ายที่สุด)';
+  hbars($('cmTodoProj'), sortedEntries(byP).map(function(e){ return {l:pname(e[0]), v:e[1], c:pcol(e[0]), key:e[0]}; }), {noPct:true});
+  var pages = Math.max(1, Math.ceil(todo.length / H_PER));
+  if(tPage >= pages) tPage = pages - 1;
+  var slice = todo.slice(tPage*H_PER, (tPage+1)*H_PER);
+  $('cmTodo').innerHTML = slice.length ? slice.map(function(h){
+    var st = h.sv && h.sv.surveyed === 'N' ? '<span class="pill warn">มีในไฟล์ ยังไม่ได้ทำ</span>' : '<span class="pill mute">ไม่มีในไฟล์แบบสอบถาม</span>';
+    return '<tr class="click" data-id="' + h.id + '"><td class="hid">' + h.id + '</td><td>' + esc(pname(h.p)) + '</td><td>' + esc(h.ow) + (h.co ? ' <span class="pill mute">บริษัท</span>' : '') + '</td><td>' + thDate(h.td) + '</td><td>' + st + '</td></tr>';
+  }).join('') : '<tr><td colspan="5" class="empty">ทำแบบสอบถามครบทุกหลังแล้ว</td></tr>';
+  $('cmTodoCount').textContent = fmt(todo.length) + ' หลัง · หน้า ' + (tPage+1) + '/' + pages;
+  $('tPrev').disabled = tPage === 0; $('tNext').disabled = tPage >= pages - 1;
+  Array.prototype.forEach.call($('cmTodo').querySelectorAll('tr.click'), function(tr){
+    tr.addEventListener('click', function(){ openHouse(tr.getAttribute('data-id')); });
+  });
+}
+$('tPrev').addEventListener('click', function(){ tPage--; renderTodo(); });
+$('tNext').addEventListener('click', function(){ tPage++; renderTodo(); });
+
 // ---------- house drawer ----------
 function openHouse(id){
   var h = houseById[id];
@@ -668,6 +826,26 @@ function openHouse(id){
       '<div>ช่องทางที่มา</div><div>' + esc(h.src || '–') + (h.wd ? ' <span class="muted">(Walk-in ' + thDate(h.wd) + ')</span>' : '') + '</div>' +
       '<div>งบประมาณที่แจ้ง</div><div>' + esc(h.bud || '–') + '</div>' +
       '</div>';
+  }
+  var sv = h && h.sv;
+  if(h){
+    html += '<div style="font-weight:600;margin:6px 0 8px">แบบสอบถามวันโอนกรรมสิทธิ์</div>';
+    if(sv && sv.surveyed === 'Y'){
+      var lines = [
+        ['การอยู่อาศัย', [sv.occ, sv.stay, sv.moved === 'N' ? 'ยังไม่ได้เข้าอยู่' : ''].filter(Boolean).join(' · ')],
+        ['ผู้พักอาศัย', sv.people ? sv.people + ' คน' : ''],
+        ['บุตร', sv.kids !== undefined ? (sv.kids === '0' ? 'ไม่มี' : sv.kids + ' คน') + (sv.school ? ' · ' + sv.school : '') : (sv.school || '')],
+        ['ผู้สูงอายุ', sv.elder || ''], ['แม่บ้าน/พี่เลี้ยง', sv.maid || ''], ['คนขับรถ', sv.driver || ''],
+        ['สัตว์เลี้ยง', sv.pets !== undefined ? (sv.pets === '0' ? 'ไม่มี' : sv.pets + ' ตัว' + (sv.pet_type ? ' (' + sv.pet_type + ')' : '')) : ''],
+        ['รถยนต์', sv.cars !== undefined ? sv.cars + ' คัน' + (sv.motos ? ' · จักรยานยนต์ ' + sv.motos + ' คัน' : '') : ''],
+        ['เหตุผลที่ซื้อ', (sv.factors||'').split('|').join(', ')], ['ต่อเติม', (sv.extend||'').split('|').join(', ')],
+        ['อยากได้เพิ่ม', (sv.want||'').split('|').join(', ')], ['ส่วนกลางที่ชอบ', (sv.like||'').split('|').join(', ')],
+        ['ข้อเสนอแนะ', sv.improve || '']
+      ].filter(function(l){ return l[1]; });
+      html += '<div class="kv">' + lines.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
+    } else {
+      html += '<div class="muted" style="margin-bottom:16px">' + (sv ? 'มีชื่อในไฟล์แบบสอบถาม แต่ยังไม่ได้ทำ' : 'ยังไม่มีข้อมูลแบบสอบถาม') + '</div>';
+    }
   }
   html += '<div style="font-weight:600;margin:6px 0 8px">ประวัติแจ้งซ่อม (' + reps.length + ' รายการ)</div>';
   html += reps.length ? reps.map(function(r){
@@ -701,7 +879,8 @@ function renderAll(){
   renderFilter();
   $('tab-overview').hidden = tabSel !== 'overview';
   $('tab-service').hidden = tabSel !== 'service';
-  if(tabSel === 'overview') renderOverview(); else renderService();
+  $('tab-community').hidden = tabSel !== 'community';
+  if(tabSel === 'overview') renderOverview(); else if(tabSel === 'service') renderService(); else renderCommunity();
 }
 
 function setSnapshot(snap){
@@ -711,6 +890,7 @@ function setSnapshot(snap){
   S.repairs.forEach(function(r){ (repairsByHouse[r.h] = repairsByHouse[r.h] || []).push(r); });
   if(S.erpUpdated){ $('erpStamp').textContent = S.erpUpdated.slice(0,16); $('erpChip').hidden = false; }
   if(S.csmUpdated){ $('csmStamp').textContent = S.csmUpdated.slice(0,16); $('csmChip').hidden = false; }
+  if(S.surveyUpdated){ $('svStamp').textContent = S.surveyUpdated.slice(0,10); $('svChip').hidden = false; }
   $('loading').hidden = true; $('noData').hidden = true;
   renderAll();
 }
