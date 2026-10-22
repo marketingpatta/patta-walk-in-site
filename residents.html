@@ -246,7 +246,7 @@
     <button class="tab on" data-tab="overview">ภาพรวมลูกบ้าน</button>
     <button class="tab" data-tab="service">หลังการขาย</button>
     <button class="tab" data-tab="community">ชุมชน</button>
-    <button class="tab" disabled title="กำลังพัฒนา">แนะนำต่อ / ขายต่อ<span class="soon">เร็ว ๆ นี้</span></button>
+    <button class="tab" data-tab="referral">แนะนำต่อ</button>
   </div>
 
   <div class="filters" id="projFilter"></div>
@@ -349,6 +349,23 @@
       <div class="pager"><span id="cmTodoCount"></span><span><button class="btn" id="tPrev">ก่อนหน้า</button> <button class="btn" id="tNext">ถัดไป</button></span></div>
     </div>
     <div class="note" id="cmNote"></div>
+  </section>
+  <!-- ---------- referral (data from referral.html) ---------- -->
+  <section id="tab-referral" hidden>
+    <div class="card full" id="rfDenied" hidden><div class="card-title">ยังไม่มีสิทธิ์ดูข้อมูลแนะนำเพื่อน</div><div class="card-sub">ข้อมูลนี้มีชื่อและเบอร์ลูกค้าใหม่ จึงเปิดเฉพาะแอดมินและบัญชีที่ได้สิทธิ์ "PATTA แนะนำเพื่อน" ในหน้าเมนูรวม</div></div>
+    <div id="rfBody">
+      <div class="kpi-grid" id="rfKpis"></div>
+      <div class="grid2">
+        <div class="card"><div class="card-title">เส้นทางการแนะนำ</div><div class="card-sub">นับจากรายการที่บันทึกในฟอร์มแนะนำเพื่อน · ไม่รวมที่ไม่สำเร็จ</div><div class="hbars" id="rfFunnel"></div></div>
+        <div class="card"><div class="card-title">ลูกบ้านที่แนะนำมากที่สุด</div><div class="card-sub">นับต่อบ้านผู้แนะนำ · กดเพื่อดูบ้าน</div><div class="tbl-wrap"><table><thead><tr><th>บ้าน</th><th>เจ้าของ</th><th class="num">แนะนำ</th><th class="num">มาเยี่ยมชม</th><th class="num">โอนแล้ว</th></tr></thead><tbody id="rfTop"></tbody></table></div></div>
+      </div>
+      <div class="grid2">
+        <div class="card"><div class="card-title">โครงการที่ลูกค้าใหม่สนใจ</div><div class="card-sub" id="rfProjSub"></div><div class="hbars" id="rfProj"></div></div>
+        <div class="card"><div class="card-title">รางวัลผู้แนะนำ</div><div class="card-sub" id="rfRewardSub"></div><div class="hbars" id="rfReward"></div></div>
+      </div>
+      <div class="card full"><div class="card-title">ลูกบ้านที่ยินยอมรับข่าวสารจาก PATTA</div><div class="card-sub" id="rfPotSub"></div><div id="rfPot" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>
+      <div class="note" id="rfNote"></div>
+    </div>
   </section>
 </div>
 
@@ -761,6 +778,47 @@ function renderWar(){
   });
 }
 
+// ---------- referral (แนะนำเพื่อน) ----------
+function renderReferral(){
+  $('rfDenied').hidden = S.referrals !== null && S.referrals !== undefined;
+  $('rfBody').hidden = !$('rfDenied').hidden;
+  if(!$('rfDenied').hidden) return;
+  var stage = {'แนะนำแล้ว':0,'มาเยี่ยมชมแล้ว':1,'จองแล้ว':2,'โอนแล้ว':3,'ไม่สำเร็จ':-1};
+  var all = S.referrals.filter(function(r){ return !projSel || r.refProj === projSel; });
+  var act = all.filter(function(r){ return r.status !== 'ไม่สำเร็จ'; });
+  var n = function(k){ return act.filter(function(r){ return (stage[r.status]||0) >= k; }).length; };
+  var resid = all.filter(function(r){ return r.refType === 'resident'; });
+  var refHouses = {}; resid.forEach(function(r){ refHouses[r.refHouse] = 1; });
+  var pending = all.filter(function(r){ return r.reward && r.reward.status === 'รอจ่าย'; });
+  var paid = all.filter(function(r){ return r.reward && r.reward.status === 'จ่ายแล้ว'; });
+  var sum = function(a){ return a.reduce(function(t,r){ return t + (+((r.reward||{}).amount) || 0); }, 0); };
+  kpis($('rfKpis'), [
+    {l:'แนะนำทั้งหมด', v:fmt(all.length), u:'ราย', s: fmt(resid.length) + ' รายจากลูกบ้าน ' + fmt(Object.keys(refHouses).length) + ' หลัง'},
+    {l:'มาเยี่ยมชมแล้ว', v:fmt(n(1)), u:'ราย', s: pct(n(1), all.length) + '% ของที่แนะนำ'},
+    {l:'จอง / โอนแล้ว', v:fmt(n(2)), u:'ราย', s: 'โอนแล้ว ' + fmt(n(3)) + ' · ไม่สำเร็จ ' + fmt(all.length - act.length)},
+    {l:'อัตราปิดการขาย', v: all.length ? pct(n(2), all.length) + '%' : '–', s:'จองขึ้นไป ÷ แนะนำทั้งหมด'},
+    {l:'รางวัลรอจ่าย', v:fmt(pending.length), u:'ราย', s: 'รวม ' + fmt(sum(pending)) + ' บาท · จ่ายแล้ว ' + fmt(sum(paid)) + ' บาท', cls: pending.length ? 'warn' : ''}
+  ]);
+  hbars($('rfFunnel'), [['แนะนำแล้ว',0],['มาเยี่ยมชมแล้ว',1],['จองแล้ว',2],['โอนแล้ว',3]].map(function(x){ return {l:x[0], v:n(x[1])}; }), {total: all.length});
+  var by = {};
+  resid.forEach(function(r){ var b = by[r.refHouse] = by[r.refHouse] || {n:0, v:0, t:0}; b.n++; if((stage[r.status]||0) >= 1) b.v++; if(r.status === 'โอนแล้ว') b.t++; });
+  var top = Object.keys(by).sort(function(a,b){ return by[b].n - by[a].n || by[b].t - by[a].t; }).slice(0, 10);
+  $('rfTop').innerHTML = top.length ? top.map(function(id){
+    var h = houseById[id];
+    return '<tr class="click" data-id="' + esc(id) + '"><td class="hid">' + esc(id) + '</td><td>' + esc(h ? h.ow : '–') + '</td><td class="num">' + by[id].n + '</td><td class="num">' + by[id].v + '</td><td class="num">' + by[id].t + '</td></tr>';
+  }).join('') : '<tr><td colspan="5" class="empty">ยังไม่มีการแนะนำจากลูกบ้าน</td></tr>';
+  Array.prototype.forEach.call($('rfTop').querySelectorAll('tr.click'), function(tr){ tr.addEventListener('click', function(){ openHouse(tr.getAttribute('data-id')); }); });
+  $('rfProjSub').textContent = 'ลูกค้าใหม่ ' + fmt(all.length) + ' ราย · แยกตามโครงการที่สนใจ';
+  hbars($('rfProj'), sortedEntries(count(all, function(r){ return r.newProj || 'ไม่ระบุ'; })).map(function(e){ return {l:e[0], v:e[1]}; }));
+  $('rfRewardSub').textContent = 'นับตามสถานะรางวัลในฟอร์มแนะนำเพื่อน';
+  hbars($('rfReward'), ['ยังไม่ถึงเงื่อนไข','รอจ่าย','จ่ายแล้ว','ไม่มีรางวัล'].map(function(k){ return {l:k, v: all.filter(function(r){ return (r.reward||{}).status === k; }).length, c: k === 'รอจ่าย' ? 'var(--warning)' : k === 'จ่ายแล้ว' ? 'var(--good)' : 'var(--baseline)'}; }).filter(function(x){ return x.v; }), {noPct:true});
+  var pot = H().filter(function(h){ return h.sv && h.sv.consent && h.sv.consent.marketing; });
+  $('rfPotSub').textContent = fmt(pot.length) + ' หลังที่ติ๊ก "รับข่าวสาร/สิทธิพิเศษจาก PATTA รวมถึงการแนะนำเพื่อน" ในฟอร์มนิติ · กลุ่มเป้าหมายสำหรับชวนแนะนำเพื่อน · สีเขียว = เคยแนะนำแล้ว';
+  $('rfPot').innerHTML = pot.length ? pot.map(function(h){ return '<a href="#" class="pill ' + (by[h.id] ? 'good' : 'mute') + '" data-id="' + h.id + '" style="text-decoration:none;font-family:IBM Plex Mono,monospace">' + h.id + '</a>'; }).join('') : '<div class="empty" style="width:100%">ยังไม่มีลูกบ้านที่บันทึกความยินยอมนี้ผ่านฟอร์มนิติ</div>';
+  Array.prototype.forEach.call($('rfPot').querySelectorAll('a[data-id]'), function(a){ a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); }); });
+  $('rfNote').innerHTML = 'ที่มา: ฟอร์มแนะนำเพื่อน (referral.html) ซึ่งเซลและทีมการตลาดบันทึก · ตัวกรองโครงการด้านบน = โครงการของบ้านผู้แนะนำ · ลูกค้าใหม่ที่มาเยี่ยมชมแล้วถูกเพิ่มเข้า Walk-in Tracker ในช่องทาง "เพื่อน/คนรู้จักแนะนำ" · หน้านี้ไม่แสดงชื่อและเบอร์ลูกค้าใหม่';
+}
+
 // after-sales satisfaction survey (paper "แบบสอบถามความพึงพอใจหลังการขาย", keyed in by juristic staff)
 function renderSat(){
   var hs = H().filter(function(h){ return h.sv && h.sv.sat; });
@@ -1051,7 +1109,8 @@ function renderAll(){
   $('tab-overview').hidden = tabSel !== 'overview';
   $('tab-service').hidden = tabSel !== 'service';
   $('tab-community').hidden = tabSel !== 'community';
-  if(tabSel === 'overview') renderOverview(); else if(tabSel === 'service') renderService(); else renderCommunity();
+  $('tab-referral').hidden = tabSel !== 'referral';
+  if(tabSel === 'overview') renderOverview(); else if(tabSel === 'service') renderService(); else if(tabSel === 'referral') renderReferral(); else renderCommunity();
 }
 
 function setSnapshot(snap){
@@ -1101,7 +1160,12 @@ function loadSnapshot(){
         sv.consent = r.consent || {}; sv.files = r.files || {}; if(r.sat) sv.sat = r.sat; if(r.war) sv.war = r.war;
         h.sv = sv; snap.juristicCount++;
       });
-    }).catch(function(err){ console.warn('resident_records', err); }).then(function(){ setSnapshot(snap); });
+    }).catch(function(err){ console.warn('resident_records', err); }).then(function(){
+      // referrals (referral.html) -- readable only with the "referral" permission; the tab says so otherwise
+      return db.collection('referrals').get().then(function(qs){
+        snap.referrals = []; qs.forEach(function(d){ var x = d.data(); if(!x._deleted) snap.referrals.push(x); });
+      }).catch(function(){ snap.referrals = null; });
+    }).then(function(){ setSnapshot(snap); });
   }).catch(function(err){
     console.error(err);
     $('loading').hidden = true; $('noData').hidden = false;
