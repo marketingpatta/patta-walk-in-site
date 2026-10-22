@@ -236,6 +236,7 @@
       <span class="chip" id="svChip" hidden>แบบสอบถาม <b id="svStamp"></b></span>
       <a class="btn" href="home.html" style="text-decoration:none">☰ เมนูรวม</a><a class="btn" href="./">← Walk-in Tracker</a>
       <a class="btn" href="juristic.html" id="jurLink" hidden style="text-decoration:none">ฟอร์มนิติ</a>
+      <a class="btn" href="referral.html" id="refLink" hidden style="text-decoration:none">ฟอร์มแนะนำเพื่อน</a>
       <button class="btn" id="uploadBtn" hidden>อัปโหลดข้อมูลลูกบ้าน</button>
       <span class="chip" id="userChip"></span>
       <button class="btn" id="logoutBtn">ออกจากระบบ</button>
@@ -354,6 +355,7 @@
   <section id="tab-referral" hidden>
     <div class="card full" id="rfDenied" hidden><div class="card-title">ยังไม่มีสิทธิ์ดูข้อมูลแนะนำเพื่อน</div><div class="card-sub">ข้อมูลนี้มีชื่อและเบอร์ลูกค้าใหม่ จึงเปิดเฉพาะแอดมินและบัญชีที่ได้สิทธิ์ "PATTA แนะนำเพื่อน" ในหน้าเมนูรวม</div></div>
     <div id="rfBody">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><a class="btn primary" href="referral.html" style="text-decoration:none">+ บันทึกการแนะนำ (เปิดฟอร์มแนะนำเพื่อน)</a></div>
       <div class="kpi-grid" id="rfKpis"></div>
       <div class="grid2">
         <div class="card"><div class="card-title">เส้นทางการแนะนำ</div><div class="card-sub">นับจากรายการที่บันทึกในฟอร์มแนะนำเพื่อน · ไม่รวมที่ไม่สำเร็จ</div><div class="hbars" id="rfFunnel"></div></div>
@@ -1188,9 +1190,11 @@ function onUser(user){
       $('noAccessMsg').textContent = p ? 'บัญชีนี้ยังไม่ได้รับสิทธิ์ดูข้อมูลลูกบ้าน กรุณาติดต่อแอดมิน' : 'บัญชีนี้ถูกปิดการใช้งานแล้ว กรุณาติดต่อผู้ดูแลระบบ';
       return;
     }
-    currentUser = {uid:user.uid, email:user.email, name:p.displayName || user.email, isAdmin:!!p.isAdmin};
+    currentUser = {uid:user.uid, email:user.email, name:p.displayName || user.email, isAdmin:!!p.isAdmin, tabs:Array.isArray(p.tabs) ? p.tabs : []};
     $('userChip').textContent = currentUser.name;
-    $('uploadBtn').hidden = !currentUser.isAdmin; $('jurLink').hidden = !currentUser.isAdmin;
+    $('uploadBtn').hidden = !currentUser.isAdmin;
+    $('jurLink').hidden = !(currentUser.isAdmin || currentUser.tabs.indexOf('juristic') >= 0);
+    $('refLink').hidden = !(currentUser.isAdmin || currentUser.tabs.indexOf('referral') >= 0);
     $('gate').hidden = true; $('app').hidden = false;
     loadSnapshot();
   }).catch(function(err){
