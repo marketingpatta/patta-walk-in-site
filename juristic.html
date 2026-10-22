@@ -737,7 +737,7 @@ $('addVeh').addEventListener('click', function(){ addVehicle(); });
 
 // 1-year warranty evaluation is due from 11 months to 2 years after transfer, until it is recorded
 function warDue(h){
-  if(!h || !h.td || (recs[h.id] && recs[h.id].war)) return false;
+  if(!h || !h.td || (recs[h.id] && recs[h.id].war) || h.war) return false;   // h.war = scanned paper form already on file
   var d = new Date(h.td + 'T00:00:00'), old = new Date(); d.setMonth(d.getMonth() + 11); old.setFullYear(old.getFullYear() - 2);
   return d <= new Date() && new Date(h.td + 'T00:00:00') >= old;          // โอนมาแล้ว 11 เดือน ถึง 2 ปี
 }
@@ -769,10 +769,11 @@ function openForm(id){
   setR('s_issue', s.issue); setR('s_rec', s.rec);
   $('s_sat').open = !!(r && r.sat);
   setVal('s_date', s.date);
-  var w = (r && r.war) || {};
+  var w = (r && r.war) || h.war || {};   // prefill from the scanned paper form so saving keeps it
   ['w1','w2','w3','w4','w5'].forEach(function(k){ setS(k, w[k]); });
   setVal('w_cso', w.cso); setVal('w_qc', w.qc); setVal('w_suggest', w.suggest); setVal('w_date', w.date);
   $('s_war').open = !!(r && r.war) || warDue(h);
+  $('warSum').textContent = (!(r && r.war) && h.war) ? ' · ดึงคะแนนจากใบประเมินที่สแกนไว้แล้ว ตรวจแล้วบันทึกได้เลย' : ' · ทำเมื่อเก็บงานประกันครบ 1 ปี';
 
   setVal('c_name', c.name); setR('c_rel', c.rel); setVal('c_phone', c.phone); setVal('c_line', c.line); setVal('c_email', c.email);
   setVal('c_rentuntil', c.rentUntil); setVal('c_busplate', c.busPlate);

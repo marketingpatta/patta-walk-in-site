@@ -754,26 +754,29 @@ function renderSla(){
 }
 
 // 1-year warranty satisfaction (paper "แบบประเมินความพึงพอใจการให้บริการประกันครบปี", keyed in by juristic staff)
+// 1-year warranty evaluation: juristic form (sv.war) wins over the scanned paper forms (h.war from the build)
+function warOf(h){ return (h.sv && h.sv.war) || h.war || null; }
 function renderWar(){
   var all = H();
-  var hs = all.filter(function(h){ return h.sv && h.sv.war; });
+  var hs = all.filter(function(h){ return warOf(h); });
+  var nScan = hs.filter(function(h){ return !(h.sv && h.sv.war); }).length;
   var due = all.filter(function(h){
-    if(!h.td || (h.sv && h.sv.war)) return false;
+    if(!h.td || warOf(h)) return false;
     var d = new Date(h.td + 'T00:00:00'); d.setMonth(d.getMonth() + 11);
     return d.toISOString().slice(0,10) <= S.today && h.td >= String(+S.today.slice(0,4) - 2) + S.today.slice(4);
   });
   var topics = [['w1','ภาพรวมโครงการ / ความปลอดภัย'],['w2','คุณภาพบ้านหลังอยู่ครบ 1 ปี'],['w3','การซ่อมระหว่างประกัน'],['w4','เจ้าหน้าที่ดูแลโครงการ'],['w5','เจ้าหน้าที่ควบคุมงานก่อสร้าง']];
-  $('warSub').textContent = 'นิติบันทึกแล้ว ' + fmt(hs.length) + ' หลัง · ถึงรอบประเมินแต่ยังไม่มีข้อมูล ' + fmt(due.length) + ' หลัง (โอนมาแล้ว 11 เดือน–2 ปี) · คะแนนเฉลี่ยเต็ม 5';
-  if(!hs.length){ $('warBars').innerHTML = '<div class="empty">ยังไม่มีแบบประเมินที่นิติบันทึก</div>'; $('warNotes').innerHTML = ''; return; }
+  $('warSub').textContent = 'มีแบบประเมิน ' + fmt(hs.length) + ' หลัง' + (nScan ? ' (จากไฟล์สแกน ' + fmt(nScan) + ' · นิติบันทึก ' + fmt(hs.length - nScan) + ')' : '') + ' · ถึงรอบประเมินแต่ยังไม่มีข้อมูล ' + fmt(due.length) + ' หลัง (โอนมาแล้ว 11 เดือน–2 ปี) · คะแนนเฉลี่ยเต็ม 5';
+  if(!hs.length){ $('warBars').innerHTML = '<div class="empty">ยังไม่มีแบบประเมินประกันครบปี</div>'; $('warNotes').innerHTML = ''; return; }
   $('warBars').innerHTML = topics.map(function(t){
-    var v = hs.map(function(h){ return h.sv.war[t[0]]; }).filter(function(x){ return x != null && x !== ''; }).map(Number);
+    var v = hs.map(function(h){ return warOf(h)[t[0]]; }).filter(function(x){ return x != null && x !== ''; }).map(Number);
     var a = v.length ? v.reduce(function(x,y){ return x+y; }, 0) / v.length : 0;
     var c = !v.length ? 'var(--baseline)' : a >= 4 ? 'var(--good)' : a >= 3 ? 'var(--warning)' : 'var(--critical)';
     return '<div class="hbar"><div class="lab">' + esc(t[1]) + '</div><div class="track"><div class="fill" style="width:' + (a*20) + '%;background:' + c + '"></div></div><div class="val">' + (v.length ? a.toFixed(1) : '–') + '<span>' + fmt(v.length) + ' หลัง</span></div></div>';
   }).join('');
-  var notes = hs.filter(function(h){ return h.sv.war.suggest; });
+  var notes = hs.filter(function(h){ return warOf(h).suggest; });
   $('warNotes').innerHTML = notes.length ? notes.map(function(h){
-    return '<div class="rep"><div class="rhead"><a href="#" class="hid" data-id="' + h.id + '" style="color:var(--accent-ink);text-decoration:none">' + h.id + '</a></div><div class="rdet">' + esc(h.sv.war.suggest) + '</div></div>';
+    return '<div class="rep"><div class="rhead"><a href="#" class="hid" data-id="' + h.id + '" style="color:var(--accent-ink);text-decoration:none">' + h.id + '</a></div><div class="rdet">' + esc(warOf(h).suggest) + '</div></div>';
   }).join('') : '<div class="empty">ไม่มีข้อเสนอแนะที่ลูกค้าระบุ</div>';
   Array.prototype.forEach.call($('warNotes').querySelectorAll('a[data-id]'), function(a){
     a.addEventListener('click', function(ev){ ev.preventDefault(); openHouse(a.getAttribute('data-id')); });
@@ -1041,16 +1044,16 @@ function openHouse(id){
                   ['ข้อเสนอแนะ', st.suggest || ''], ['แนะนำ PATTA ต่อ', st.rec || '']].filter(function(l){ return l[1]; });
         html += '<div style="font-weight:600;margin:6px 0 8px">ความพึงพอใจหลังการขาย</div><div class="kv">' + sl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
       }
-      if(sv.war){
-        var wr = sv.war, wn = ['ภาพรวมโครงการ','คุณภาพบ้าน 1 ปี','การซ่อมประกัน','ดูแลโครงการ','ควบคุมงานก่อสร้าง'];
-        var wl = [['คะแนน (เต็ม 5)', ['w1','w2','w3','w4','w5'].map(function(k, i){ return wr[k] != null ? wn[i] + ' ' + wr[k] : ''; }).filter(Boolean).join(' · ')],
-                  ['ข้อเสนอแนะ', wr.suggest || ''], ['วันที่ประเมิน', wr.date ? thDate(wr.date) : '']].filter(function(l){ return l[1]; });
-        html += '<div style="font-weight:600;margin:6px 0 8px">ประเมินประกันครบปี</div><div class="kv">' + wl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
-      }
     } else {
       html += '<div class="muted" style="margin-bottom:16px">' + (sv ? 'มีชื่อในไฟล์แบบสอบถาม แต่ยังไม่ได้ทำ' : 'ยังไม่มีข้อมูลแบบสอบถาม') + '</div>';
     }
   }
+  if(h && warOf(h)){
+        var wr = warOf(h), wn = ['ภาพรวมโครงการ','คุณภาพบ้าน 1 ปี','การซ่อมประกัน','ดูแลโครงการ','ควบคุมงานก่อสร้าง'];
+        var wl = [['คะแนน (เต็ม 5)', ['w1','w2','w3','w4','w5'].map(function(k, i){ return wr[k] != null ? wn[i] + ' ' + wr[k] : ''; }).filter(Boolean).join(' · ')],
+                  ['ข้อเสนอแนะ', wr.suggest || ''], ['วันที่ประเมิน', wr.date ? thDate(wr.date) : ''], ['ที่มา', h.war && wr === h.war ? 'ไฟล์สแกนแบบประเมิน' : 'นิติบันทึก']].filter(function(l){ return l[1]; });
+        html += '<div style="font-weight:600;margin:6px 0 8px">ประเมินประกันครบปี</div><div class="kv">' + wl.map(function(l){ return '<div>' + esc(l[0]) + '</div><div>' + esc(l[1]) + '</div>'; }).join('') + '</div>';
+      }
   if(h && currentUser && currentUser.isAdmin) html += '<div style="font-weight:600;margin:6px 0 8px">ไฟล์จากนิติ</div><div id="dFiles" class="muted" style="margin-bottom:16px">กำลังโหลด…</div>';
   html += '<div style="font-weight:600;margin:6px 0 8px">ประวัติแจ้งซ่อม (' + reps.length + ' รายการ)</div>';
   html += reps.length ? reps.map(function(r){
@@ -1259,6 +1262,7 @@ $('upGo').addEventListener('click', function(){
   pending.houses.forEach(function(h){
     var x = {id:h.id, ow:h.ow, td:h.td, co:h.co};
     if(h.sv) x.sv = h.sv;
+    if(h.war) x.war = h.war;
     (perP[h.p] = perP[h.p] || []).push(x);
   });
   Object.keys(perP).forEach(function(p){ b.set(db.collection('juristic_houses').doc(p), {json: JSON.stringify(perP[p]), updatedAt: stamp, updatedBy: by}); });
