@@ -461,6 +461,8 @@ function kpis(el, list){
 }
 
 // ---------- filtering ----------
+// CSM repair data stops at its latest job date; ages/overdue are measured up to that date, not today
+function csmAsOf(){ return (S.csmLatest && S.csmLatest < S.today) ? S.csmLatest : S.today; }
 function H(){ return S.houses.filter(function(h){ return !projSel || h.p === projSel; }); }
 function R(){ return S.repairs.filter(function(r){ return !projSel || r.p === projSel; }); }
 function pname(p){ return (S.projects && S.projects[p]) || p; }
@@ -649,8 +651,8 @@ function renderService(){
   // open table
   var openSorted = open.slice().sort(function(a,b){ return (a.d||'').localeCompare(b.d||''); });
   $('svOpen').innerHTML = openSorted.length ? openSorted.map(function(r){
-    var age = r.d ? days(r.d, S.today) : '';
-    var overdue = r.due && r.due < S.today && r.st === 'open';
+    var age = r.d ? days(r.d, csmAsOf()) : '';
+    var overdue = r.due && r.due < csmAsOf() && r.st === 'open';
     return '<tr class="click" data-id="' + esc(r.h) + '"><td class="hid">' + esc(r.h) + '</td><td class="mono" style="font-size:11.5px">' + esc(r.no) + '</td><td>' + esc(r.subj) + (r.pr === 'ด่วน' ? ' <span class="pill bad">ด่วน</span>' : '') + '</td><td>' + esc(r.cat) + '</td><td>' + thDate(r.d) + '</td><td class="num">' + age + '</td><td>' +
       (r.st === 'done' ? '<span class="pill warn">รอลูกค้าเซ็นปิด</span>' : '<span class="pill bad">' + (overdue ? 'เกินกำหนด' : 'กำลังดำเนินการ') + '</span>') + '</td><td>' + esc(r.who || '–') + '</td></tr>';
   }).join('') : '<tr><td colspan="8" class="empty">ไม่มีงานค้าง</td></tr>';
@@ -695,7 +697,7 @@ function renderSla(){
   // definitions match Khun Runruk's CSM aging report (csm_repair_aging.py): unit = repair line,
   // overdue/age use today for lines not closed yet; CSM sets due = report date + 10 days automatically (system SLA)
   var rs = R().filter(function(r){ return !/000$/.test(r.h); });
-  var endOf = function(r){ return r.done || S.today; };
+  var endOf = function(r){ return r.done || csmAsOf(); };
   var slaOf = function(r){ return r.sla || r.due; };
   var withDue = rs.filter(function(r){ return slaOf(r); });
   var lateL = withDue.filter(function(r){ return endOf(r) > slaOf(r); });
@@ -709,7 +711,7 @@ function renderSla(){
   var qaAll = []; qa.forEach(function(r){ r.qa.forEach(function(v){ if(v != null) qaAll.push(v); }); });
   var avg = function(a){ return a.length ? a.reduce(function(x,y){ return x+y; }, 0) / a.length : null; };
   if(!rs.length){ $('slaSub').textContent = 'ไม่มีงานซ่อมในตัวกรองนี้'; $('slaKpis').innerHTML = ''; $('slaCat').innerHTML = ''; $('slaQa').innerHTML = ''; return; }
-  $('slaSub').textContent = (S.csmLatest ? 'ข้อมูลงานซ่อมถึง ' + thDate(S.csmLatest) + ' (ใบงานล่าสุดในระบบ CSM) · ' : '') + 'นับรายบรรทัดงานซ่อม ' + fmt(rs.length) + ' รายการ · "กำหนด" คือ SLA ที่ระบบ CSM ตั้งให้อัตโนมัติ = วันแจ้ง + 10 วัน งานด่วน 3 วัน (ไม่ใช่วันนัดลูกค้า) · งานที่ยังไม่ปิดนับถึงวันนี้ · วันช่างเข้า-ออก การตีกลับ และ QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : '');
+  $('slaSub').textContent = (S.csmLatest ? 'ข้อมูลงานซ่อมถึง ' + thDate(S.csmLatest) + ' (ใบงานล่าสุดในระบบ CSM) · ' : '') + 'นับรายบรรทัดงานซ่อม ' + fmt(rs.length) + ' รายการ · "กำหนด" คือ SLA ที่ระบบ CSM ตั้งให้อัตโนมัติ = วันแจ้ง + 10 วัน งานด่วน 3 วัน (ไม่ใช่วันนัดลูกค้า) · งานที่ยังไม่ปิดนับถึง ' + thDate(csmAsOf()) + ' · วันช่างเข้า-ออก การตีกลับ และ QA จากตาราง CSM ที่ดึงทุกคืน' + (S.slaUpdated ? ' (ข้อมูล ' + S.slaUpdated + ')' : '');
   var f1 = function(v){ return v == null ? '–' : (Math.round(v*10)/10).toString(); };
   kpis($('slaKpis'), [
     {l:'เลย SLA', v: withDue.length ? pct(lateL.length, withDue.length) + '%' : '–', s: fmt(lateL.length) + ' จาก ' + fmt(withDue.length) + ' รายการ · ยังไม่ปิด ' + fmt(openLate.length), cls: withDue.length && lateL.length/withDue.length > 0.3 ? 'warn' : ''},
