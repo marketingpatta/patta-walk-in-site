@@ -8,6 +8,7 @@
      upload the paper questionnaire and resident photos. This file contains NO customer data.
      Everything is read/written in Firestore after sign-in:
        juristic_profiles/{uid}      who is a juristic user + which projects (admin-managed)
+       profiles/{uid}.tabs has "juristic" -> company staff, all projects (set in home.html permission pop-up)
        juristic_houses/{p}          house list per project (written by the residents.html upload)
        resident_records/{houseId}   household answers, no contact details (dashboard reads this)
        resident_contacts/{houseId}  contact person, phone, LINE, e-mail, plates (juristic + admin only)
@@ -471,15 +472,17 @@ function onUser(user){
     var j = res[0] && res[0].exists ? res[0].data() : null;
     var p = res[1] && res[1].exists ? res[1].data() : null;
     var admin = !!(p && p.isAdmin);
-    if(!admin && !(j && j.active !== false && (j.projects||[]).length)){
+    // company staff given "PATTA นิติบุคคล" in the hub's permission pop-up (profiles.tabs has "juristic") see every project
+    var staff = !admin && !!(p && Array.isArray(p.tabs) && p.tabs.indexOf('juristic') >= 0);
+    if(!admin && !staff && !(j && j.active !== false && (j.projects||[]).length)){
       $('gateLoading').hidden = true; $('loginForm').hidden = true; $('noAccess').hidden = false;
       $('noAccessMsg').textContent = 'บัญชีนี้ยังไม่ได้รับสิทธิ์บันทึกข้อมูลลูกบ้าน กรุณาติดต่อแอดมิน';
       return;
     }
     me = {uid:user.uid, email:user.email, admin:admin, name:(j && j.name) || (p && p.displayName) || user.email,
-          projects: admin ? ALL_P.slice() : j.projects.slice()};
-    $('who').textContent = me.name + (admin ? ' · แอดมิน' : ' · นิติ ' + me.projects.map(function(x){ return PNAME[x] || x; }).join(', '));
-    $('manageBtn').hidden = !admin; $('homeLink').hidden = !admin;
+          projects: (admin || staff) ? ALL_P.slice() : j.projects.slice()};
+    $('who').textContent = me.name + (admin ? ' · แอดมิน' : staff ? ' · พนักงาน (ทุกโครงการ)' : ' · นิติ ' + me.projects.map(function(x){ return PNAME[x] || x; }).join(', '));
+    $('manageBtn').hidden = !admin; $('homeLink').hidden = !(admin || staff);
     $('gate').hidden = true; $('app').hidden = false;
     renderProjSeg();
   });
