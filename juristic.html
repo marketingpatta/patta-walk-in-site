@@ -205,8 +205,20 @@
       <label class="field" style="margin-top:12px">รหัสผ่าน<input type="password" id="loginPwd" autocomplete="current-password" required></label>
       <button class="btn primary" type="submit" id="loginBtn" style="width:100%;margin-top:16px">เข้าสู่ระบบ</button>
       <div class="err" id="loginErr" hidden></div>
+      <div class="ok" id="loginOk" hidden></div>
+      <div style="margin-top:12px;text-align:center"><button type="button" class="btn" id="forgotBtn" style="border:0;background:none;color:var(--accent-ink);min-height:0;padding:4px">ลืมรหัสผ่าน</button></div>
     </form>
-    <div id="noAccess" hidden><div class="err" id="noAccessMsg"></div><button class="btn" id="noAccessLogout" style="margin-top:12px">ออกจากระบบ</button></div>
+    <div id="noAccess" hidden>
+      <div class="err" id="noAccessMsg"></div>
+      <div id="reqBox" hidden style="margin-top:14px">
+        <div class="muted" style="margin-bottom:8px">ถ้าเป็นนิติโครงการและใช้อีเมลนี้อยู่แล้ว ส่งคำขอให้แอดมินอนุมัติได้เลย ไม่ต้องสร้างบัญชีใหม่</div>
+        <label class="field">ชื่อที่แสดง<input id="reqName" placeholder="เช่น นิติ CHIEFTAIN - คุณเอ"></label>
+        <label class="field" style="margin-top:10px">โครงการที่ดูแล<input id="reqProj" placeholder="เช่น CHIEFTAIN"></label>
+        <button class="btn primary" id="reqBtn" style="width:100%;margin-top:12px">ส่งคำขอสิทธิ์นิติ</button>
+        <div class="ok" id="reqOk" hidden></div><div class="err" id="reqErr" hidden></div>
+      </div>
+      <button class="btn" id="noAccessLogout" style="margin-top:12px">ออกจากระบบ</button>
+    </div>
   </div>
 </div>
 
@@ -372,13 +384,18 @@
   <div class="modal-card">
     <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:700;font-size:18px">บัญชีนิติบุคคล</div><button class="x" id="mgrClose">×</button></div>
     <div class="muted" style="margin:4px 0 12px">บัญชีนิติเข้าได้เฉพาะหน้านี้ เห็นเฉพาะโครงการที่กำหนด เข้า Walk-in Tracker และแดชบอร์ดลูกบ้านไม่ได้</div>
+    <div id="reqSec" hidden>
+      <div style="font-weight:600;margin:4px 0 6px">คำขอสิทธิ์รออนุมัติ <span class="pill warn" id="reqCount"></span></div>
+      <table style="margin-bottom:14px"><thead><tr><th>ชื่อ</th><th>อีเมล</th><th>โครงการที่แจ้ง</th><th></th></tr></thead><tbody id="reqList"></tbody></table>
+    </div>
     <table><thead><tr><th>ชื่อ</th><th>อีเมล</th><th>โครงการ</th><th></th></tr></thead><tbody id="mgrList"></tbody></table>
     <div style="font-weight:600;margin:16px 0 8px" id="mgrFormTitle">เพิ่มบัญชีนิติ</div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <label class="field">ชื่อที่แสดง<input id="m_name" placeholder="เช่น นิติ CHIEFTAIN - คุณเอ"></label>
       <label class="field">อีเมล<input id="m_email" type="email"></label>
-      <label class="field" id="m_pwdWrap">รหัสผ่านเริ่มต้น (อย่างน้อย 6 ตัว)<input id="m_pwd" type="text"></label>
+      <label class="field" id="m_pwdWrap">รหัสผ่านเริ่มต้น (อย่างน้อย 6 ตัว · เว้นว่างได้ถ้าอีเมลมีบัญชีแล้ว)<input id="m_pwd" type="text"></label>
     </div>
+    <div class="muted" id="m_hint" style="margin-top:6px">ถ้าอีเมลนี้มีบัญชีในระบบอยู่แล้ว (เช่น เคยใช้ Walk-in Tracker) ระบบจะเพิ่มสิทธิ์นิติให้บัญชีเดิม นิติใช้รหัสผ่านเดิมได้เลย ช่องรหัสผ่านจะไม่ถูกใช้</div>
     <div class="field" style="margin-top:10px">โครงการที่ดูแล<div class="chips" id="m_projects"></div></div>
     <div class="err" id="mgrErr" hidden></div><div class="ok" id="mgrOk" hidden></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn" id="mgrReset">ล้างฟอร์ม</button><button class="btn primary" id="mgrSave">บันทึกบัญชี</button></div>
@@ -476,7 +493,11 @@ function onUser(user){
     var staff = !admin && !!(p && Array.isArray(p.tabs) && p.tabs.indexOf('juristic') >= 0);
     if(!admin && !staff && !(j && j.active !== false && (j.projects||[]).length)){
       $('gateLoading').hidden = true; $('loginForm').hidden = true; $('noAccess').hidden = false;
-      $('noAccessMsg').textContent = 'บัญชีนี้ยังไม่ได้รับสิทธิ์บันทึกข้อมูลลูกบ้าน กรุณาติดต่อแอดมิน';
+      $('noAccessMsg').textContent = 'บัญชี ' + (user.email || '') + ' ยังไม่ได้รับสิทธิ์บันทึกข้อมูลลูกบ้าน' + (j && j.active === false ? ' (บัญชีถูกปิดอยู่)' : '');
+      $('reqBox').hidden = !!(j && j.active === false);
+      db.collection('juristic_requests').doc(user.uid).get().then(function(r){
+        if(r.exists){ $('reqOk').textContent = 'ส่งคำขอแล้ว รอแอดมินอนุมัติ — เมื่ออนุมัติแล้วรีเฟรชหน้านี้ได้เลย'; $('reqOk').hidden = false; $('reqBtn').textContent = 'ส่งคำขออีกครั้ง'; var d = r.data(); $('reqName').value = d.name || ''; $('reqProj').value = d.proj || ''; }
+      }).catch(function(){});
       return;
     }
     me = {uid:user.uid, email:user.email, admin:admin, name:(j && j.name) || (p && p.displayName) || user.email,
@@ -495,6 +516,23 @@ $('loginForm').addEventListener('submit', function(e){
 });
 $('logoutBtn').addEventListener('click', function(){ auth.signOut(); });
 $('noAccessLogout').addEventListener('click', function(){ auth.signOut(); });
+$('reqBtn').addEventListener('click', function(){
+  var u = auth.currentUser; if(!u) return;
+  var name = $('reqName').value.trim(), proj = $('reqProj').value.trim();
+  $('reqErr').hidden = true; $('reqOk').hidden = true;
+  if(!name || !proj){ $('reqErr').textContent = 'กรอกชื่อและโครงการที่ดูแล'; $('reqErr').hidden = false; return; }
+  $('reqBtn').disabled = true;
+  db.collection('juristic_requests').doc(u.uid).set({email:u.email || '', name:name, proj:proj, at:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+    $('reqBtn').disabled = false; $('reqOk').textContent = 'ส่งคำขอแล้ว รอแอดมินอนุมัติ — เมื่ออนุมัติแล้วรีเฟรชหน้านี้ได้เลย'; $('reqOk').hidden = false;
+  }).catch(function(err){ $('reqBtn').disabled = false; $('reqErr').textContent = fbMsg(err); $('reqErr').hidden = false; });
+});
+$('forgotBtn').addEventListener('click', function(){
+  var email = $('loginEmail').value.trim();
+  $('loginErr').hidden = true; $('loginOk').hidden = true;
+  if(!email){ $('loginErr').textContent = 'กรอกอีเมลก่อน แล้วกด "ลืมรหัสผ่าน" อีกครั้ง'; $('loginErr').hidden = false; return; }
+  auth.sendPasswordResetEmail(email).then(function(){ $('loginOk').textContent = 'ถ้าอีเมลนี้มีบัญชี ระบบส่งลิงก์ตั้งรหัสผ่านใหม่ไปแล้ว (ดูในกล่องจดหมายขยะด้วย)'; $('loginOk').hidden = false; })
+    .catch(function(err){ $('loginErr').textContent = fbMsg(err); $('loginErr').hidden = false; });
+});
 
 // ---------- project list ----------
 function renderProjSeg(){
@@ -922,8 +960,8 @@ function openFile(fid){
 $('vClose').addEventListener('click', function(){ $('viewer').hidden = true; $('vImg').src = ''; });
 
 // ---------- admin: juristic accounts ----------
-var editingUid = null;
-function mgrReset(){ editingUid = null; ['m_name','m_email','m_pwd'].forEach(function(k){ $(k).value = ''; }); $('m_email').disabled = false; $('m_pwdWrap').hidden = false; $('mgrFormTitle').textContent = 'เพิ่มบัญชีนิติ'; Array.prototype.forEach.call($('m_projects').querySelectorAll('input'), function(i){ i.checked = false; }); $('mgrErr').hidden = true; $('mgrOk').hidden = true; }
+var editingUid = null, approvingUid = null;
+function mgrReset(){ editingUid = null; approvingUid = null; $('m_hint').hidden = false; ['m_name','m_email','m_pwd'].forEach(function(k){ $(k).value = ''; }); $('m_email').disabled = false; $('m_pwdWrap').hidden = false; $('mgrFormTitle').textContent = 'เพิ่มบัญชีนิติ'; Array.prototype.forEach.call($('m_projects').querySelectorAll('input'), function(i){ i.checked = false; }); $('mgrErr').hidden = true; $('mgrOk').hidden = true; }
 $('m_projects').innerHTML = ALL_P.map(function(p){ return '<label><input type="checkbox" value="' + p + '">' + esc(PNAME[p]) + '</label>'; }).join('');
 function loadMgr(){
   db.collection('juristic_profiles').get().then(function(qs){
@@ -942,6 +980,27 @@ function loadMgr(){
       db.collection('juristic_profiles').doc(x.uid).update({active: x.active === false}).then(loadMgr);
     }); });
   }).catch(function(err){ $('mgrList').innerHTML = '<tr><td colspan="4" class="err">' + esc(fbMsg(err)) + '</td></tr>'; });
+  // requests from people who already have an account (sent from the "no access" screen)
+  db.collection('juristic_requests').get().then(function(qs){
+    var rq = []; qs.forEach(function(d){ var x = d.data(); x.uid = d.id; rq.push(x); });
+    $('reqSec').hidden = !rq.length; $('reqCount').textContent = rq.length;
+    $('reqList').innerHTML = rq.map(function(x){
+      return '<tr><td>' + esc(x.name) + '</td><td>' + esc(x.email) + '</td><td>' + esc(x.proj) + '</td><td style="white-space:nowrap"><button class="btn primary" data-a="' + x.uid + '">อนุมัติ</button> <button class="btn danger" data-x="' + x.uid + '">ปฏิเสธ</button></td></tr>';
+    }).join('');
+    Array.prototype.forEach.call($('reqList').querySelectorAll('[data-a]'), function(b){ b.addEventListener('click', function(){
+      var x = rq.filter(function(r){ return r.uid === b.getAttribute('data-a'); })[0];
+      mgrReset(); approvingUid = x.uid; $('m_hint').hidden = true;
+      $('m_name').value = x.name || ''; $('m_email').value = x.email || ''; $('m_email').disabled = true; $('m_pwdWrap').hidden = true;
+      $('mgrFormTitle').textContent = 'อนุมัติคำขอของ ' + (x.email || '') + ' — เลือกโครงการแล้วกดบันทึก';
+      var guess = String(x.proj || '').toUpperCase();
+      Array.prototype.forEach.call($('m_projects').querySelectorAll('input'), function(i){ i.checked = guess.indexOf(i.value) >= 0 || guess.indexOf(String(PNAME[i.value] || '').toUpperCase()) >= 0; });
+      $('mgrFormTitle').scrollIntoView({block:'center'});
+    }); });
+    Array.prototype.forEach.call($('reqList').querySelectorAll('[data-x]'), function(b){ b.addEventListener('click', function(){
+      if(!confirm('ปฏิเสธคำขอนี้?')) return;
+      db.collection('juristic_requests').doc(b.getAttribute('data-x')).delete().then(loadMgr);
+    }); });
+  }).catch(function(){ $('reqSec').hidden = true; });
 }
 $('manageBtn').addEventListener('click', function(){ mgrReset(); loadMgr(); $('mgr').hidden = false; });
 $('mgrClose').addEventListener('click', function(){ $('mgr').hidden = true; });
@@ -950,25 +1009,54 @@ $('mgrSave').addEventListener('click', function(){
   var name = $('m_name').value.trim(), email = $('m_email').value.trim(), pwd = $('m_pwd').value;
   var projects = Array.prototype.map.call($('m_projects').querySelectorAll('input:checked'), function(i){ return i.value; });
   $('mgrErr').hidden = true; $('mgrOk').hidden = true;
-  if(!name || !projects.length || (!editingUid && (!email || pwd.length < 6))){ $('mgrErr').textContent = 'กรอกชื่อ เลือกโครงการ และ (บัญชีใหม่) อีเมล + รหัสผ่านอย่างน้อย 6 ตัว'; $('mgrErr').hidden = false; return; }
+  if(!name || !projects.length || (!editingUid && !approvingUid && (!email || (pwd && pwd.length < 6)))){ $('mgrErr').textContent = 'กรอกชื่อ เลือกโครงการ และอีเมล (รหัสผ่านเริ่มต้นต้องมีอย่างน้อย 6 ตัว หรือเว้นว่างไว้)'; $('mgrErr').hidden = false; return; }
   $('mgrSave').disabled = true;
   var done = function(msg){ $('mgrSave').disabled = false; $('mgrOk').textContent = msg; $('mgrOk').hidden = false; loadMgr(); };
   var fail = function(err){ $('mgrSave').disabled = false; $('mgrErr').textContent = fbMsg(err); $('mgrErr').hidden = false; };
   if(editingUid){
-    db.collection('juristic_profiles').doc(editingUid).update({name:name, projects:projects}).then(function(){ done('บันทึกแล้ว'); mgrReset(); }).catch(fail);
+    db.collection('juristic_profiles').doc(editingUid).update({name:name, projects:projects}).then(function(){ mgrReset(); done('บันทึกแล้ว'); }).catch(fail);
     return;
   }
+  if(approvingUid){
+    var au = approvingUid;
+    db.collection('juristic_profiles').doc(au).set({name:name, email:email, projects:projects, active:true, linked:'request',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(), createdBy:me.email}).then(function(){
+      return db.collection('juristic_requests').doc(au).delete();
+    }).then(function(){ mgrReset(); done('อนุมัติแล้ว — นิติรีเฟรชหน้าเดิมแล้วเข้าใช้ได้ทันทีด้วยรหัสผ่านเดิม'); }).catch(fail);
+    return;
+  }
+  // email already registered (e.g. a staff account): link to that account instead of creating a new one
+  var linkExisting = function(){
+    var em = email.toLowerCase();
+    return Promise.all([db.collection('profiles').get(), db.collection('juristic_profiles').get()]).then(function(res){
+      var hitJ = null, hitP = null;
+      res[1].forEach(function(d){ if(String((d.data() || {}).email || '').toLowerCase() === em) hitJ = d.id; });
+      if(hitJ){ throw {message:'อีเมลนี้เป็นบัญชีนิติอยู่แล้ว — กด "แก้ไข" ที่รายชื่อด้านบนเพื่อเปลี่ยนโครงการ หรือกด "เปิด" ถ้าบัญชีถูกปิดไว้'}; }
+      res[0].forEach(function(d){ if(String((d.data() || {}).email || '').toLowerCase() === em) hitP = d.id; });
+      if(!hitP){ throw {message:'อีเมลนี้มีบัญชีในระบบอยู่แล้ว แต่ไม่พบในรายชื่อพนักงาน — ให้นิติเปิดหน้าฟอร์มนิติ เข้าสู่ระบบด้วยรหัสผ่านเดิม (หรือกด "ลืมรหัสผ่าน") แล้วกด "ส่งคำขอสิทธิ์นิติ" จากนั้นกดอนุมัติในหน้าต่างนี้'}; }
+      return db.collection('juristic_profiles').doc(hitP).set({name:name, email:email, projects:projects, active:true, linked:'existing',
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(), createdBy:me.email}).then(function(){
+        mgrReset(); done('อีเมลนี้มีบัญชีอยู่แล้ว — เพิ่มสิทธิ์นิติให้บัญชีเดิมแล้ว ใช้รหัสผ่านเดิมเข้าได้เลย (รหัสผ่านที่กรอกไว้ไม่ถูกใช้)');
+      });
+    });
+  };
   // Create the Auth account with a secondary app instance so the admin stays signed in
   // (same technique as "จัดการผู้ใช้" in the Walk-in Tracker). No "profiles" doc is written,
   // so this account cannot open the Walk-in Tracker or the residents dashboard.
   var sec;
   try{ sec = firebase.initializeApp(FIREBASE_CONFIG, 'jur-' + Date.now()); }catch(e){ return fail(e); }
+  var noPwd = !pwd;
+  if(noPwd){ pwd = Math.random().toString(36).slice(2, 10) + 'Aa1!'; }   // only used if the e-mail turns out to be new
   sec.auth().createUserWithEmailAndPassword(email, pwd).then(function(cred){
     var uid = cred.user.uid;
     return db.collection('juristic_profiles').doc(uid).set({name:name, email:email, projects:projects, active:true,
       createdAt:firebase.firestore.FieldValue.serverTimestamp(), createdBy:me.email}).then(function(){ return sec.auth().signOut(); });
-  }).then(function(){ try{ sec.delete(); }catch(e){} done('สร้างบัญชีแล้ว ส่งอีเมลและรหัสผ่านเริ่มต้นให้นิติ แล้วให้เปลี่ยนรหัสผ่านภายหลัง'); mgrReset(); })
-    .catch(function(err){ try{ sec.delete(); }catch(e){} fail(err); });
+  }).then(function(){ try{ sec.delete(); }catch(e){} mgrReset(); done(noPwd ? 'สร้างบัญชีใหม่แล้ว (ไม่ได้ตั้งรหัสผ่าน) — ให้นิติเปิดหน้าฟอร์มนิติ กรอกอีเมลแล้วกด "ลืมรหัสผ่าน" เพื่อตั้งรหัสผ่านเอง' : 'สร้างบัญชีแล้ว ส่งอีเมลและรหัสผ่านเริ่มต้นให้นิติ แล้วให้เปลี่ยนรหัสผ่านภายหลัง'); })
+    .catch(function(err){
+      try{ sec.delete(); }catch(e){}
+      if(err && /email-already-in-use/.test(err.code || '')) return linkExisting().catch(fail);
+      fail(err);
+    });
 });
 
 })();
