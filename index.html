@@ -2886,16 +2886,20 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // Re-run this section manually whenever marketing shares an updated sheet.
   var AD_SPEND = {};
   (SS_DATA.salesProjects || []).forEach(function(p){ AD_SPEND[p] = { online: null, offline: null }; });
+  // 26 ต.ค. 2569: online (Facebook) = ยอดสะสมจากชีตการตลาด (ถึง ก.ย.) + ยอดที่ Meta เรียกเก็บ ~22 ก.ย.–27 ต.ค. (ใบเสร็จบัญชี Patta Development แยกตามแคมเปญ/ชุดโฆษณา
+  // + Invoice Summary บัญชี Chieftain 36,592.90 ซึ่งเป็น CHF ทั้งหมด) · แคมเปญ Brand 21,578.83 ใช้ร่วมทุกโครงการ ยังไม่ได้แบ่ง · ช่วงปลาย ก.ย. อาจซ้อนกับยอดในชีต
+  // OFFLINE_ERP_BUDGET (26 ต.ค. 2569): offline = ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP (เฉพาะที่ลงบัญชีแล้ว ม.ค.–ต.ค.) แทนตัวเลขจากชีต;
+  // ค่าที่นี่เป็นค่าสำรอง -- ถ้ามี SS_DATA.mktCost (จาก ERP sync) การ์ดจะใช้ค่าสดจากนั้นแทน (ดู renderMediaCompareCard)
   Object.assign(AD_SPEND, {
-    'HORIZON':          { online: 381289, offline: 110870 },
-    'ARCADE Autograph': { online: 413414, offline: 1178069 },
-    'CHIEFTAIN':        { online: 419700, offline: 236771 },
-    'CASCADE':          { online: 386612, offline: 854595 },
-    'PATTA TERRANE':    { online: 51360,  offline: 56825 },
-    'PATTA RIVERINE':   { online: 55578,  offline: 36113 },
+    'HORIZON':          { online: 426106, offline: 174544 },
+    'ARCADE Autograph': { online: 443153, offline: 832778 },
+    'CHIEFTAIN':        { online: 463294, offline: 373719 },
+    'CASCADE':          { online: 416205, offline: 1064067 },
+    'PATTA TERRANE':    { online: 62957,  offline: 170306 },
+    'PATTA RIVERINE':   { online: 67127,  offline: 186848 },
     // PATTA PILLAR: no Facebook spend logged in the sheet yet; the ป้าย figure has
     // only one month (ก.ย. 2569) recorded so far -- treat it as partial, not a full total.
-    'PATTA PILLAR':     { online: null,   offline: 73396 }
+    'PATTA PILLAR':     { online: 21886,  offline: 0 }
   });
 
   // Best-effort name match against SS_DATA.contractDetail[proj] (ERP) for closed-deal
@@ -2926,8 +2930,11 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     });
     var keys = group.series.map(function(s){ return s.key; });
     var channelRows = rows.filter(function(r){ return keys.indexOf(r.m)>=0; });
-    var closedRows = channelRows.filter(isClosedDealRow);
+    var PREFIX = {'HORIZON':'HRZ','ARCADE Autograph':'ACS','CHIEFTAIN':'CHF','CASCADE':'CAS','PATTA TERRANE':'TER','PATTA RIVERINE':'RVR','PATTA PILLAR':'PPL'}[proj] || null;
     var contractList = (SS_DATA.contractDetail && SS_DATA.contractDetail[proj]) || [];
+    var erpCodes = {};
+    contractList.forEach(function(c){ if(c.rc) erpCodes[c.rc] = 1; });
+    var hasErp = contractList.length > 0;
     var contractByName = {};
     contractList.forEach(function(c){
       if(c.bs || c.cs || c.ds || c.ts){
@@ -2935,20 +2942,57 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         if(k && c.rc && !contractByName[k]) contractByName[k] = c.rc;
       }
     });
+    // Unit codes typed in "แปลงที่จอง" that belong to THIS project and (when ERP data exists) have a
+    // contract in ERP. A code of another project (e.g. CAS008 on a CHF walk-in) or a unit ERP shows as
+    // vacant does not make the walk-in a closed deal of this project.
+    function ownUnits(r){
+      var found = String(r.bu||'').toUpperCase().match(/[A-Z]{3}\d{3}/g) || [];
+      return found.filter(function(c){ return (!PREFIX || c.indexOf(PREFIX)===0) && (!hasErp || erpCodes[c]); });
+    }
+    var closedRows = channelRows.filter(function(r){
+      if(!isClosedDealRow(r)) return false;
+      if(ownUnits(r).length) return true;
+      if(contractByName[mcNormName(r.nm)]) return true;
+      return !String(r.bu||'').trim();
+    });
     var unitsMatched = false;
-    var units = closedRows.map(function(r){
-      if(r.bu) return r.bu;
+    var units = [];
+    closedRows.forEach(function(r){
+      var o = ownUnits(r);
+      if(o.length){ units = units.concat(o); return; }
       var m = contractByName[mcNormName(r.nm)];
-      if(m){ unitsMatched = true; return '~'+m; }
-      return null;
-    }).filter(Boolean);
+      if(m){ unitsMatched = true; units.push('~'+m); }
+    });
     return { buckets: buckets, series: series, total: channelRows.length, closedCount: closedRows.length, units: units, unitsMatched: unitsMatched };
+  }
+
+  // ค่าป้าย/สื่อสิ่งพิมพ์ตาม ERP (SS_DATA.mktCost จาก GL, ดู mkt_cost.py) -- แสดงเฉพาะการ์ด Offline เป็นข้อมูลอ้างอิงแยก
+  var MKT_TH_MONTH = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  function mktErpHtml(proj, closedCount){
+    var mc = (SS_DATA && SS_DATA.mktCost && SS_DATA.mktCost[proj]) || null;
+    if (!mc) return '';
+    var bb = mc.billboard || {posted:0,sched:0,byMonth:{}}, pr = mc.print || {posted:0,sched:0,byMonth:{}};
+    var posted = (bb.posted||0) + (pr.posted||0), sched = (bb.sched||0) + (pr.sched||0);
+    var last = '';
+    [bb, pr].forEach(function(k){ Object.keys(k.byMonth||{}).forEach(function(m){ if ((k.byMonth[m][0]||0)!==0 && m>last) last = m; }); });
+    var range = last ? ('ลงบัญชีแล้ว ม.ค.–'+MKT_TH_MONTH[parseInt(last.slice(5,7),10)]) : 'ยังไม่มียอดที่ลงบัญชี';
+    var per = (posted>0 && closedCount>0) ? Math.round(posted/closedCount) : null;
+    return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border, #bbb)">'+
+      '<div style="font-size:11px;opacity:.75;margin-bottom:2px">ตามระบบ ERP ('+range+')</div>'+
+      '<div>ค่าเช่า/ภาษีป้าย: <b>'+fmtInt(bb.posted||0)+' บาท</b> &middot; สื่อสิ่งพิมพ์: <b>'+fmtInt(pr.posted||0)+' บาท</b> &middot; รวม <b>'+fmtInt(posted)+' บาท</b></div>'+
+      '<div>ต้นทุน ERP ต่อการปิดการขาย 1 ราย: <b>'+(per!=null ? fmtInt(per)+' บาท' : '&mdash;')+'</b></div>'+
+      '<div style="font-size:11px;opacity:.7">สื่อสิ่งพิมพ์ = รหัสต้นทุน G020051 ซึ่ง ERP แยกค่าผลิตป้ายออกจากสิ่งพิมพ์อื่นไม่ได้ · ยอดก่อน VAT · เป็นข้อมูลอ้างอิง แยกจากงบด้านบน (ชีตอาจรวมค่าเช่าป้ายไว้แล้ว)</div>'+
+      '</div>';
   }
 
   function renderMediaCompareCard(rootEl, proj, startISO, endISO, channelKey){
     var group = MEDIA_COMPARE_GROUPS[channelKey];
     var res = computeMediaCompare(proj, startISO, endISO, channelKey);
     var spendCfg = (AD_SPEND[proj] || {})[channelKey];
+    if (channelKey==='offline' && SS_DATA && SS_DATA.mktCost && SS_DATA.mktCost[proj]) {
+      var _mk = SS_DATA.mktCost[proj];
+      spendCfg = ((_mk.billboard && _mk.billboard.posted) || 0) + ((_mk.print && _mk.print.posted) || 0);
+    }
     var hasSpend = typeof spendCfg === 'number';
     var perSuccess = (hasSpend && res.closedCount>0) ? Math.round(spendCfg/res.closedCount) : null;
     var unitsText = res.units.length ? (' ('+res.units.map(escapeHTML).join(', ')+')'+(res.unitsMatched?' <span style="cursor:help;opacity:.6" title="~ = จับคู่ชื่อกับ ERP โดยประมาณ (ไม่ได้พิมพ์แปลงในชีต Walk-in) อาจไม่ครบทุกราย">ⓘ</span>':'')) : '';
@@ -2963,6 +3007,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<div>ผลลัพธ์ (Result): <b>'+fmtInt(res.total)+' Walk</b></div>'+
         '<div>ปิดการขาย: <b>'+fmtInt(res.closedCount)+' ราย</b>'+unitsText+'</div>'+
         '<div>ต้นทุนต่อการปิดการขาย 1 ราย: <b>'+(perSuccess!=null ? fmtInt(perSuccess)+' บาท' : '&mdash;')+'</b></div>'+
+'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–ต.ค.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
       '</div>'+
       '<div class="card-sub" style="margin:0;">'+
         res.series.map(function(s){ return escapeHTML(s.name)+': '+fmtInt(s.total)+' Walk'; }).join(' &middot; ')+
