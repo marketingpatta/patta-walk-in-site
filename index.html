@@ -4929,7 +4929,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var erpStr = (SS_DATA && SS_DATA.erpUpdated) ? ccFmtD(ccErpDate()) : '-';
     if(tab==='command'){
       txt = '<b>ช่วงเวลาที่ใช้:</b> ยอดขาย/งบ/เป้า = ปีนี้ (1 ม.ค. – ข้อมูล ERP '+erpStr+') &middot; Walk-in = 30 วันล่าสุดเทียบ 30 วันก่อนหน้า &middot; สต็อก/รอโอน = ณ วันที่ ERP อัปเดต (ตัวกรองด้านบนไม่ใช้กับหน้านี้)';
-    } else if(tab==='overview' || tab==='trends'){
+    } else if(tab==='overview' || tab==='trends' || tab==='followup'){
       txt = '<b>ช่วงเวลาที่ใช้:</b> '+fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+' &middot; โครงการ: '+(state.project==='ALL' ? 'ทุกโครงการ' : state.project)+' &middot; ข้อมูล Walk-in เท่านั้น (ไม่ใช่ยอดขาย ERP)';
     } else if(tab==='projectprofile'){
       var full = (typeof PROFILE_BOUNDS!=='undefined' && profileState.start===PROFILE_BOUNDS.min && profileState.end===PROFILE_BOUNDS.max);
