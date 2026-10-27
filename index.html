@@ -769,6 +769,51 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .cd-timeline-label{ display:inline-block; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; background:var(--accent-wash); color:var(--accent-ink); white-space:nowrap; }
   .cd-timeline-label.first{ background:rgba(12,163,12,0.14); color:var(--good-ink); }
 
+  /* ===== Marketing Report (patch_marketing_report.py, 27 ต.ค. 2569) ===== */
+  #tabPanelMktReport .mr-scope{ font-size:13px; color:var(--text-secondary); background:var(--surface-2); border-radius:8px; padding:8px 12px; margin:0 0 14px; line-height:1.6; }
+  #tabPanelMktReport .mr-scope b{ color:var(--text-primary); }
+  #tabPanelMktReport .mr-nav{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; }
+  #tabPanelMktReport .mr-nav a{ font-size:13px; text-decoration:none; color:var(--accent-ink); background:var(--accent-wash); border-radius:999px; padding:4px 12px; font-weight:600; }
+  #tabPanelMktReport .mr-sec{ margin:0 0 22px; }
+  #tabPanelMktReport .mr-h{ font-size:18px; font-weight:700; margin:0 0 2px; color:var(--text-primary); }
+  #tabPanelMktReport .mr-sub{ font-size:13px; color:var(--text-secondary); margin:0 0 10px; line-height:1.6; }
+  #tabPanelMktReport .mr-card{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); margin-bottom:14px; min-width:0; }
+  #tabPanelMktReport .mr-card table.data{ min-width:0; font-size:13.5px; }
+  #tabPanelMktReport .mr-card table.data th, #tabPanelMktReport .mr-card table.data td{ vertical-align:middle; }
+  #tabPanelMktReport .mr-n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  #tabPanelMktReport tr.mr-total td{ font-weight:700; background:var(--surface-2); }
+  #tabPanelMktReport .mr-dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  #tabPanelMktReport .mr-chip{ display:inline-block; font-size:12.5px; line-height:1.4; border-radius:999px; padding:1px 10px; font-weight:600; background:var(--surface-2); color:var(--text-secondary); white-space:nowrap; }
+  #tabPanelMktReport .mr-chip.g{ background:rgba(12,163,12,0.12); color:var(--good-ink); }
+  #tabPanelMktReport .mr-chip.a{ background:rgba(184,121,15,0.16); color:var(--warning); }
+  #tabPanelMktReport .mr-chip.r{ background:rgba(208,59,59,0.12); color:var(--critical); }
+  #tabPanelMktReport .mr-bar{ position:relative; height:8px; background:var(--grid); border-radius:4px; min-width:90px; }
+  #tabPanelMktReport .mr-bar i{ position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:var(--accent); }
+  #tabPanelMktReport .mr-bar b{ position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text-primary); opacity:.7; }
+  #tabPanelMktReport .mr-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); gap:14px; }
+  #tabPanelMktReport .mr-pc-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  #tabPanelMktReport .mr-pc-title{ font-size:16px; font-weight:700; }
+  #tabPanelMktReport .mr-mini{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:10px; }
+  #tabPanelMktReport .mr-mini div{ background:var(--surface-2); border-radius:8px; padding:6px 9px; font-size:12.5px; color:var(--text-secondary); }
+  #tabPanelMktReport .mr-mini b{ display:block; font-size:16px; color:var(--text-primary); }
+  #tabPanelMktReport .mr-talk{ list-style:none; margin:0 0 10px; padding:0; display:flex; flex-direction:column; gap:6px; }
+  #tabPanelMktReport .mr-talk li{ font-size:13.5px; line-height:1.55; border-left:4px solid var(--border-strong); padding:2px 0 2px 10px; }
+  #tabPanelMktReport .mr-talk li.g{ border-left-color:var(--good); } #tabPanelMktReport .mr-talk li.a{ border-left-color:var(--warning); } #tabPanelMktReport .mr-talk li.r{ border-left-color:var(--critical); }
+  #tabPanelMktReport .mr-talk li b.mr-th{ color:var(--accent-ink); }
+  #tabPanelMktReport .mr-note-h{ font-size:13.5px; font-weight:700; margin:4px 0 4px; }
+  #tabPanelMktReport textarea.mr-note{ width:100%; min-height:96px; box-sizing:border-box; resize:vertical; font:inherit; font-size:13.5px; line-height:1.55; padding:8px 10px; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--text-primary); }
+  #tabPanelMktReport textarea.mr-note[readonly]{ background:var(--surface-2); }
+  #tabPanelMktReport .mr-note-meta{ font-size:12.5px; color:var(--text-muted); margin-top:4px; }
+  #tabPanelMktReport .mr-note-row{ display:flex; align-items:center; gap:10px; margin-top:6px; flex-wrap:wrap; }
+  #tabPanelMktReport details.mr-prev{ margin-top:6px; font-size:12.5px; color:var(--text-secondary); }
+  #tabPanelMktReport details.mr-prev div{ border-top:1px dashed var(--border-strong); padding:4px 0; white-space:pre-wrap; }
+  #tabPanelMktReport .mr-empty{ padding:18px; text-align:center; color:var(--text-muted); font-size:14px; }
+  #tabPanelMktReport .mr-legend{ font-size:12.5px; color:var(--text-muted); margin-top:8px; line-height:1.7; }
+  @media (max-width: 860px){
+    #tabPanelMktReport .mr-grid{ grid-template-columns:1fr; }
+    #tabPanelMktReport .mr-mini{ grid-template-columns:repeat(2,1fr); }
+  }
+
 </style>
 
 <div class="tooltip" id="tooltip"></div>
@@ -897,6 +942,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     <button type="button" data-tab="projectprofile">โปรไฟล์โครงการ</button>
     <button type="button" data-tab="trends">เทรน &amp; แนวโน้มลูกค้า</button>
     <button type="button" data-tab="followup">สถานะการติดตามลูกค้า</button>
+    <button type="button" data-tab="mktreport">Marketing Report</button>
     <button type="button" data-tab="customerdata" id="tabBtnCustomerData" hidden>ข้อมูลลูกค้าเพิ่มเติม</button>
   </div>
 
@@ -1137,6 +1183,15 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       </div>
       <div class="monthly-summary-history" id="spfMonthlySummaryHistory"></div>
     </div>
+  </div>
+
+  <!-- Marketing Report: รายงานการตลาด (เพิ่ม 27 ต.ค. 2569) -- ใช้ตัวกรองโครงการ/ช่วงวันที่ชุดเดียวกับหน้าภาพรวม -->
+  <div id="tabPanelMktReport" class="tab-panel" hidden>
+    <div class="section-heading">
+      <h2>Marketing Report</h2>
+      <div class="card-sub">สรุปผลการขาย เป้า โครงการ และงบ MK สำหรับประชุมการตลาด — ใช้ตัวกรองโครงการ/ช่วงวันที่ด้านบนร่วมกับหน้าภาพรวม</div>
+    </div>
+    <div id="mrBody" class="mr-body"></div>
   </div>
 
   <div id="tabPanelCustomerData" class="tab-panel" hidden>
@@ -4730,6 +4785,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   var tabPanelProjectProfileEl = document.getElementById('tabPanelProjectProfile');
   var tabPanelSalesPerfEl = document.getElementById('tabPanelSalesPerf');
   var tabPanelCustomerDataEl = document.getElementById('tabPanelCustomerData');
+  var tabPanelMktReportEl = document.getElementById('tabPanelMktReport');
   var ssSalesStatusRendered = false, ssProjectProfileRendered = false;
   var cdTabRendered = false;
   mainTabSegEl.addEventListener('click', function(e){
@@ -4745,11 +4801,553 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     tabPanelProjectProfileEl.hidden = tab!=='projectprofile';
     tabPanelSalesPerfEl.hidden = tab!=='salesperf';
     tabPanelCustomerDataEl.hidden = tab!=='customerdata';
+    tabPanelMktReportEl.hidden = tab!=='mktreport';
     if (tab==='salesstatus' && !ssSalesStatusRendered){ renderSalesStatusTab(); ssSalesStatusRendered = true; }
     if (tab==='projectprofile' && !ssProjectProfileRendered){ renderProjectProfileTab(); ssProjectProfileRendered = true; }
     if (tab==='salesperf' && !spfRendered){ renderSalesPerfTab(); spfRendered = true; }
     if (tab==='customerdata' && !cdTabRendered){ renderCustomerTabRows(); cdTabRendered = true; }
+    if (tab==='mktreport'){ renderMktReport(); }
   });
+
+  // ===================================================================================
+  // MARKETING REPORT (แท็บรายงานการตลาด) -- เพิ่ม 27 ต.ค. 2569 (patch_marketing_report.py)
+  // ใช้ตัวกรองชุดเดียวกับหน้าภาพรวม: state.project / state.start / state.end
+  //  - จอง/โอน/ยกเลิก: ERP รายเดือน (เดือนที่คาบเกี่ยวช่วงที่เลือกนับทั้งเดือน เหมือนแท็บโปรไฟล์โครงการ)
+  //  - เป้า/ยอดขายใหม่: ปี '+MR_YEAR+' สะสมถึง min(วันที่สิ้นสุดตัวกรอง, วันนี้)
+  //  - งบ MK: มีเฉพาะยอดสะสมปี 2569 -> ผลลัพธ์นับ 1 ม.ค. 2569 ถึงวันที่สิ้นสุดตัวกรอง
+  //  - Note กลยุทธ์: เก็บที่ Firestore erp_snapshot/mkt_notes (กฎเดิม: ทุกคนที่มี profile อ่านได้, เฉพาะแอดมินเขียนได้)
+  // ===================================================================================
+  var MR_CODE = {'HORIZON':'HRZ','ARCADE Autograph':'ACS','CHIEFTAIN':'CHF','CASCADE':'CAS','PATTA PILLAR':'PPL','PATTA TERRANE':'TER','PATTA RIVERINE':'RVR'};
+  var MR_YEAR = 2026;
+  var MR_ONLINE_KEYS = ['Facebook — Walk-in', 'Facebook — ลงทะเบียน/แชท'];
+  var MR_OFFLINE_KEYS = ['ป้ายโฆษณา', 'ขับรถผ่านโครงการฯ'];
+  var mrNotes = {};          // code -> {text, updatedAt, updatedBy, prev:[...]}
+  var mrNotesDirty = {};     // code -> true เมื่อมีข้อความที่ยังไม่บันทึก
+  var mrNotesUnsub = null, mrNotesRef = null, mrNotesError = '';
+  var mrChartSpecs = [];
+
+  function mrLocalISO(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function mrN(n){ return fmtInt(Math.round(n||0)); }
+  function mrBaht(n){ return (n==null||isNaN(n)) ? '—' : fmtInt(Math.round(n))+' บาท'; }
+  function mrPctTxt(a, b){ return b>0 ? Math.round(a/b*100)+'%' : '—'; }
+  function mrProjs(){
+    var all = (SS_DATA.salesProjects || []).filter(function(p){ return SPF_DATA[p]; });
+    if(state.project==='ALL') return all;
+    return all.indexOf(state.project)>=0 ? [state.project] : [];
+  }
+  function mrCapISO(){ var t = mrLocalISO(new Date()); return state.end > t ? t : state.end; }
+  function mrMonthVal(map, proj, key){
+    var y = key.slice(0,4), m = +key.slice(5,7)-1;
+    var arr = map && map[proj] && map[proj][y];
+    return arr ? (arr[m]||0) : 0;
+  }
+  function mrFunnelMonth(proj, key, stage){
+    var f = SS_DATA.funnelByMonth && SS_DATA.funnelByMonth[proj];
+    var y = key.slice(0,4), arr = f && f[y] && f[y][stage];
+    return arr ? (arr[+key.slice(5,7)-1]||0) : 0;
+  }
+  function mrColor(p){ return 'var('+(PCOLOR[p]||'--accent')+')'; }
+  function mrChip(tone, txt){ return '<span class="mr-chip '+tone+'">'+txt+'</span>'; }
+  function mrTopPairs(pairs, n, skipNA){
+    return (pairs||[]).filter(function(x){ return !(skipNA && (x[0]==='N/A')); }).slice(0, n);
+  }
+  function mrPairsTxt(pairs, n, skipNA){
+    var top = mrTopPairs(pairs, n, skipNA);
+    return top.length ? top.map(function(x){ return escapeHTML(String(x[0]))+' '+mrN(x[1]); }).join(' · ') : '—';
+  }
+
+  // ---------- ตัวเลขเป้า/ยอดขายใหม่ ปี 2569 ----------
+  function mrTargetData(p){
+    var s = SPF_DATA[p] || {}, cap = mrCapISO();
+    var capD = parseISO(cap);
+    var o = { p:p, code:MR_CODE[p]||p, units:s.total_units||0, target:s.target_2026||0, remaining:s.remaining_unsold||0,
+              pending:s.pending_transfer||0, months:s.time_to_closeout_months, launch:s.launch_date||null };
+    var inYear = capD.getUTCFullYear()===MR_YEAR;
+    var arr = (SS_DATA.yearly && SS_DATA.yearly[p] && SS_DATA.yearly[p][String(MR_YEAR)]) || [];
+    var capM = inYear ? capD.getUTCMonth() : (capD.getUTCFullYear()>MR_YEAR ? 11 : -1);
+    o.sold = 0;
+    for(var i=0;i<=capM;i++) o.sold += (arr[i]||0);
+    var frac = 0;
+    if(capD.getUTCFullYear()>MR_YEAR) frac = 1;
+    else if(inYear){
+      var dim = new Date(Date.UTC(MR_YEAR, capM+1, 0)).getUTCDate();
+      frac = (capM + capD.getUTCDate()/dim) / 12;
+    }
+    o.frac = frac;
+    o.pace = o.target * frac;
+    o.gap = Math.max(0, o.target - o.sold);
+    var t0 = Date.UTC(MR_YEAR,0,1);
+    if(o.launch && /^\d{4}-\d{2}-\d{2}/.test(o.launch)){ var ld = parseISO(o.launch).getTime(); if(ld>t0) t0 = ld; }
+    var capMs = capD.getTime();
+    var monthsEl = Math.max(0.5, (capMs - t0)/(30.44*86400000));
+    var monthsLeft = Math.max(0, (Date.UTC(MR_YEAR,11,31) - capMs)/(30.44*86400000));
+    var proj = (frac>0) ? o.sold + (o.sold/monthsEl)*monthsLeft : 0;
+    o.projRaw = proj;
+    o.proj = Math.min(proj, o.sold + o.remaining);
+    o.capped = o.target>0 && o.remaining < o.gap;
+    if(!o.target) o.tone = 'x';
+    else if(o.capped) o.tone = 'r';
+    else { var r = o.proj/o.target; o.tone = r>=0.9 ? 'g' : (r>=0.7 ? 'a' : 'r'); }
+    o.statusTxt = o.tone==='g' ? 'ตามเป้า' : o.tone==='a' ? 'ต่ำกว่าเป้าเล็กน้อย' : o.tone==='r' ? (o.capped ? 'สต็อกไม่พอถึงเป้า' : 'ต่ำกว่าเป้ามาก') : 'ไม่มีเป้า';
+    return o;
+  }
+
+  // ---------- 1) Sale Performance Overview: จอง / โอน / ยกเลิก ----------
+  function mrSec1(projs){
+    var buckets = buildBucketSequence(state.start, state.end, 'month');
+    var hasCancel = !!(SS_DATA.cancelByMonth);
+    var rows = projs.map(function(p){
+      var o = { p:p, code:MR_CODE[p]||p, book:0, trans:0, cancel:0, cancelMove:0 };
+      buckets.forEach(function(k){
+        o.book += mrFunnelMonth(p,k,'จอง');
+        o.trans += mrMonthVal(SS_DATA.transferByMonth, p, k);
+        if(hasCancel){ o.cancel += mrMonthVal(SS_DATA.cancelByMonth, p, k); o.cancelMove += mrMonthVal(SS_DATA.cancelMoveByMonth, p, k); }
+      });
+      o.cancelReal = o.cancel - o.cancelMove;
+      o.pending = (SPF_DATA[p]||{}).pending_transfer || 0;
+      return o;
+    });
+    var T = { book:0, trans:0, cancel:0, cancelMove:0, cancelReal:0, pending:0 };
+    rows.forEach(function(o){ Object.keys(T).forEach(function(k){ T[k] += o[k]; }); });
+    var mBook = [], mTrans = [], mCancel = [];
+    buckets.forEach(function(k){
+      var b=0,t=0,c=0;
+      projs.forEach(function(p){ b += mrFunnelMonth(p,k,'จอง'); t += mrMonthVal(SS_DATA.transferByMonth,p,k); if(hasCancel) c += mrMonthVal(SS_DATA.cancelByMonth,p,k); });
+      mBook.push(b); mTrans.push(t); mCancel.push(c);
+    });
+    var series = [ {name:'จอง', color:'var(--s1)', values:mBook}, {name:'โอนกรรมสิทธิ์', color:'var(--s3)', values:mTrans} ];
+    if(hasCancel) series.push({name:'ยกเลิก', color:'var(--critical)', values:mCancel});
+    mrChartSpecs.push({ id:'mrChart1', buckets:buckets, series:series, opts:{yTitle:'จำนวนยูนิต', xTitle:'เดือน'} });
+
+    var cancelKpi, cancelSub;
+    if(hasCancel){
+      cancelKpi = mrN(T.cancel);
+      cancelSub = 'ย้ายแปลง '+mrN(T.cancelMove)+' · ลูกค้าหลุดจริง <b>'+mrN(T.cancelReal)+'</b>';
+    } else {
+      var yc = 0; projs.forEach(function(p){ yc += (SPF_DATA[p]||{}).period_cancel||0; });
+      cancelKpi = mrN(yc);
+      cancelSub = 'ปี '+MR_YEAR+' สะสม (ยังไม่แยกรายเดือน รอซิงค์ ERP รอบถัดไป)';
+    }
+    var net = T.book - T.cancelReal;
+    var html = '<div class="kpi-grid">'+
+      '<div class="kpi"><div class="kpi-label">จอง (ERP)</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.book)+'</div></div><div class="kpi-sub">สัญญาที่ใช้งานอยู่ ตามเดือนที่จอง</div></div>'+
+      '<div class="kpi"><div class="kpi-label">โอนกรรมสิทธิ์ (ERP)</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.trans)+'</div></div><div class="kpi-sub">ตามเดือนที่โอนจริง · ค้างโอนตอนนี้ '+mrN(T.pending)+' ยูนิต</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ยกเลิก (ERP)</div><div class="kpi-value-row"><div class="kpi-value">'+cancelKpi+'</div></div><div class="kpi-sub">'+cancelSub+'</div></div>'+
+      (hasCancel ? '<div class="kpi"><div class="kpi-label">จองสุทธิ (จอง − ยกเลิกจริง)</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(net)+'</div></div><div class="kpi-sub">ยกเลิกจริง ÷ จอง = '+mrPctTxt(T.cancelReal, T.book)+' (ยกเลิกอาจเป็นสัญญาที่จองก่อนช่วงนี้)</div></div>' : '')+
+      '</div>';
+    html += '<div class="mr-card"><div class="card-sub" style="margin-bottom:6px;">จอง / โอน / ยกเลิก รายเดือน ('+(projs.length>1?'ทุกโครงการที่เลือก':escapeHTML(projs[0]||''))+')</div><div class="legend" id="mrChart1Legend"></div><div id="mrChart1"></div></div>';
+    html += '<div class="mr-card"><div class="table-scroll"><table class="data"><thead><tr><th>โครงการ</th><th class="mr-n">จอง</th><th class="mr-n">โอน</th>'+
+      (hasCancel ? '<th class="mr-n">ยกเลิก</th><th class="mr-n">ในนั้นย้ายแปลง</th><th class="mr-n">ยกเลิกจริง</th><th class="mr-n">ยกเลิกจริง ÷ จอง</th>' : '<th class="mr-n">ยกเลิก (ปี '+MR_YEAR+')</th>')+
+      '<th class="mr-n">ค้างโอน (ตอนนี้)</th></tr></thead><tbody>';
+    rows.forEach(function(o){
+      html += '<tr><td><span class="mr-dot" style="background:'+mrColor(o.p)+'"></span>'+escapeHTML(o.code)+'</td><td class="mr-n">'+mrN(o.book)+'</td><td class="mr-n">'+mrN(o.trans)+'</td>'+
+        (hasCancel ? '<td class="mr-n">'+mrN(o.cancel)+'</td><td class="mr-n">'+mrN(o.cancelMove)+'</td><td class="mr-n">'+mrN(o.cancelReal)+'</td><td class="mr-n">'+mrPctTxt(o.cancelReal,o.book)+'</td>' : '<td class="mr-n">'+mrN((SPF_DATA[o.p]||{}).period_cancel||0)+'</td>')+
+        '<td class="mr-n">'+mrN(o.pending)+'</td></tr>';
+    });
+    if(rows.length>1){
+      html += '<tr class="mr-total"><td>รวม</td><td class="mr-n">'+mrN(T.book)+'</td><td class="mr-n">'+mrN(T.trans)+'</td>'+
+        (hasCancel ? '<td class="mr-n">'+mrN(T.cancel)+'</td><td class="mr-n">'+mrN(T.cancelMove)+'</td><td class="mr-n">'+mrN(T.cancelReal)+'</td><td class="mr-n">'+mrPctTxt(T.cancelReal,T.book)+'</td>' : '<td class="mr-n">'+cancelKpi+'</td>')+
+        '<td class="mr-n">'+mrN(T.pending)+'</td></tr>';
+    }
+    html += '</tbody></table></div><div class="mr-legend">'+
+      '<b>จอง</b> = สัญญาที่ยังใช้งานอยู่ นับตามเดือนที่จอง (ตัวเลขเดียวกับแท็บโปรไฟล์โครงการ) · <b>โอน</b> = โอนกรรมสิทธิ์จริง นับตามเดือนที่โอน (จองปีก่อนแต่โอนในช่วงนี้ก็นับ) · '+
+      '<b>ยกเลิก</b> = สัญญาที่ถูกยกเลิก นับตามเดือนที่ยกเลิก · <b>ย้ายแปลง</b> = ยกเลิกเพราะลูกค้าไปจองยูนิตอื่น ไม่ใช่ลูกค้าหลุด · จองสุทธิ = จอง − ยกเลิกจริง (ยกเลิกอาจเป็นของสัญญาที่จองก่อนช่วงนี้)</div></div>';
+    return html;
+  }
+
+  // ---------- 2) Sales vs Target ----------
+  function mrSec2(projs){
+    var data = projs.map(mrTargetData);
+    var cap = mrCapISO();
+    var capD = parseISO(cap);
+    if(capD.getUTCFullYear() < MR_YEAR){
+      return '<div class="mr-card"><div class="mr-empty">ช่วงที่เลือกสิ้นสุดก่อนปี '+MR_YEAR+' จึงไม่มีเป้าและยอดขายปีนี้ให้เทียบ</div></div>';
+    }
+    var T = { target:0, sold:0, pace:0, proj:0, remaining:0 };
+    data.forEach(function(o){ if(o.target){ T.target+=o.target; T.sold+=o.sold; T.pace+=o.pace; T.proj+=o.proj; } T.remaining += o.remaining; });
+    // กราฟรายเดือน: ขายใหม่ vs เป้าเฉลี่ยต่อเดือน
+    var capM = capD.getUTCFullYear()>MR_YEAR ? 11 : capD.getUTCMonth();
+    var bks = [], sold = [], tgt = [];
+    for(var m=0;m<=capM;m++){
+      bks.push(MR_YEAR+'-'+String(m+1).padStart(2,'0'));
+      var v=0; projs.forEach(function(p){ var a=(SS_DATA.yearly&&SS_DATA.yearly[p]&&SS_DATA.yearly[p][String(MR_YEAR)])||[]; v += (a[m]||0); });
+      sold.push(v);
+      tgt.push(Math.round(T.target/12*10)/10);
+    }
+    mrChartSpecs.push({ id:'mrChart2', buckets:bks, series:[{name:'ขายใหม่ (ERP)', color:'var(--accent)', values:sold},{name:'เป้าเฉลี่ยต่อเดือน', color:'var(--baseline)', values:tgt}], opts:{yTitle:'ยูนิต', xTitle:'เดือน '+MR_YEAR} });
+    var html = '<div class="kpi-grid">'+
+      '<div class="kpi"><div class="kpi-label">ขายใหม่ปี '+MR_YEAR+' (ERP)</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.sold)+'</div></div><div class="kpi-sub">จากเป้า '+mrN(T.target)+' ยูนิต ('+mrPctTxt(T.sold,T.target)+')</div></div>'+
+      '<div class="kpi"><div class="kpi-label">เป้าตามสัดส่วนเวลา</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.pace)+'</div></div><div class="kpi-sub">ถึง '+fmtDateShort(cap)+' · '+(T.sold>=T.pace?'เหนือ':'ต่ำกว่า')+' '+mrN(Math.abs(T.sold-T.pace))+' ยูนิต</div></div>'+
+      '<div class="kpi"><div class="kpi-label">คาดปิดปี (ตามความเร็วขาย)</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.proj)+'</div></div><div class="kpi-sub">'+mrPctTxt(T.proj,T.target)+' ของเป้า · จำกัดไม่เกินยูนิตที่เหลือขาย</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ยูนิตเหลือขาย</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.remaining)+'</div></div><div class="kpi-sub">ณ วันที่ ERP อัปเดต</div></div>'+
+      '</div>';
+    html += '<div class="mr-card"><div class="card-sub" style="margin-bottom:6px;">ขายใหม่รายเดือน เทียบเป้าเฉลี่ยต่อเดือน (ปี '+MR_YEAR+')</div><div id="mrChart2"></div></div>';
+    html += '<div class="mr-card"><div class="table-scroll"><table class="data"><thead><tr><th>โครงการ</th><th class="mr-n">เป้า '+MR_YEAR+'</th><th class="mr-n">ขายใหม่</th><th style="min-width:150px;">ความคืบหน้า (เส้นดำ = เป้าตามเวลา)</th><th class="mr-n">% เป้า</th><th class="mr-n">คาดปิดปี</th><th class="mr-n">เหลือขาย</th><th>สถานะ</th></tr></thead><tbody>';
+    data.forEach(function(o){
+      var pct = o.target ? Math.min(100, o.sold/o.target*100) : 0;
+      var pacePct = o.target ? Math.min(100, o.frac*100) : 0;
+      html += '<tr><td><span class="mr-dot" style="background:'+mrColor(o.p)+'"></span>'+escapeHTML(o.code)+'</td>'+
+        '<td class="mr-n">'+(o.target?mrN(o.target):'—')+'</td><td class="mr-n">'+mrN(o.sold)+'</td>'+
+        '<td>'+(o.target?'<div class="mr-bar"><i style="width:'+pct.toFixed(1)+'%"></i><b style="left:'+pacePct.toFixed(1)+'%"></b></div>':'—')+'</td>'+
+        '<td class="mr-n">'+(o.target?mrPctTxt(o.sold,o.target):'—')+'</td>'+
+        '<td class="mr-n">'+(o.target?mrN(o.proj):'—')+'</td><td class="mr-n">'+mrN(o.remaining)+'</td>'+
+        '<td>'+mrChip(o.tone==='x'?'':o.tone, o.statusTxt)+'</td></tr>';
+    });
+    if(data.length>1){
+      html += '<tr class="mr-total"><td>รวม</td><td class="mr-n">'+mrN(T.target)+'</td><td class="mr-n">'+mrN(T.sold)+'</td><td></td><td class="mr-n">'+mrPctTxt(T.sold,T.target)+'</td><td class="mr-n">'+mrN(T.proj)+'</td><td class="mr-n">'+mrN(T.remaining)+'</td><td></td></tr>';
+    }
+    html += '</tbody></table></div><div class="mr-legend">'+
+      'ขายใหม่ = ยอดจองใหม่ไม่รวมย้ายแปลง (นิยามเดียวกับแท็บ Sales Performance) · เป้าและยอดขายเป็นรายปี จึงนับตั้งแต่ 1 ม.ค. '+MR_YEAR+' ถึง '+fmtDateShort(cap)+' (วันที่เริ่มต้นของตัวกรองไม่มีผลกับส่วนนี้) · '+
+      'คาดปิดปี = ความเร็วขายตั้งแต่ 1 ม.ค. (หรือวันเปิดขาย) คูณเดือนที่เหลือ แต่ไม่เกินยูนิตที่เหลือขาย · '+
+      'สถานะ: คาดปิดปี ≥ 90% ของเป้า = ตามเป้า, ≥ 70% = ต่ำกว่าเป้าเล็กน้อย, ต่ำกว่านั้น = ต่ำกว่าเป้ามาก, และถ้ายูนิตที่เหลือน้อยกว่าที่ต้องขายเพื่อถึงเป้า = สต็อกไม่พอถึงเป้า</div></div>';
+    return html;
+  }
+
+  // ---------- ข้อมูลรวมต่อโครงการ (ใช้ใน Project Performance และ งบ MK) ----------
+  function mrBudgetOf(p){
+    var ad = AD_SPEND[p] || {};
+    var mc = SS_DATA.mktCost && SS_DATA.mktCost[p];
+    var bb = mc && mc.billboard ? (mc.billboard.posted||0) : null;
+    var pr = mc && mc.print ? (mc.print.posted||0) : null;
+    var off = mc ? ((bb||0)+(pr||0)) : (typeof ad.offline==='number' ? ad.offline : null);
+    var on = typeof ad.online==='number' ? ad.online : null;
+    return { online:on, billboard:bb, print:pr, offline:off, total:(on==null&&off==null)?null:((on||0)+(off||0)) };
+  }
+  function mrYtdAgg(p){
+    var start = MR_MIN_START, cap = mrCapISO();
+    if(cap < start) return null;
+    var w = computeProfileWalkinAgg(p, start, cap);
+    var by = {}; (w.media_booked||[]).forEach(function(x){ by[x[0]] = x[1]; });
+    function sum(keys){ return keys.reduce(function(a,k){ return a + (by[k]||0); }, 0); }
+    var total = (w.media_booked||[]).reduce(function(a,x){ return a + x[1]; }, 0);
+    var all = {}; (w.media_all||[]).forEach(function(x){ all[x[0]] = x[1]; });
+    return { w:w, by:by, all:all, total:total, online:sum(MR_ONLINE_KEYS), offline:sum(MR_OFFLINE_KEYS),
+             walkOnline: MR_ONLINE_KEYS.reduce(function(a,k){ return a+(all[k]||0); },0), walkOffline: MR_OFFLINE_KEYS.reduce(function(a,k){ return a+(all[k]||0); },0),
+             unknown: by['N/A']||0 };
+  }
+  var MR_MIN_START = MR_YEAR+'-01-01';
+
+  // ---------- 3) Project Performance: ประเด็นที่ควรพูด + Note กลยุทธ์ ----------
+  function mrProjData(p){
+    var t = mrTargetData(p), s = SPF_DATA[p] || {};
+    var w = computeProfileWalkinAgg(p, state.start, state.end);
+    var sdt = parseISO(state.start), edt = parseISO(state.end);
+    var lenDays = Math.round((edt - sdt)/86400000)+1;
+    var prevEnd = addDays(sdt,-1), prevStart = addDays(prevEnd, -(lenDays-1));
+    var prevVisits = RAW.filter(function(r){ return r.p===p && r.d>=toISO(prevStart) && r.d<=toISO(prevEnd); }).length;
+    var buckets = buildBucketSequence(state.start, state.end, 'month');
+    var d = { t:t, s:s, w:w, prevVisits:prevVisits, book:0, trans:0, cancel:0, cancelMove:0 };
+    buckets.forEach(function(k){
+      d.book += mrFunnelMonth(p,k,'จอง'); d.trans += mrMonthVal(SS_DATA.transferByMonth,p,k);
+      if(SS_DATA.cancelByMonth){ d.cancel += mrMonthVal(SS_DATA.cancelByMonth,p,k); d.cancelMove += mrMonthVal(SS_DATA.cancelMoveByMonth,p,k); }
+    });
+    d.hasCancel = !!SS_DATA.cancelByMonth;
+    d.cancelReal = d.cancel - d.cancelMove;
+    var nat = sumNatErpForRange(p, state.start, state.end);
+    d.nat = nat ? Object.keys(nat).map(function(k){ return [k, nat[k]]; }).filter(function(x){ return x[1]>0; }).sort(function(a,b){ return b[1]-a[1]; }) : [];
+    var bm = {}; (w.bookedRows||[]).forEach(function(r){ var v=r.b; if(!v||v==='N/A') return; bm[v]=(bm[v]||0)+1; });
+    d.budgetClosed = Object.keys(bm).map(function(k){ return [k,bm[k]]; }).sort(function(a,b){ return b[1]-a[1]; });
+    d.ytd = mrYtdAgg(p);
+    d.bud = mrBudgetOf(p);
+    return d;
+  }
+  function mrTalk(d, avgCost){
+    var t = d.t, out = [];
+    function add(tone, head, txt){ out.push({tone:tone, head:head, txt:txt}); }
+    // 1 เป้า
+    if(!t.target) add('', '1) เป้าและยอดขาย', 'ไม่มีเป้าปี '+MR_YEAR+' ในระบบ · ขายใหม่ปีนี้ '+mrN(t.sold)+' ยูนิต');
+    else {
+      var x = 'ขายใหม่ปีนี้ <b>'+mrN(t.sold)+'/'+mrN(t.target)+'</b> ยูนิต ('+mrPctTxt(t.sold,t.target)+' ของเป้า, เป้าตามสัดส่วนเวลา '+mrN(t.pace)+') · คาดปิดปี <b>'+mrN(t.proj)+'</b> ยูนิต';
+      if(t.capped) x += ' · ⚠ เหลือขาย '+mrN(t.remaining)+' ยูนิต น้อยกว่าที่ต้องขายเพิ่มเพื่อถึงเป้า ('+mrN(t.gap)+') → ควรคุยเรื่องเปิดสต็อกเพิ่มหรือปรับเป้า';
+      else if(t.tone==='r') x += ' → ต่ำกว่าเป้ามาก ควรคุยว่าจะเร่งยอดด้วยแคมเปญ/โปรโมชั่นอะไร';
+      else if(t.tone==='a') x += ' → ต่ำกว่าเป้าเล็กน้อย ตามดูอีก 1-2 เดือน';
+      add(t.tone==='x'?'':t.tone, '1) เป้าและยอดขาย', x);
+    }
+    // 2 จอง/โอน/ยกเลิก/สต็อก
+    var y = 'ช่วงที่เลือก: จอง <b>'+mrN(d.book)+'</b> · โอน <b>'+mrN(d.trans)+'</b>';
+    var tone2 = '';
+    if(d.hasCancel){
+      y += ' · ยกเลิก <b>'+mrN(d.cancel)+'</b> (ย้ายแปลง '+mrN(d.cancelMove)+', หลุดจริง '+mrN(d.cancelReal)+')';
+      if(d.book>=5 && d.cancelReal/d.book>=0.2){ tone2='a'; y += ' → ยกเลิกจริงเทียบยอดจองช่วงเดียวกันสูง ('+mrPctTxt(d.cancelReal,d.book)+') ควรตรวจสาเหตุที่ลูกค้าหลุด'; }
+    }
+    y += ' · รอโอนตอนนี้ '+mrN(t.pending)+' ยูนิต · เหลือขาย <b>'+mrN(t.remaining)+'/'+mrN(t.units)+'</b>';
+    if(t.remaining>0 && t.months!=null && t.months<=3){ tone2 = tone2||'a'; y += ' → คาดขายหมดใน ~'+t.months+' เดือน ควรวางแผนเฟส/โครงการถัดไป'; }
+    if(t.remaining===0) y += ' → ขายหมดแล้ว โฟกัสที่การโอน';
+    add(tone2, '2) จอง โอน ยกเลิก และสต็อก', y);
+    // 3 Walk-in & conversion
+    var w = d.w, v = w.total_visits, pv = d.prevVisits;
+    if(w.no_walkin_data) add('', '3) Walk-in และการปิดการขาย', 'ไม่มีข้อมูล Walk-in ในช่วงที่เลือก');
+    else {
+      var chg = pv>0 ? Math.round((v-pv)/pv*100) : null;
+      var z = 'Walk-in <b>'+mrN(v)+'</b> ราย'+(chg!=null ? ' ('+(chg>=0?'▲':'▼')+Math.abs(chg)+'% จากช่วงก่อนหน้า '+mrN(pv)+' ราย)' : '')+' · จองตาม ERP '+mrN(d.book)+' ยูนิต (ประมาณ '+mrPctTxt(d.book, v)+' ของ Walk-in)';
+      var tone3 = '';
+      if(chg!=null && pv>=10 && chg<=-30){ tone3='r'; z += ' → Walk-in ลดแรง ควรทบทวนสื่อ/กิจกรรมที่ยิง'; }
+      else if(chg!=null && pv>=10 && chg<=-10){ tone3='a'; z += ' → Walk-in ลดลง ตามดูต่อ'; }
+      else if(v>=30 && d.book/v<0.03){ tone3='a'; z += ' → Walk-in เยอะแต่ปิดได้น้อย ควรทบทวนการติดตามลูกค้า/ราคา/โปรโมชั่น'; }
+      add(tone3, '3) Walk-in และการปิดการขาย', z);
+    }
+    // 4 ช่องทาง
+    var ch = 'Walk-in มาจาก: '+mrPairsTxt(w.media_all, 3, true)+' · จองมาจาก: '+mrPairsTxt(w.media_booked, 3, true);
+    var tone4 = '';
+    if(w.media_booked_gap>0){ tone4='a'; ch += ' · ไม่ทราบช่องทาง '+mrN(w.media_booked_gap)+' ยูนิต → ให้ทีมขายกรอกช่องทางให้ครบ'; }
+    add(tone4, '4) ช่องทางที่ได้ผล', ch);
+    // 5 ลูกค้า
+    add('', '5) ลูกค้าที่ปิดได้เป็นใคร', 'สัญชาติผู้ซื้อ (ERP): '+mrPairsTxt(d.nat, 3, true)+' · งบที่ลูกค้าบอก (ที่ปิดได้): '+mrPairsTxt(d.budgetClosed, 3, false)+' · ช่วงราคา '+(d.s.price_min?(Math.round(d.s.price_min/1e5)/10)+'–'+(Math.round(d.s.price_max/1e5)/10)+' ล้านบาท':'—'));
+    // 6 ต้นทุน
+    var b = d.bud, yt = d.ytd;
+    var cz = 'งบ MK ปี '+MR_YEAR+': Facebook '+mrBaht(b.online)+' · ป้าย+สิ่งพิมพ์ '+mrBaht(b.offline)+' (รวม '+mrBaht(b.total)+')';
+    var tone6 = '';
+    if(yt && b.total!=null && yt.total>0 && mrCostComparable()){
+      var per = b.total/yt.total;
+      cz += ' · ต้นทุนต่อยูนิตที่จอง <b>'+mrBaht(per)+'</b>';
+      if(avgCost && per>avgCost*1.5){ tone6='r'; cz += ' → สูงกว่าค่าเฉลี่ยทุกโครงการ ('+mrBaht(avgCost)+') เกิน 1.5 เท่า ควรทบทวนการใช้งบ'; }
+      else if(avgCost && per>avgCost){ tone6='a'; cz += ' → สูงกว่าค่าเฉลี่ยทุกโครงการ ('+mrBaht(avgCost)+')'; }
+    }
+    if(yt && b.online!=null && b.online>0 && yt.online===0 && mrCostComparable()){ tone6='a'; cz += ' · ⚠ งบ Facebook ยังไม่มียูนิตที่ปิดได้จากช่องนี้'; }
+    add(tone6, '6) ต้นทุนการตลาด', cz);
+    return out;
+  }
+  function mrCostComparable(){
+    // งบเป็นยอดสะสมล่าสุด: เทียบต้นทุนต่อยูนิตได้เมื่อวันที่สิ้นสุดตัวกรองไม่น้อยกว่าวันที่ ERP อัปเดต (ห่างไม่เกิน 3 วัน)
+    var erp = SS_DATA.erpUpdated ? SS_DATA.erpUpdated.slice(0,10) : '';
+    if(!erp) return false;
+    return mrDays(mrCapISO(), erp) <= 3;
+  }
+  function mrDays(a, b){ return Math.abs(Math.round((parseISO(a) - parseISO(b))/86400000)); }
+
+  function mrNoteBlock(code){
+    var n = mrNotes[code] || null;
+    var admin = !!(currentUser && currentUser.isAdmin);
+    var h = '<div class="mr-note-h">กลยุทธ์ MK ของโครงการ '+escapeHTML(code)+'</div>';
+    h += '<textarea class="mr-note" id="mrNote_'+code+'" data-code="'+code+'" placeholder="'+(admin?'พิมพ์กลยุทธ์/แผนที่ทีม MK จะทำกับโครงการนี้ แล้วกดบันทึก':'ยังไม่มีบันทึกกลยุทธ์')+'"'+(admin?'':' readonly')+'></textarea>';
+    h += '<div class="mr-note-meta" id="mrNoteMeta_'+code+'">'+(n && n.updatedAt ? 'แก้ไขล่าสุดโดย '+escapeHTML(n.updatedBy||'-')+' เมื่อ '+escapeHTML(mrFmtTs(n.updatedAt)) : (mrNotesError ? escapeHTML(mrNotesError) : 'ยังไม่เคยบันทึก'))+'</div>';
+    if(admin) h += '<div class="mr-note-row"><button class="btn" type="button" data-mr-save="'+code+'">บันทึกกลยุทธ์</button><span class="mr-note-meta" id="mrNoteState_'+code+'"></span></div>';
+    else h += '<div class="mr-note-meta">แก้ไขได้เฉพาะผู้ดูแลระบบ (แอดมิน)</div>';
+    if(n && n.prev && n.prev.length){
+      h += '<details class="mr-prev"><summary>เวอร์ชันก่อนหน้า ('+n.prev.length+')</summary>'+n.prev.map(function(x){
+        return '<div><b>'+escapeHTML(mrFmtTs(x.updatedAt))+' · '+escapeHTML(x.updatedBy||'-')+'</b><br>'+escapeHTML(x.text||'(ว่าง)')+'</div>';
+      }).join('')+'</details>';
+    }
+    return h;
+  }
+  function mrFmtTs(iso){
+    var d = new Date(iso); if(isNaN(d)) return iso || '';
+    return d.getDate()+' '+THAI_MONTH[d.getMonth()]+' '+(d.getFullYear())+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' น.';
+  }
+
+  function mrSec3(projs){
+    var datas = projs.map(function(p){ return mrProjData(p); });
+    // ค่าเฉลี่ยต้นทุนต่อยูนิตที่จอง ของทุกโครงการ (ใช้เทียบ)
+    var sumCost = 0, sumUnits = 0;
+    datas.forEach(function(d){ if(d.ytd && d.bud.total!=null && d.ytd.total>0){ sumCost += d.bud.total; sumUnits += d.ytd.total; } });
+    var avgCost = sumUnits>0 ? sumCost/sumUnits : null;
+    var html = '<div class="mr-card"><div class="mr-sub" style="margin:0;"><b>หัวข้อที่เสนอให้พูดในแต่ละโครงการ (เรียงตามลำดับ):</b> '+
+      '1) เป้าและยอดขาย → 2) จอง โอน ยกเลิก และสต็อก → 3) Walk-in และการปิดการขาย → 4) ช่องทางที่ได้ผล → 5) ลูกค้าที่ปิดได้เป็นใคร → 6) ต้นทุนการตลาด · '+
+      'ข้อความด้านล่างสร้างจากตัวเลขจริงอัตโนมัติ ขอบสีเหลือง/แดง = ประเด็นที่ควรหยิบมาคุยก่อน แล้วให้ทีม MK สรุปกลยุทธ์ลงช่อง Note ใต้การ์ดแต่ละโครงการ</div></div>';
+    html += '<div class="mr-grid">';
+    datas.forEach(function(d){
+      var t = d.t;
+      var talk = mrTalk(d, avgCost);
+      html += '<div class="mr-card" id="mrPc_'+t.code+'">'+
+        '<div class="mr-pc-head"><div class="mr-pc-title"><span class="mr-dot" style="background:'+mrColor(t.p)+'"></span>'+escapeHTML(t.p)+' ('+escapeHTML(t.code)+')</div>'+mrChip(t.tone==='x'?'':t.tone, t.statusTxt)+'</div>'+
+        '<div class="mr-mini">'+
+          '<div>ขายใหม่ / เป้า<b>'+mrN(t.sold)+(t.target?' / '+mrN(t.target):'')+'</b></div>'+
+          '<div>คาดปิดปี<b>'+(t.target?mrN(t.proj):'—')+'</b></div>'+
+          '<div>เหลือขาย<b>'+mrN(t.remaining)+'</b></div>'+
+          '<div>จอง / โอน (ช่วงที่เลือก)<b>'+mrN(d.book)+' / '+mrN(d.trans)+'</b></div>'+
+          '<div>ยกเลิก (ช่วงที่เลือก)<b>'+(d.hasCancel?mrN(d.cancel):'—')+'</b></div>'+
+          '<div>Walk-in (ช่วงที่เลือก)<b>'+mrN(d.w.total_visits)+'</b></div>'+
+        '</div>'+
+        '<ul class="mr-talk">'+talk.map(function(x){ return '<li class="'+x.tone+'"><b class="mr-th">'+x.head+'</b> &mdash; '+x.txt+'</li>'; }).join('')+'</ul>'+
+        mrNoteBlock(t.code)+
+        '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // ---------- 4) งบ MK และงบที่ปิดการขายได้ ----------
+  function mrSec4(projs){
+    var cap = mrCapISO();
+    if(cap < MR_MIN_START) return '<div class="mr-card"><div class="mr-empty">ช่วงที่เลือกสิ้นสุดก่อนปี '+MR_YEAR+' จึงไม่มีข้อมูลงบ MK ให้เทียบ (งบมีเฉพาะปี '+MR_YEAR+')</div></div>';
+    var comparable = mrCostComparable();
+    var rows = projs.map(function(p){ return { p:p, code:MR_CODE[p]||p, b:mrBudgetOf(p), y:mrYtdAgg(p) }; });
+    var T = { on:0, bb:0, pr:0, off:0, closeOn:0, closeOff:0, total:0, unknown:0 };
+    rows.forEach(function(r){
+      T.on += r.b.online||0; T.bb += r.b.billboard||0; T.pr += r.b.print||0; T.off += r.b.offline||0;
+      if(r.y){ T.closeOn += r.y.online; T.closeOff += r.y.offline; T.total += r.y.total; T.unknown += r.y.unknown; }
+    });
+    function verdict(budget, closed, trackable){
+      if(budget==null || budget<=0) return mrChip('', 'ไม่มีงบ');
+      if(!trackable) return mrChip('', 'ติดตามผลไม่ได้');
+      return closed>0 ? mrChip('g', '✓ ปิดได้ '+mrN(closed)+' ยูนิต') : mrChip('r', '✗ ยังไม่มียูนิตที่ปิดได้');
+    }
+    function costPer(budget, closed){ return (comparable && budget>0 && closed>0) ? mrBaht(budget/closed) : '—'; }
+    var html = '<div class="kpi-grid">'+
+      '<div class="kpi"><div class="kpi-label">งบ MK รวม (ปี '+MR_YEAR+' สะสม)</div><div class="kpi-value-row"><div class="kpi-value">'+(((T.on+T.off)/1e6).toFixed(2))+' <span style="font-size:14px;font-weight:500;">ล้านบาท</span></div></div><div class="kpi-sub">Facebook '+mrBaht(T.on)+' · Offline '+mrBaht(T.off)+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ยูนิตที่จอง (ERP) '+fmtDateShort(MR_MIN_START)+' – '+fmtDateShort(cap)+'</div><div class="kpi-value-row"><div class="kpi-value">'+mrN(T.total)+'</div></div><div class="kpi-sub">จาก Facebook '+mrN(T.closeOn)+' · จาก ป้าย/ขับผ่าน '+mrN(T.closeOff)+' · ไม่ทราบช่องทาง '+mrN(T.unknown)+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ต้นทุน MK ต่อยูนิตที่จอง</div><div class="kpi-value-row"><div class="kpi-value">'+(comparable && T.total>0 ? mrN((T.on+T.off)/T.total) : '—')+'</div></div><div class="kpi-sub">'+(comparable?'บาท/ยูนิต (งบรวมทุกช่องทาง ÷ ยูนิตที่จองทั้งหมด)':'คำนวณได้เมื่อวันที่สิ้นสุดตัวกรอง = วันนี้ (งบเป็นยอดสะสมล่าสุด)')+'</div></div>'+
+      '</div>';
+    html += '<div class="mr-card"><div class="mr-sub" style="margin:0 0 8px;"><b>งบไหนปิดการขายได้:</b> เทียบงบแต่ละรายการกับยูนิตที่จองตาม ERP ซึ่งโยงกับช่องทางที่ลูกค้าบอกใน Walk-in</div><div class="table-scroll"><table class="data"><thead><tr><th>โครงการ</th>'+
+      '<th class="mr-n">งบ Facebook</th><th>ผล Facebook</th><th class="mr-n">ต้นทุน/ยูนิต</th>'+
+      '<th class="mr-n">งบป้าย</th><th class="mr-n">งบสิ่งพิมพ์</th><th>ผลป้าย + ขับรถผ่าน</th><th class="mr-n">ต้นทุน/ยูนิต (Offline รวม)</th><th>ผลสิ่งพิมพ์</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      var y = r.y || {online:0, offline:0};
+      html += '<tr><td><span class="mr-dot" style="background:'+mrColor(r.p)+'"></span>'+escapeHTML(r.code)+'</td>'+
+        '<td class="mr-n">'+(r.b.online!=null?mrN(r.b.online):'—')+'</td><td>'+verdict(r.b.online, y.online, true)+'</td><td class="mr-n">'+costPer(r.b.online||0, y.online)+'</td>'+
+        '<td class="mr-n">'+(r.b.billboard!=null?mrN(r.b.billboard):'—')+'</td><td class="mr-n">'+(r.b.print!=null?mrN(r.b.print):'—')+'</td>'+
+        '<td>'+verdict(r.b.billboard, y.offline, true)+'</td><td class="mr-n">'+costPer(r.b.offline||0, y.offline)+'</td><td>'+verdict(r.b.print, 0, false)+'</td></tr>';
+    });
+    if(rows.length>1){
+      html += '<tr class="mr-total"><td>รวม</td><td class="mr-n">'+mrN(T.on)+'</td><td>'+verdict(T.on, T.closeOn, true)+'</td><td class="mr-n">'+costPer(T.on, T.closeOn)+'</td><td class="mr-n">'+mrN(T.bb)+'</td><td class="mr-n">'+mrN(T.pr)+'</td><td>'+verdict(T.bb, T.closeOff, true)+'</td><td class="mr-n">'+costPer(T.off, T.closeOff)+'</td><td>'+verdict(T.pr, 0, false)+'</td></tr>';
+    }
+    html += '</tbody></table></div><div class="mr-legend">'+
+      '<b>งบ Facebook</b> = ยอดสะสมจากชีตการตลาด + ยอดที่ Meta เรียกเก็บล่าสุด · <b>ป้าย / สิ่งพิมพ์</b> = ยอดที่ลงบัญชีใน ERP แล้ว (ยังไม่รวมรายการที่รอลงบัญชี) · '+
+      '<b>ผลของงบ</b> = ยูนิตที่จอง (ERP) ซึ่งลูกค้าบอกว่ามาจาก Facebook / ป้ายโฆษณา+ขับรถผ่านโครงการ ตามข้อมูล Walk-in · สื่อสิ่งพิมพ์ไม่มีช่องทางแยกใน Walk-in จึงติดตามผลรายช่องไม่ได้ (ต้นทุน/ยูนิต Offline รวมป้ายและสิ่งพิมพ์) · '+
+      'ต้นทุนไม่รวมค่านายหน้า Agency, อีเวนต์ และแคมเปญ Brand · งบเป็นยอดสะสมปี '+MR_YEAR+' จึงนับผลตั้งแต่ 1 ม.ค. '+MR_YEAR+' ถึงวันที่สิ้นสุดตัวกรอง</div></div>';
+
+    // ช่องทางทั้งหมดที่ปิดการขายได้ (รวมทุกโครงการที่เลือก)
+    var allMap = {}, bookMap = {};
+    rows.forEach(function(r){ if(!r.y) return; Object.keys(r.y.all).forEach(function(k){ allMap[k] = (allMap[k]||0) + r.y.all[k]; }); Object.keys(r.y.by).forEach(function(k){ bookMap[k] = (bookMap[k]||0) + r.y.by[k]; }); });
+    var chans = {}; Object.keys(allMap).concat(Object.keys(bookMap)).forEach(function(k){ chans[k]=1; });
+    var list = Object.keys(chans).map(function(k){ return { k:k, walk:allMap[k]||0, closed:bookMap[k]||0 }; }).sort(function(a,b){ return b.closed-a.closed || b.walk-a.walk; });
+    var budgeted = MR_ONLINE_KEYS.concat(MR_OFFLINE_KEYS);
+    html += '<div class="mr-card"><div class="mr-sub" style="margin:0 0 8px;"><b>ทุกช่องทางที่ปิดการขายได้</b> ('+fmtDateShort(MR_MIN_START)+' – '+fmtDateShort(cap)+')</div><div class="table-scroll"><table class="data"><thead><tr><th>ช่องทางที่ลูกค้าบอก</th><th class="mr-n">Walk-in</th><th class="mr-n">ปิดการขาย (จอง ERP)</th><th class="mr-n">% ของยอดจอง</th><th class="mr-n">ปิดได้ต่อ Walk-in</th><th>งบในระบบ</th></tr></thead><tbody>';
+    list.forEach(function(c){
+      html += '<tr><td>'+escapeHTML(c.k==='N/A'?'ไม่ทราบช่องทาง (N/A)':c.k)+'</td><td class="mr-n">'+mrN(c.walk)+'</td><td class="mr-n">'+mrN(c.closed)+'</td><td class="mr-n">'+mrPctTxt(c.closed,T.total)+'</td><td class="mr-n">'+(c.k==='N/A'?'—':mrPctTxt(c.closed,c.walk))+'</td><td>'+(budgeted.indexOf(c.k)>=0 ? mrChip('g','มีงบในระบบ') : mrChip('', 'ไม่มีงบในระบบ'))+'</td></tr>';
+    });
+    html += '</tbody></table></div><div class="mr-legend">ช่องทาง "ไม่มีงบในระบบ" (เช่น Agency, เพื่อน/คนรู้จัก) อาจมีต้นทุนที่ยังไม่ได้ลงในแดชบอร์ด · ยอดรวมช่อง ปิดการขาย = ยอดจอง ERP (ส่วนที่ไม่พบใน Walk-in ถูกนับเป็น N/A)</div></div>';
+    return html;
+  }
+
+  // ---------- ประกอบหน้า ----------
+  function mrSecHead(id, title, sub){
+    return '<div class="mr-sec" id="'+id+'"><div class="mr-h">'+title+'</div><div class="mr-sub">'+sub+'</div>';
+  }
+  function renderMktReport(){
+    var body = document.getElementById('mrBody');
+    if(!body) return;
+    mrChartSpecs = [];
+    // เก็บข้อความ Note ที่ยังไม่บันทึกไว้ก่อน render ใหม่
+    var keep = {};
+    Array.prototype.forEach.call(body.querySelectorAll('textarea.mr-note'), function(ta){ if(mrNotesDirty[ta.dataset.code]) keep[ta.dataset.code] = ta.value; });
+    var projs = mrProjs();
+    var erpStr = (SS_DATA && SS_DATA.erpUpdated) ? fmtDateShort(SS_DATA.erpUpdated.slice(0,10)) : '-';
+    var scope = '<div class="mr-scope"><b>ช่วงเวลาที่ใช้:</b> '+fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+' &middot; <b>โครงการ:</b> '+(state.project==='ALL'?'ทุกโครงการ':escapeHTML(state.project))+
+      ' &middot; ใช้ตัวกรองชุดเดียวกับหน้าภาพรวม (ด้านบน) &middot; ข้อมูล ERP ณ '+erpStr+' &middot; ส่วนเป้าและงบ MK เป็นรายปี '+MR_YEAR+' (นับ 1 ม.ค. – วันที่สิ้นสุดตัวกรอง) &middot; จอง/โอน/ยกเลิกนับเป็นรายเดือน เดือนที่คาบเกี่ยวนับทั้งเดือน</div>';
+    if(!projs.length){
+      body.innerHTML = scope + '<div class="mr-card"><div class="mr-empty">'+(state.project==='ALL' ? 'กำลังโหลดข้อมูล ERP หรือยังไม่มีข้อมูล' : 'โครงการ '+escapeHTML(state.project)+' ไม่มีข้อมูลเป้า/งบในรายงานนี้ (เลือก "ทั้งหมด" หรือโครงการอื่น)')+'</div></div>';
+      return;
+    }
+    var html = scope +
+      '<div class="mr-nav"><a href="#mrS1">1 ภาพรวมการขาย จอง/โอน/ยกเลิก</a><a href="#mrS2">2 ยอดขายเทียบเป้า</a><a href="#mrS3">3 Project Performance + Note กลยุทธ์</a><a href="#mrS4">4 งบ MK และงบที่ปิดการขายได้</a></div>';
+    html += mrSecHead('mrS1', '1. Sale Performance Overview — จอง โอน ยกเลิก', 'ภาพรวมยอดจอง การโอนกรรมสิทธิ์ และการยกเลิก ตามช่วงเวลาและโครงการที่เลือก') + mrSec1(projs) + '</div>';
+    html += mrSecHead('mrS2', '2. Sales Target Performance — ยอดขายเทียบเป้าปี '+MR_YEAR, 'ขายได้เท่าไรเทียบเป้า เทียบเป้าตามสัดส่วนเวลา และคาดว่าจะปิดปีที่เท่าไร') + mrSec2(projs) + '</div>';
+    html += mrSecHead('mrS3', '3. Project Performance — ประเด็นที่ควรพูด และ Note กลยุทธ์ MK', 'สรุปรายโครงการ 6 หัวข้อจากข้อมูลที่มี พร้อมช่องให้ทีม MK พิมพ์กลยุทธ์ของโครงการ') + mrSec3(projs) + '</div>';
+    html += mrSecHead('mrS4', '4. งบประมาณ MK และงบที่ปิดการขายได้', 'งบ Facebook / ป้าย / สิ่งพิมพ์ เทียบกับยูนิตที่ปิดการขายได้จากแต่ละช่องทาง') + mrSec4(projs) + '</div>';
+    body.innerHTML = html;
+    // คืนข้อความ Note (ค่าที่ยังไม่บันทึก มาก่อนค่าที่บันทึกแล้ว)
+    Array.prototype.forEach.call(body.querySelectorAll('textarea.mr-note'), function(ta){
+      var c = ta.dataset.code;
+      if(keep[c]!==undefined) ta.value = keep[c];
+      else ta.value = (mrNotes[c] && mrNotes[c].text) || '';
+    });
+    mrDrawCharts();
+  }
+  function mrDrawCharts(){
+    mrChartSpecs.forEach(function(s){
+      var el = document.getElementById(s.id);
+      if(!el) return;
+      var lg = document.getElementById(s.id+'Legend');
+      if(lg){
+        lg.innerHTML = '';
+        s.series.forEach(function(x){
+          var li = document.createElement('div'); li.className = 'legend-item';
+          li.innerHTML = '<span class="legend-key" style="background:'+x.color+'"></span><span>'+escapeHTML(x.name)+'</span>';
+          lg.appendChild(li);
+        });
+      }
+      if(s.id==='mrChart2'){
+        var l2 = el.parentNode.querySelector('.legend');
+        if(!l2){ l2 = document.createElement('div'); l2.className = 'legend'; el.parentNode.insertBefore(l2, el); }
+        l2.innerHTML = '';
+        s.series.forEach(function(x){ var li=document.createElement('div'); li.className='legend-item'; li.innerHTML='<span class="legend-key" style="background:'+x.color+'"></span><span>'+escapeHTML(x.name)+'</span>'; l2.appendChild(li); });
+      }
+      drawGroupedBarChart(el, s.buckets, s.series, function(k){ return bucketLabel(k,'month'); }, s.opts);
+    });
+  }
+
+  // ---------- Note กลยุทธ์: Firestore erp_snapshot/mkt_notes ----------
+  function wireMktNotesListener(){
+    try{
+      mrNotesRef = db.collection('erp_snapshot').doc('mkt_notes');
+      mrNotesUnsub = mrNotesRef.onSnapshot(function(snap){
+        var data = snap.exists ? (snap.data() || {}) : {};
+        var map = {};
+        Object.keys(data).forEach(function(k){ if(k.indexOf('n_')===0) map[k.slice(2)] = data[k]; });
+        mrNotes = map; mrNotesError = '';
+        if(!tabPanelMktReportEl.hidden) mrRefreshNotes();
+      }, function(err){
+        console.error('mkt_notes subscription error:', err);
+        mrNotesError = 'อ่านบันทึกกลยุทธ์ไม่ได้: '+firebaseErrMsg(err);
+      });
+    }catch(e){ console.error(e); }
+  }
+  // อัปเดตเฉพาะช่อง Note (ไม่ render ทั้งหน้าใหม่) เมื่อมีคนอื่นบันทึกระหว่างที่เปิดหน้านี้
+  function mrRefreshNotes(){
+    var body = document.getElementById('mrBody');
+    if(!body) return;
+    Array.prototype.forEach.call(body.querySelectorAll('textarea.mr-note'), function(ta){
+      var c = ta.dataset.code;
+      if(!mrNotesDirty[c] && document.activeElement!==ta) ta.value = (mrNotes[c] && mrNotes[c].text) || '';
+      var meta = document.getElementById('mrNoteMeta_'+c), n = mrNotes[c];
+      if(meta && n && n.updatedAt) meta.textContent = 'แก้ไขล่าสุดโดย '+(n.updatedBy||'-')+' เมื่อ '+mrFmtTs(n.updatedAt);
+    });
+  }
+  function mrSaveNote(code){
+    if(!currentUser || !currentUser.isAdmin){ alert('เฉพาะผู้ดูแลระบบ (แอดมิน) ที่แก้ไขกลยุทธ์ได้'); return; }
+    if(!mrNotesRef) mrNotesRef = db.collection('erp_snapshot').doc('mkt_notes');
+    var ta = document.getElementById('mrNote_'+code); if(!ta) return;
+    var text = ta.value.trim();
+    var st = document.getElementById('mrNoteState_'+code);
+    var btn = document.querySelector('button[data-mr-save="'+code+'"]');
+    if(btn) btn.disabled = true;
+    if(st) st.textContent = 'กำลังบันทึก...';
+    var old = mrNotes[code] || null;
+    var prev = (old && old.prev) ? old.prev.slice(0) : [];
+    if(old && (old.text || '') !== text && old.updatedAt) prev.unshift({ text: old.text||'', updatedAt: old.updatedAt, updatedBy: old.updatedBy||'' });
+    prev = prev.slice(0, 5);
+    var upd = {}; upd['n_'+code] = { text:text, updatedAt:new Date().toISOString(), updatedBy:(currentUser.displayName || currentUser.email || ''), prev:prev };
+    mrNotesRef.set(upd, { merge:true }).then(function(){
+      mrNotesDirty[code] = false;
+      if(btn) btn.disabled = false;
+      if(st) st.textContent = 'บันทึกแล้ว';
+      setTimeout(function(){ if(st && st.textContent==='บันทึกแล้ว') st.textContent = ''; }, 3000);
+    }).catch(function(err){
+      console.error('save mkt note failed:', err);
+      if(btn) btn.disabled = false;
+      if(st) st.textContent = '';
+      alert('บันทึกไม่สำเร็จ: '+firebaseErrMsg(err));
+    });
+  }
+  (function(){
+    var host = document.getElementById('mrBody');
+    if(!host) return;
+    host.addEventListener('input', function(e){
+      var ta = e.target.closest ? e.target.closest('textarea.mr-note') : null;
+      if(ta) mrNotesDirty[ta.dataset.code] = true;
+    });
+    host.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('button[data-mr-save]') : null;
+      if(b) mrSaveNote(b.getAttribute('data-mr-save'));
+    });
+    var rt = null;
+    window.addEventListener('resize', function(){
+      if(tabPanelMktReportEl.hidden) return;
+      clearTimeout(rt); rt = setTimeout(mrDrawCharts, 150);
+    });
+  })();
+
 
   function renderKPIs(rows){
     kpiGrid.innerHTML = '';
@@ -6892,6 +7490,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     renderBreakdowns(rows);
     renderCustomerTrends(rows);
     renderTable(rows);
+    if (!tabPanelMktReportEl.hidden) renderMktReport();
   }
 
   buildTotalTrendYearChips();
@@ -7570,6 +8169,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     {key:'overview', label:'ภาพรวม'},
     {key:'trends', label:'เทรน & แนวโน้มลูกค้า'},
     {key:'followup', label:'สถานะการติดตามลูกค้า'},
+    {key:'mktreport', label:'Marketing Report'},
     {key:'salesstatus', label:'สถานะการขาย'},
     {key:'projectprofile', label:'โปรไฟล์โครงการ'},
     {key:'salesperf', label:'Sales Performance'},
@@ -8799,6 +9399,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     if(followupLogUnsub){ followupLogUnsub(); followupLogUnsub = null; }
     if(followupClosedUnsub){ followupClosedUnsub(); followupClosedUnsub = null; }
     if(monthlySummaryUnsub){ monthlySummaryUnsub(); monthlySummaryUnsub = null; }
+    if(mrNotesUnsub){ mrNotesUnsub(); mrNotesUnsub = null; } mrNotes = {}; mrNotesDirty = {};
     manualRecords = []; manualById = {};
     deletedManualRecords = []; deletedById = {};
     salesEmailByName = {};
@@ -8878,6 +9479,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       wireFollowupLogListener();
       wireFollowupClosedListener();
       wireMonthlySummaryListener();
+      wireMktNotesListener();
       if(currentUser.isAdmin) wireProfilesListener();
     }).catch(function(err){
       console.error('profiles read failed:', err);
