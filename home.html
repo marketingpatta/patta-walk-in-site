@@ -5,15 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>PATTA เมนูรวมระบบ</title>
-<!-- PATTA hub: menu page shown before the individual dashboards (admins set permissions with the "จัดการสิทธิ์" button -> pop-up).
+<!-- PATTA hub: menu page shown before the individual dashboards (permissions set in index.html > จัดการผู้ใช้งาน > เข้าถึงแท็บใดได้บ้าง).
      Contains NO customer data. Same Firebase project / accounts as the Walk-in Tracker.
      A card is shown only if the signed-in profile may open that system:
        Walk-in Tracker  -> admin, or at least one Tracker tab ticked
        Event Mode       -> admin, or profile whose "tabs" list includes "event"
        PATTA ลูกบ้าน     -> admin, or profile whose "tabs" list includes "residents"
-       PATTA แนะนำเพื่อน -> admin, or profile whose "tabs" list includes "referral"
-       PATTA นิติบุคคล   -> admin, or profile whose "tabs" list includes "juristic" (all projects; juristic staff accounts
-                           themselves are managed inside juristic.html and never see this page)
      To add a system: add one object to CARDS below. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +26,7 @@
     --text-primary:#101012; --text-secondary:#54544d; --text-muted:#8b897f;
     --accent:#2a78d6; --accent-ink:#184f95; --accent-wash:rgba(42,120,214,0.10);
     --critical:#d03b3b; --critical-wash:rgba(208,59,59,0.10);
-    --c1:#2a78d6; --c2:#1baf7a; --c3:#eb6834; --c4:#7a5af0; --c5:#d6457a;
+    --c1:#2a78d6; --c2:#1baf7a; --c3:#eb6834;
     --shadow:0 1px 2px rgba(11,11,11,0.04),0 4px 14px rgba(11,11,11,0.05);
   }
   @media (prefers-color-scheme: dark){
@@ -83,14 +80,6 @@
   /* ---- admin: permission matrix ---- */
   :root{ --warn-bg:#fff4dc; --warn:#8a5a00; --good-bg:#e3f6ec; --good:#0b6b3f; --soft-bg:#eef2f8; --soft:#3a5a8c; }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --warn-bg:#3a2d10; --warn:#f0c46a; --good-bg:#10301f; --good:#7ddba8; --soft-bg:#18222f; --soft:#9cc0f0; } }
-  .pmodal{ position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.45); display:flex; align-items:flex-start; justify-content:center; padding:28px 14px; overflow-y:auto; }
-  .pmodal h2{ font-size:18px; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-right:36px; }
-  .pmodal .lead{ margin:0 0 12px; font-size:14px; }
-  .pmodal .tools{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
-  .pmodal .tools input[type=search]{ font:inherit; font-size:14px; padding:7px 11px; border-radius:9px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-primary); min-width:220px; }
-  .pmodal-card{ position:relative; width:min(1180px,100%); background:var(--bg); border:1px solid var(--border); border-radius:18px; padding:24px 22px 22px; box-shadow:0 20px 60px rgba(0,0,0,.25); }
-  .pclose{ position:absolute; top:12px; right:14px; border:0; background:none; font-size:28px; line-height:1; cursor:pointer; color:var(--text-secondary); }
-  body.pm-open{ overflow:hidden; }
   .perm{ margin-top:38px; }
   .perm h2{ font-size:18px; margin:0 0 4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .badge{ font-size:12px; border-radius:999px; padding:3px 10px; font-weight:600; display:inline-block; }
@@ -126,8 +115,7 @@
   .mc b{ font-size:14px; } .mc div{ font-size:12px; color:var(--text-secondary); }
   .nonebox{ padding:16px; text-align:center; border:1px dashed var(--border-strong); border-radius:10px; color:var(--text-secondary); font-size:13px; }
   .pnote{ font-size:12.5px; color:var(--text-secondary); margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
-  .pbar{ position:sticky; bottom:-22px; margin:16px -22px -22px; background:var(--surface); border-top:1px solid var(--border-strong); border-radius:0 0 18px 18px; padding:12px 18px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; }
-  .panel{ overflow-x:auto; }
+  .pbar{ position:fixed; left:0; right:0; bottom:0; background:var(--surface); border-top:1px solid var(--border-strong); padding:12px 18px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; z-index:5; }
   .ptoast{ position:fixed; left:50%; top:18px; transform:translateX(-50%); background:var(--text-primary); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:13.5px; z-index:9; max-width:90vw; }
 </style>
 </head>
@@ -153,16 +141,14 @@
 <div class="wrap" id="app" hidden>
   <div class="top">
     <div class="brand"><div class="logo">PT</div><div><h1>PATTA เมนูรวมระบบ</h1><div class="subtitle">เลือกระบบที่ต้องการเปิด</div></div></div>
-    <div class="who"><span class="chip" id="userChip"></span><button class="btn" id="permBtn" hidden>⚙ จัดการสิทธิ์</button><button class="btn" id="logoutBtn">ออกจากระบบ</button></div>
+    <div class="who"><span class="chip" id="userChip"></span><button class="btn" id="logoutBtn">ออกจากระบบ</button></div>
   </div>
   <p class="hello" id="hello"></p>
   <p class="lead">แสดงเฉพาะระบบที่บัญชีของคุณมีสิทธิ์เข้าใช้ ถ้าไม่เห็นระบบที่ต้องการ ให้ติดต่อแอดมินเพื่อขอสิทธิ์</p>
   <div class="grid" id="cards"></div>
   <div class="empty" id="emptyMsg" hidden>บัญชีนี้ยังไม่มีระบบที่เข้าใช้ได้ กรุณาติดต่อแอดมิน</div>
-  <div class="pmodal" id="permSec" hidden role="dialog" aria-modal="true" aria-labelledby="permTitle">
-   <div class="pmodal-card">
-    <button class="pclose" id="permClose" type="button" aria-label="ปิด">×</button>
-    <h2 id="permTitle">จัดการสิทธิ์เข้าระบบ <span class="badge b-soft">เห็นเฉพาะแอดมิน</span></h2>
+  <div class="perm" id="permSec" hidden>
+    <h2>จัดการสิทธิ์เข้าระบบ <span class="badge b-soft">เห็นเฉพาะแอดมิน</span></h2>
     <p class="lead">เปิดสวิตช์ = คนนี้เข้าระบบนั้นได้ และจะเห็นการ์ดในเมนูรวม · กดที่ชื่อเพื่อดูว่าคนนั้นจะเห็นอะไรในเมนู</p>
     <div class="tools">
       <input type="search" id="permQ" placeholder="ค้นหาชื่อหรืออีเมล" aria-label="ค้นหาผู้ใช้">
@@ -177,8 +163,6 @@
             <th class="l">ผู้ใช้</th>
             <th><span class="dot" style="background:var(--c1)"></span>Walk-in Tracker<br><span class="badge b-warn">ซ่อนหน้า</span></th>
             <th><span class="dot" style="background:var(--c2)"></span>PATTA ลูกบ้าน<br><span class="badge b-good">ล็อกจริง</span></th>
-            <th><span class="dot" style="background:var(--c4)"></span>PATTA นิติบุคคล<br><span class="badge b-good">ล็อกจริง</span></th>
-            <th><span class="dot" style="background:var(--c5)"></span>PATTA แนะนำเพื่อน<br><span class="badge b-good">ล็อกจริง</span></th>
             <th><span class="dot" style="background:var(--c3)"></span>Event Mode<br><span class="badge b-warn">ซ่อนการ์ด</span></th>
           </tr></thead>
           <tbody id="permRows"></tbody>
@@ -187,10 +171,8 @@
       <div class="panel pside" id="permSide"></div>
     </div>
     <div class="err" id="permErr" hidden></div>
-    <div class="pnote" style="margin-top:14px">PATTA นิติบุคคล: สวิตช์นี้ให้พนักงานบริษัทเปิดฟอร์มนิติได้ทุกโครงการ (เช่น ทีมหลังการขาย) · บัญชีของนิติโครงการสร้างแยกในหน้าฟอร์มนิติ ปุ่ม "บัญชีนิติ"</div>
-    <div class="pbar" id="permBar" hidden><span id="permBarTxt"></span><button class="btn" id="permUndo" type="button">ยกเลิกการแก้ไข</button><button class="btn primary" id="permSave" type="button">บันทึกสิทธิ์</button></div>
-   </div>
   </div>
+  <div class="pbar" id="permBar" hidden><span id="permBarTxt"></span><button class="btn" id="permUndo" type="button">ยกเลิกการแก้ไข</button><button class="btn primary" id="permSave" type="button">บันทึกสิทธิ์</button></div>
   <div class="foot">PATTA Development · หน้านี้ไม่มีข้อมูลลูกค้า ข้อมูลทั้งหมดอยู่หลังการล็อกอินของแต่ละระบบ</div>
 </div>
 
@@ -208,8 +190,6 @@ var FIREBASE_CONFIG = {
 var ICONS = {
   tracker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><rect x="5" y="11" width="3.5" height="7" rx="1"/><rect x="10.25" y="6" width="3.5" height="12" rx="1"/><rect x="15.5" y="9" width="3.5" height="9" rx="1"/></svg>',
   residents:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>',
-  juristic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5V6h6V3.5"/><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4"/></svg>',
-  referral:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5"/><path d="M14 15.2c.8-.5 1.6-.7 2.5-.7 2 0 3.6 1.2 4.2 3.5"/></svg>',
   event:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="m9.5 15 2 2 3.5-4"/></svg>'
 };
 function isAdmin(p){ return !!(p && p.isAdmin); }
@@ -224,12 +204,6 @@ var CARDS = [
   { key:'residents', color:'var(--c2)', href:'residents.html', title:'PATTA ลูกบ้าน',
     desc:'ลูกค้าที่รับโอนกรรมสิทธิ์แล้ว ภาพรวมลูกบ้าน งานหลังการขาย การแจ้งซ่อม และประกัน',
     tag:'หลังการขาย', allow:function(p){ return isAdmin(p) || hasTab(p,'residents'); } },
-  { key:'juristic', color:'var(--c4)', href:'juristic.html', title:'PATTA นิติบุคคล',
-    desc:'ฟอร์มให้นิติโครงการบันทึกข้อมูลลูกบ้าน แบบสอบถาม รูปลูกบ้าน และความยินยอม PDPA · จัดการบัญชีนิติ',
-    tag:'นิติบุคคล', allow:function(p){ return isAdmin(p) || hasTab(p,'juristic'); } },
-  { key:'referral', color:'var(--c5)', href:'referral.html', title:'PATTA แนะนำเพื่อน',
-    desc:'บันทึกลูกบ้านที่แนะนำเพื่อนมาซื้อบ้าน ติดตามสถานะจนโอน และรางวัลผู้แนะนำ',
-    tag:'การตลาด / ทีมขาย', allow:function(p){ return isAdmin(p) || hasTab(p,'referral'); } },
   { key:'event', color:'var(--c3)', href:'event.html', title:'PATTA Event Mode',
     desc:'เช็คอินหน้างานอีเวนต์ รายชื่อลงทะเบียนล่วงหน้า Walk-in หน้างาน และบันทึกลูกค้า',
     tag:'งาน 20–21 พ.ย. 2569', allow:function(p){ return isAdmin(p) || hasTab(p,'event'); } }
@@ -268,8 +242,6 @@ function renderCards(p){
 var P_SYS = [
   {k:'tracker',   name:'Walk-in Tracker',  c:'var(--c1)', desc:'ลูกค้า Walk-in ผลงานเซล การติดตามลูกค้า'},
   {k:'residents', name:'PATTA ลูกบ้าน',    c:'var(--c2)', desc:'ลูกบ้านที่รับโอนแล้ว งานหลังการขาย'},
-  {k:'juristic',  name:'PATTA นิติบุคคล',  c:'var(--c4)', desc:'ฟอร์มบันทึกข้อมูลลูกบ้าน ทุกโครงการ'},
-  {k:'referral',  name:'PATTA แนะนำเพื่อน', c:'var(--c5)', desc:'บันทึกการแนะนำเพื่อนและรางวัล'},
   {k:'event',     name:'PATTA Event Mode', c:'var(--c3)', desc:'เช็คอินหน้างานอีเวนต์'}
 ];
 var P_TABS = [['overview','ภาพรวม'],['trends','เทรน & แนวโน้มลูกค้า'],['salesstatus','สถานะการขาย'],['projectprofile','โปรไฟล์โครงการ'],['salesperf','Sales Performance'],['customerdata','ข้อมูลลูกค้าเพิ่มเติม']];
@@ -321,12 +293,12 @@ function renderPerms(){
     });
     h += '</tr>';
     if(permOpen[u.uid] && !u.admin && pHasTracker(u)){
-      h += '<tr class="tabrow"><td colspan="6"><div class="ptabs">' + P_TABS.map(function(t){
+      h += '<tr class="tabrow"><td colspan="4"><div class="ptabs">' + P_TABS.map(function(t){
         return '<label><input type="checkbox" data-tab="' + t[0] + '" data-uid="' + pEsc(u.uid) + '"' + (u.tabs.indexOf(t[0]) >= 0 ? ' checked' : '') + '> ' + pEsc(t[1]) + '</label>';
       }).join('') + '</div></td></tr>';
     }
     return h;
-  }).join('') || '<tr><td colspan="6" class="muted" style="padding:20px">ไม่พบผู้ใช้</td></tr>';
+  }).join('') || '<tr><td colspan="4" class="muted" style="padding:20px">ไม่พบผู้ใช้</td></tr>';
   var u = permUsers.filter(function(x){ return x.uid === permSel; })[0];
   if(u){
     var cards = P_SYS.filter(function(s){ return pOn(u, s.k); });
@@ -383,24 +355,14 @@ $('permSave').addEventListener('click', function(){
   });
 });
 function initPerms(p){
-  $('permSec').hidden = true; document.body.classList.remove('pm-open');
-  $('permBtn').hidden = !isAdmin(p);
+  if(!isAdmin(p)){ $('permSec').hidden = true; $('permBar').hidden = true; return; }
+  $('permSec').hidden = false; loadPerms();
 }
-function openPerms(){ $('permSec').hidden = false; document.body.classList.add('pm-open'); if(!permLoaded) loadPerms(); else renderPerms(); $('permQ').focus(); }
-function closePerms(){
-  if(permUsers.filter(pChanged).length && !confirm('มีการแก้ไขสิทธิ์ที่ยังไม่ได้บันทึก ปิดหน้าต่างและยกเลิกการแก้ไขไหม?')) return;
-  if(permUsers.filter(pChanged).length) loadPerms();
-  $('permSec').hidden = true; document.body.classList.remove('pm-open');
-}
-$('permBtn').addEventListener('click', openPerms);
-$('permClose').addEventListener('click', closePerms);
-$('permSec').addEventListener('click', function(e){ if(e.target === $('permSec')) closePerms(); });
-document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !$('permSec').hidden) closePerms(); });
 
 var auth, db;
 function onUser(user){
   if(!user){
-    $('app').hidden = true; $('gate').hidden = false; $('permSec').hidden = true; $('permBtn').hidden = true; permLoaded = false; document.body.classList.remove('pm-open');
+    $('app').hidden = true; $('gate').hidden = false; $('permSec').hidden = true; $('permBar').hidden = true;
     $('gateLoading').hidden = true; $('loginForm').hidden = false; $('noAccess').hidden = true;
     return;
   }
