@@ -172,9 +172,9 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     flex: none;
   }
   h1{ font-size: 24pt; font-weight:700; margin:0; letter-spacing:-0.01em; text-wrap:balance; }
-  .subtitle{ font-size:14px; color:var(--text-secondary); margin-top:2px; }
+  .subtitle{ font-size:12.5px; color:var(--text-secondary); margin-top:2px; }
   .coverage{
-    font-size:14px; color:var(--text-muted);
+    font-size:12px; color:var(--text-muted);
     display:flex; align-items:center; gap:8px;
   }
   .coverage .dot{ width:6px; height:6px; border-radius:50%; background: var(--good); flex:none; }
@@ -191,7 +191,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   }
   .filter-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .filter-label{
-    font-size:14px; text-transform:uppercase; letter-spacing:0.06em;
+    font-size:11px; text-transform:uppercase; letter-spacing:0.06em;
     color: var(--text-muted); font-weight:600; min-width: 78px;
   }
   .chipset{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -199,7 +199,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .chip{
     border:1px solid var(--border-strong); background: var(--surface);
     color: var(--text-secondary);
-    padding: 6px 12px; border-radius: 999px; font-size:14px; font-weight:500;
+    padding: 6px 12px; border-radius: 999px; font-size:12.5px; font-weight:500;
     cursor:pointer; user-select:none; white-space:nowrap;
     display:inline-flex; align-items:center; gap:6px;
     transition: background .12s ease, color .12s ease, border-color .12s ease;
@@ -213,7 +213,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .seg{ display:flex; border:1px solid var(--border-strong); border-radius:8px; overflow:hidden; }
   .seg button{
     border:none; background:var(--surface); color:var(--text-secondary);
-    padding:6px 13px; font-size:14px; font-weight:500; cursor:pointer;
+    padding:6px 13px; font-size:12.5px; font-weight:500; cursor:pointer;
     font-family:inherit; border-right:1px solid var(--border-strong);
   }
   .seg button:last-child{ border-right:none; }
@@ -221,11 +221,11 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .seg button:hover:not(.active){ background:var(--surface-2); }
   #fuChannelSeg button{ flex:1; padding:10px 13px; font-size:14px; }
   input[type=date]{
-    font-family:"IBM Plex Mono", monospace; font-size:14px;
+    font-family:"IBM Plex Mono", monospace; font-size:12px;
     border:1px solid var(--border-strong); border-radius:7px;
     padding:5px 8px; background:var(--surface); color:var(--text-primary);
   }
-  .range-sep{ color: var(--text-muted); font-size:14px; }
+  .range-sep{ color: var(--text-muted); font-size:12px; }
 
   /* ---------- KPI row ---------- */
   .kpi-grid{
@@ -237,13 +237,13 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     padding: 14px 16px; box-shadow: var(--shadow);
     display:flex; flex-direction:column; gap:6px; min-height:98px;
   }
-  .kpi-label{ font-size:14px; color:var(--text-secondary); font-weight:500; }
+  .kpi-label{ font-size:11.5px; color:var(--text-secondary); font-weight:500; }
   .kpi-value-row{ display:flex; align-items:baseline; gap:8px; }
   .kpi-value{ font-size:26px; font-weight:600; letter-spacing:-0.01em; }
-  .kpi-delta{ font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:2px; }
+  .kpi-delta{ font-size:11.5px; font-weight:600; display:inline-flex; align-items:center; gap:2px; }
   .kpi-delta.up{ color:var(--good-ink); }
   .kpi-delta.down{ color:var(--critical); }
-  .kpi-sub{ font-size:14px; color:var(--text-muted); margin-top:auto; }
+  .kpi-sub{ font-size:11.5px; color:var(--text-muted); margin-top:auto; }
   .kpi-spark{ height:26px; margin-top:2px; }
 
   /* ---------- cards ---------- */
@@ -252,12 +252,12 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     padding: 16px 18px 14px; box-shadow: var(--shadow);
   }
   .card-title{ font-size:24pt; font-weight:600; margin:0 0 2px; }
-  .card-sub{ font-size:14px; color:var(--text-muted); margin-bottom:10px; }
+  .card-sub{ font-size:11.5px; color:var(--text-muted); margin-bottom:10px; }
   .card.trend{ margin-bottom: 20px; }
   .total-trend-controls{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin: 6px 0 4px; }
-  .total-trend-controls .chip{ padding:4px 10px; font-size:14px; }
+  .total-trend-controls .chip{ padding:4px 10px; font-size:11.5px; }
   .legend{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:8px; }
-  .legend-item{ display:flex; align-items:center; gap:6px; font-size:14px; color:var(--text-secondary); }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-secondary); }
   .legend-key{ width:14px; height:2.5px; border-radius:2px; flex:none; }
 
   .breakdown-grid{
@@ -274,10 +274,10 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     padding:14px 20px; border-bottom:1px solid var(--border);
     display:grid; grid-template-columns: repeat(3, 1fr); gap:18px;
   }
-  .followup-results-empty{ font-size:14px; color:var(--text-muted); padding:14px 20px; border-bottom:1px solid var(--border); }
-  .fu-col-title{ font-size:14px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
-  .fu-col-title .fu-col-count{ font-weight:400; color:var(--text-muted); font-size:14px; white-space:nowrap; }
-  .fu-col-empty{ font-size:14px; color:var(--text-muted); padding:4px 0; }
+  .followup-results-empty{ font-size:12px; color:var(--text-muted); padding:14px 20px; border-bottom:1px solid var(--border); }
+  .fu-col-title{ font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .fu-col-title .fu-col-count{ font-weight:400; color:var(--text-muted); font-size:11px; white-space:nowrap; }
+  .fu-col-empty{ font-size:11.5px; color:var(--text-muted); padding:4px 0; }
   @media (max-width: 760px){
     .followup-results{ grid-template-columns: 1fr; gap:12px; }
   }
@@ -293,35 +293,35 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .source-stat{ display:flex; align-items:center; gap:9px; }
   .source-stat .dot{ width:11px; height:11px; border-radius:3px; flex:none; }
   .source-stat .num{ font-size:19px; font-weight:600; color:var(--text-primary); }
-  .source-stat .lbl{ font-size:14px; color:var(--text-secondary); }
+  .source-stat .lbl{ font-size:11.5px; color:var(--text-secondary); }
   .bar-row{ display:grid; grid-template-columns: 108px 1fr 46px; align-items:center; gap:8px; padding:3px 0; border-radius:6px; cursor:default; }
   .nat-ytd-summary{ margin:2px 0 12px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:var(--bg); }
-  .nat-ytd-total{ font-size:14px; font-weight:600; margin-bottom:6px; }
+  .nat-ytd-total{ font-size:12px; font-weight:600; margin-bottom:6px; }
   .nat-ytd-groups{ display:flex; flex-wrap:wrap; gap:6px; }
-  .nat-group-pill{ font-size:14px; border:1px solid var(--border-strong); border-radius:20px; padding:3px 10px; background:var(--surface); }
+  .nat-group-pill{ font-size:11.5px; border:1px solid var(--border-strong); border-radius:20px; padding:3px 10px; background:var(--surface); }
   .nat-group-pill.muted{ color:var(--text-muted); }
   .nat-group-pct{ color:var(--text-muted); }
-  .agency-row{ display:grid; grid-template-columns: 1fr auto auto auto; align-items:center; gap:10px; padding:4px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .agency-row{ display:grid; grid-template-columns: 1fr auto auto auto; align-items:center; gap:10px; padding:4px 0; border-bottom:1px solid var(--border); font-size:12px; }
   .agency-row:last-child{ border-bottom:none; }
   .agency-name{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .agency-stat{ color:var(--text-secondary); white-space:nowrap; }
-  .agency-badge{ font-size:14px; border-radius:20px; padding:2px 9px; white-space:nowrap; }
+  .agency-badge{ font-size:11px; border-radius:20px; padding:2px 9px; white-space:nowrap; }
   .agency-badge.active{ background:var(--good); color:#fff; }
   .agency-badge.inactive{ background:var(--border); color:var(--text-muted); }
-  .monthly-summary-box textarea{ width:100%; min-height:110px; font:inherit; font-size:14px; line-height:1.5; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); resize:vertical; box-sizing:border-box; }
-  .monthly-summary-meta{ font-size:14px; color:var(--text-muted); margin-top:6px; }
+  .monthly-summary-box textarea{ width:100%; min-height:110px; font:inherit; font-size:13px; line-height:1.5; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text); resize:vertical; box-sizing:border-box; }
+  .monthly-summary-meta{ font-size:11px; color:var(--text-muted); margin-top:6px; }
   .monthly-summary-actions{ display:flex; gap:8px; margin-top:8px; }
   .monthly-summary-history{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
   .monthly-summary-history-item{ border-top:1px solid var(--border); padding-top:10px; }
-  .monthly-summary-history-month{ font-weight:600; font-size:14px; margin-bottom:3px; }
-  .monthly-summary-history-text{ font-size:14px; color:var(--text-secondary); white-space:pre-wrap; }
+  .monthly-summary-history-month{ font-weight:600; font-size:12px; margin-bottom:3px; }
+  .monthly-summary-history-text{ font-size:12px; color:var(--text-secondary); white-space:pre-wrap; }
   .bar-row:hover{ background: var(--surface-2); }
   .bar-row-clickable{ cursor:pointer; }
-  .bar-label{ font-size:14px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-label{ font-size:12px; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .bar-track{ height:14px; background: var(--surface-2); border-radius:4px; position:relative; overflow:hidden; }
   .bar-fill{ position:absolute; left:0; top:0; bottom:0; border-radius:4px; transition: filter .1s ease; }
   .bar-row:hover .bar-fill{ filter: brightness(1.08); }
-  .bar-value{ font-size:14px; color:var(--text-muted); text-align:right; font-variant-numeric: tabular-nums; }
+  .bar-value{ font-size:11.5px; color:var(--text-muted); text-align:right; font-variant-numeric: tabular-nums; }
 
   /* Budget-trend rows on the "เทรนลูกค้า" tab: same shape as .bar-row above but with a
      wider value column to fit the count + a vs-previous-period delta badge together. */
@@ -336,20 +336,20 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      reading numbers first. */
   .funnel-row{ display:grid; grid-template-columns: 148px 1fr 108px 64px; align-items:center; gap:10px; padding:7px 0; }
   .funnel-row + .funnel-row{ border-top:1px solid var(--border); }
-  .funnel-label{ font-size:14px; font-weight:600; color:var(--text-primary); }
+  .funnel-label{ font-size:12.5px; font-weight:600; color:var(--text-primary); }
   .funnel-track{ height:20px; background:var(--surface-2); border-radius:5px; position:relative; overflow:hidden; }
   .funnel-fill{ position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--accent); transition:width .2s ease; }
-  .funnel-value{ font-size:14px; font-weight:600; color:var(--text-primary); text-align:right; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end; gap:6px; }
-  .funnel-pct{ font-size:14px; color:var(--text-muted); text-align:right; font-variant-numeric:tabular-nums; }
+  .funnel-value{ font-size:13px; font-weight:600; color:var(--text-primary); text-align:right; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end; gap:6px; }
+  .funnel-pct{ font-size:11.5px; color:var(--text-muted); text-align:right; font-variant-numeric:tabular-nums; }
   @media (max-width: 760px){
     .funnel-row{ grid-template-columns: 96px 1fr 84px 44px; gap:6px; }
-    .funnel-label{ font-size:14px; }
+    .funnel-label{ font-size:11.5px; }
   }
 
   .tooltip{
     position:fixed; pointer-events:none; z-index:50;
     background: var(--text-primary); color: var(--bg);
-    font-size:14px; padding:7px 10px; border-radius:8px;
+    font-size:12px; padding:7px 10px; border-radius:8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     max-width:220px; opacity:0; transition:opacity .08s ease;
   }
@@ -366,7 +366,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .export-btn{
     display:inline-flex; align-items:center; gap:6px;
     background:var(--accent); color:#fff; border:none; border-radius:8px;
-    padding:7px 13px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;
+    padding:7px 13px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit;
     white-space:nowrap; transition:filter .12s ease;
   }
   .export-btn:hover{ filter:brightness(0.94); }
@@ -419,13 +419,13 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   }
   .search-box{
     border:1px solid var(--border-strong); border-radius:8px; padding:6px 10px;
-    font-size:14px; font-family:inherit; background:var(--surface); color:var(--text-primary);
+    font-size:12.5px; font-family:inherit; background:var(--surface); color:var(--text-primary);
     min-width:220px;
   }
   .table-scroll{ overflow-x:auto; border-top:1px solid var(--border); }
-  table.data{ width:100%; border-collapse:collapse; font-size:14px; min-width:1900px; }
+  table.data{ width:100%; border-collapse:collapse; font-size:12px; min-width:1660px; }
   table.data th{
-    text-align:left; font-weight:600; color:var(--text-muted); font-size:14px;
+    text-align:left; font-weight:600; color:var(--text-muted); font-size:10.5px;
     text-transform:uppercase; letter-spacing:0.04em;
     padding:8px 10px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);
   }
@@ -468,20 +468,20 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      instead of getting cut off mid-sentence — "รายละเอียดความสนใจ" now gets the same
      full-text, no-clamp treatment as "รายละเอียดลูกค้า" (note-col-cust class added below
      in the header/row markup), just narrower since its content tends to be shorter. */
-  .table-card table.data{ font-size:14px; }
-  .table-card table.data th{ font-size:14px; }
+  .table-card table.data{ font-size:13.5px; }
+  .table-card table.data th{ font-size:11px; }
   .table-card table.data td{ padding:9px 11px; line-height:1.5; }
   .table-card table.data td.note-col{ line-height:1.55; }
   .table-card table.data th.note-col, .table-card table.data td.note-col{ min-width:280px; max-width:340px; }
   .table-card table.data th.note-col-cust, .table-card table.data td.note-col-cust{ min-width:460px; max-width:620px; }
-  .pager{ display:flex; align-items:center; gap:10px; padding:10px 2px 4px; font-size:14px; color:var(--text-secondary); }
+  .pager{ display:flex; align-items:center; gap:10px; padding:10px 2px 4px; font-size:12px; color:var(--text-secondary); }
   .pager button{
     border:1px solid var(--border-strong); background:var(--surface); border-radius:6px;
-    padding:4px 10px; font-size:14px; cursor:pointer; color:var(--text-primary); font-family:inherit;
+    padding:4px 10px; font-size:12px; cursor:pointer; color:var(--text-primary); font-family:inherit;
   }
   .pager button:disabled{ opacity:0.4; cursor:default; }
   .pill{
-    display:inline-flex; padding:2px 8px; border-radius:999px; font-size:14px; font-weight:600;
+    display:inline-flex; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:600;
   }
   .pill.g{ background: rgba(12,163,12,0.14); color: var(--good-ink); }
   .pill.b{ background: var(--accent-wash); color: var(--accent-ink); }
@@ -543,7 +543,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .kpi.clickable{ cursor:pointer; transition: box-shadow .12s ease, border-color .12s ease; }
   .kpi.clickable:hover{ border-color: var(--border-strong); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
   .kpi.clickable:hover .kpi-link{ text-decoration: underline; }
-  .kpi-link{ font-size:14px; color: var(--accent-ink); font-weight:600; margin-top:4px; }
+  .kpi-link{ font-size:11.5px; color: var(--accent-ink); font-weight:600; margin-top:4px; }
 
   .modal-overlay{
     position:fixed; inset:0; background:rgba(11,11,11,0.45); backdrop-filter: blur(1px);
@@ -560,7 +560,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     padding:16px 20px; border-bottom:1px solid var(--border);
   }
   .modal-title{ font-size:24pt; font-weight:600; margin:0; }
-  .modal-sub{ font-size:14px; color:var(--text-muted); margin-top:3px; }
+  .modal-sub{ font-size:12px; color:var(--text-muted); margin-top:3px; }
   .modal-close{
     border:1px solid var(--border-strong); background:var(--surface); color:var(--text-secondary);
     border-radius:8px; width:30px; height:30px; font-size:15px; line-height:1; cursor:pointer;
@@ -570,15 +570,15 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .modal-toolbar{ padding:10px 20px; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; }
   .modal-toolbar input{
     border:1px solid var(--border-strong); border-radius:8px; padding:6px 10px;
-    font-size:14px; font-family:inherit; background:var(--surface); color:var(--text-primary); width:260px;
+    font-size:12.5px; font-family:inherit; background:var(--surface); color:var(--text-primary); width:260px;
   }
   .modal-body{ overflow:auto; padding:0; }
-  .modal-empty{ padding:40px 20px; text-align:center; color:var(--text-muted); font-size:14px; }
+  .modal-empty{ padding:40px 20px; text-align:center; color:var(--text-muted); font-size:13px; }
 
   /* ---- header add-customer button ---- */
   .header-right{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
   .btn{
-    border-radius:8px; padding:8px 16px; font-size:14px; font-weight:600; cursor:pointer;
+    border-radius:8px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;
     font-family:inherit; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-primary);
   }
   .btn:hover{ background:var(--surface-2); }
@@ -586,7 +586,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .btn.primary:hover{ filter:brightness(1.08); }
   .btn.danger{ background:transparent; color:var(--critical); border-color:var(--critical); }
   .btn.danger:hover{ background:rgba(208,59,59,0.08); }
-  .btn.small{ padding:4px 10px; font-size:14px; border-radius:6px; }
+  .btn.small{ padding:4px 10px; font-size:11.5px; border-radius:6px; }
   .btn[disabled]{ opacity:0.5; cursor:not-allowed; }
 
   /* ---- add/edit customer form modal ---- */
@@ -594,16 +594,16 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .form-section{ margin-bottom:18px; }
   .form-section:last-child{ margin-bottom:0; }
   .form-section-title{
-    font-size:14px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;
+    font-size:11.5px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;
     letter-spacing:.04em; margin:0 0 10px; padding-bottom:6px; border-bottom:1px solid var(--border);
   }
   .form-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr)); gap:12px 16px; }
   .form-field{ display:flex; flex-direction:column; gap:4px; }
   .form-field.span2{ grid-column: span 2; }
-  .form-field label{ font-size:14px; font-weight:600; color:var(--text-secondary); }
+  .form-field label{ font-size:11.5px; font-weight:600; color:var(--text-secondary); }
   .form-field label .req{ color:var(--critical); }
   .form-field input, .form-field select, .form-field textarea{
-    border:1px solid var(--border-strong); border-radius:8px; padding:7px 9px; font-size:14px;
+    border:1px solid var(--border-strong); border-radius:8px; padding:7px 9px; font-size:12.5px;
     font-family:inherit; background:var(--surface); color:var(--text-primary); width:100%;
   }
   .form-field textarea{ resize:vertical; min-height:56px; font-family:inherit; }
@@ -612,18 +612,18 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     padding:12px 20px; border-top:1px solid var(--border); display:flex;
     justify-content:space-between; align-items:center; gap:10px;
   }
-  .form-error{ color:var(--critical); font-size:14px; }
-  .form-note{ color:var(--good-ink); font-size:14px; margin-top:6px; }
-  .form-note-info{ color:var(--accent-ink); font-size:14px; margin-top:6px; }
+  .form-error{ color:var(--critical); font-size:12px; }
+  .form-note{ color:var(--good-ink); font-size:11.5px; margin-top:6px; }
+  .form-note-info{ color:var(--accent-ink); font-size:11.5px; margin-top:6px; }
   .name-suggest{
     position:absolute; top:100%; left:0; right:0; z-index:20; margin-top:4px;
     background:var(--surface); border:1px solid var(--border-strong); border-radius:8px;
     max-height:240px; overflow:auto; box-shadow:0 10px 28px rgba(0,0,0,0.18);
   }
-  .name-suggest-item{ padding:8px 10px; cursor:pointer; font-size:14px; border-bottom:1px solid var(--border); color:var(--text-primary); }
+  .name-suggest-item{ padding:8px 10px; cursor:pointer; font-size:12px; border-bottom:1px solid var(--border); color:var(--text-primary); }
   .name-suggest-item:last-child{ border-bottom:none; }
   .name-suggest-item:hover{ background:var(--surface-2); }
-  .name-suggest-item .ns-meta{ color:var(--text-muted); font-size:14px; }
+  .name-suggest-item .ns-meta{ color:var(--text-muted); font-size:11px; }
   .row-actions{ display:flex; gap:6px; }
   .manual-tag{
     display:inline-block; font-size:10px; font-weight:700; padding:1px 6px; border-radius:5px;
@@ -633,7 +633,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   /* custom confirm/alert replacements -- see the HTML comment above #confirmModal */
   .toast{
     background: var(--text-primary); color: var(--bg);
-    font-size:14px; padding:10px 16px; border-radius:8px; line-height:1.5;
+    font-size:12.5px; padding:10px 16px; border-radius:8px; line-height:1.5;
     box-shadow: 0 8px 24px rgba(0,0,0,0.25); max-width:min(420px, 90vw); text-align:center;
     opacity:0; transform:translateY(8px); transition:opacity .18s ease, transform .18s ease;
     pointer-events:auto;
@@ -641,7 +641,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .toast.show{ opacity:1; transform:translateY(0); }
   .toast.error{ background: var(--critical); color:#fff; }
 
-  footer.note{ margin-top: 26px; font-size:14px; color:var(--text-muted); text-align:center; }
+  footer.note{ margin-top: 26px; font-size:11.5px; color:var(--text-muted); text-align:center; }
 
   @media (max-width:640px){
     .bar-row{ grid-template-columns: 84px 1fr 38px; }
@@ -665,13 +665,13 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   }
   .auth-brand{ display:flex; align-items:center; gap:12px; margin-bottom:22px; }
   .auth-title{ font-size:16px; font-weight:700; }
-  .auth-sub{ font-size:14px; color:var(--text-secondary); margin-top:2px; }
-  .auth-loading{ font-size:14px; color:var(--text-secondary); text-align:center; padding:24px 0; }
+  .auth-sub{ font-size:12px; color:var(--text-secondary); margin-top:2px; }
+  .auth-loading{ font-size:12.5px; color:var(--text-secondary); text-align:center; padding:24px 0; }
   .auth-form{ display:flex; flex-direction:column; gap:14px; }
-  .auth-remember{ display:flex; align-items:center; gap:6px; font-size:14px; color:var(--text-secondary); cursor:pointer; }
+  .auth-remember{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-secondary); cursor:pointer; }
   .auth-remember input{ width:auto; }
-  .auth-submit{ width:100%; padding:9px; font-size:14px; }
-  .auth-user-chip{ font-size:14px; color:var(--text-secondary); white-space:nowrap; }
+  .auth-submit{ width:100%; padding:9px; font-size:13px; }
+  .auth-user-chip{ font-size:12px; color:var(--text-secondary); white-space:nowrap; }
   .user-row:last-child{ border-bottom:none !important; }
   /* confirmModal must always sit above every other modal-overlay (entry/trash/users/etc.)
      since it can be triggered from inside any of them -- DOM order alone isn't reliable
@@ -681,31 +681,31 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   /* ============ Sales Status tab + Project Profile tab (ERP-sourced) ============ */
   .proj-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); gap:14px; }
   .proj-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; flex:none; }
-  .update-note{ display:inline-flex; align-items:center; gap:6px; font-size:14px; color:var(--good-ink); background:rgba(12,163,12,0.10); border-radius:999px; padding:3px 10px; }
+  .update-note{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--good-ink); background:rgba(12,163,12,0.10); border-radius:999px; padding:3px 10px; }
   .update-note .dot{ width:6px; height:6px; border-radius:50%; background:var(--good); flex:none; }
   .proj-switch{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
-  .proj-switch button{ font:inherit; font-size:14px; font-weight:600; padding:7px 14px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-secondary); cursor:pointer; }
+  .proj-switch button{ font:inherit; font-size:12px; font-weight:600; padding:7px 14px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-secondary); cursor:pointer; }
   .proj-switch button.active{ background:var(--accent); border-color:var(--accent); color:#fff; }
   .profile-header{ display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px; }
   .profile-header h1{ font-size:24pt; font-weight:700; margin:0; display:flex; align-items:center; gap:10px; }
-  .highlight-answer{ background:var(--accent-wash); border:1px solid var(--accent); border-radius:10px; padding:10px 14px; font-size:14px; color:var(--accent-ink); margin-bottom:14px; line-height:1.6; }
+  .highlight-answer{ background:var(--accent-wash); border:1px solid var(--accent); border-radius:10px; padding:10px 14px; font-size:12.5px; color:var(--accent-ink); margin-bottom:14px; line-height:1.6; }
   /* "เปรียบเทียบประสิทธิภาพสื่อ: Online vs Offline" ad-spend callout box -- amber/yellow
      (vs. the blue .highlight-answer used for data insights) since this is cost/budget
      data the marketing team supplies manually, not something computed from the trackers.
      color-mix() keeps it in sync with --warning across the light/dark theme swap above
      without needing its own light+dark custom-property pair. */
-  .media-spend-box{ background: color-mix(in srgb, var(--warning) 14%, transparent); border:1px solid var(--warning); border-radius:10px; padding:10px 14px; font-size:14px; color:var(--text-primary); margin-top:10px; margin-bottom:10px; line-height:1.8; }
+  .media-spend-box{ background: color-mix(in srgb, var(--warning) 14%, transparent); border:1px solid var(--warning); border-radius:10px; padding:10px 14px; font-size:12.5px; color:var(--text-primary); margin-top:10px; margin-bottom:10px; line-height:1.8; }
   .media-spend-box b{ color:var(--text-primary); }
 
   /* Sale-funnel rows: distinct "sf-" prefix so this never collides with the existing
      .funnel-row/.funnel-fill used by the Walk-in->Revisit->Close customer-journey funnel
      on the "เทรน & แนวโน้มลูกค้า" tab above (different column layout + per-stage colors). */
   .sf-row{ display:grid; grid-template-columns: 84px 1fr 52px 168px; align-items:center; gap:10px; padding:5px 0; }
-  .sf-label{ font-size:14px; font-weight:600; color:var(--text-secondary); }
+  .sf-label{ font-size:12px; font-weight:600; color:var(--text-secondary); }
   .sf-track{ height:18px; background:var(--surface-2); border-radius:5px; position:relative; overflow:hidden; }
   .sf-fill{ position:absolute; left:0; top:0; bottom:0; border-radius:5px; }
-  .sf-value{ font-size:14px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
-  .sf-note{ font-size:14px; color:var(--text-muted); text-align:right; }
+  .sf-value{ font-size:13px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+  .sf-note{ font-size:10.5px; color:var(--text-muted); text-align:right; }
   .sf-note b{ color:var(--warning); font-weight:700; }
   .sf-row-clickable{ cursor:pointer; border-radius:8px; transition: background .12s ease; }
   .sf-row-clickable:hover{ background: var(--surface-2); }
@@ -716,11 +716,11 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .sf-remaining-link:hover{ opacity:.7; }
   @media (max-width: 720px){
     .sf-row{ grid-template-columns: 64px 1fr 40px 128px; gap:6px; }
-    .sf-label{ font-size:14px; }
+    .sf-label{ font-size:11px; }
     .sf-note{ font-size:9.5px; }
   }
 
-  .year-legend{ display:flex; gap:12px; flex-wrap:wrap; font-size:14px; color:var(--text-secondary); margin:0 0 6px; }
+  .year-legend{ display:flex; gap:12px; flex-wrap:wrap; font-size:11px; color:var(--text-secondary); margin:0 0 6px; }
   .year-legend span{ display:inline-flex; align-items:center; gap:5px; }
   .year-legend i{ width:14px; height:2.5px; border-radius:2px; display:inline-block; }
   .yearline svg{ display:block; width:100%; height:auto; overflow:visible; }
@@ -740,12 +740,12 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   table.data.compact-table{ min-width:0; }
   .spf-stack-row{ display:grid; grid-template-columns:150px 1fr; align-items:center; gap:10px; margin-bottom:10px; }
   .spf-stack-track{ height:26px; border-radius:6px; overflow:hidden; display:flex; background:var(--surface-2); }
-  .spf-stack-seg{ display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; }
-  .spf-stack-legend{ display:flex; gap:14px; font-size:14px; color:var(--text-secondary); margin-bottom:14px; }
+  .spf-stack-seg{ display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; }
+  .spf-stack-legend{ display:flex; gap:14px; font-size:11px; color:var(--text-secondary); margin-bottom:14px; }
   .spf-stack-legend span{ display:inline-flex; align-items:center; gap:5px; }
   .spf-stack-legend i{ width:10px; height:10px; border-radius:3px; display:inline-block; }
   .spf-target-cell{ border-radius:6px; padding:4px 10px; font-weight:700; display:inline-block; }
-  .spf-method-note{ font-size:14px; color:var(--text-muted); margin-top:8px; line-height:1.5; }
+  .spf-method-note{ font-size:10.5px; color:var(--text-muted); margin-top:8px; line-height:1.5; }
   .spf-pct-good{ color:var(--good-ink); font-weight:700; }
   .spf-pct-warn{ color:var(--warning); font-weight:700; }
   .spf-pct-bad{ color:var(--critical); font-weight:700; }
@@ -753,7 +753,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      is behind how much of the year has already elapsed (see renderSalesPerfTab's
      pctPassed calc) -- !important needed to win over table.data tr:hover td above. */
   tr.spf-row-behind td{ background: rgba(208,59,59,0.10) !important; }
-  .spf-table4-note{ margin-top:12px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:16px; font-size:14px; color:var(--text-secondary); }
+  .spf-table4-note{ margin-top:12px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:16px; font-size:12px; color:var(--text-secondary); }
   .spf-table4-note b{ color:var(--text-primary); }
   .spf-note-legend{ display:flex; align-items:center; gap:6px; }
   .spf-legend-swatch{ width:12px; height:12px; border-radius:3px; display:inline-block; }
@@ -763,97 +763,11 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      close/reopen controls (see #cdTabTable / renderCustomerTabRows()). */
   tr.cd-timeline-row > td{ background:var(--surface-2); padding:10px 16px 16px 16px !important; }
   .cd-timeline-table{ width:100%; border-collapse:collapse; }
-  .cd-timeline-table th, .cd-timeline-table td{ padding:6px 10px; font-size:14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
+  .cd-timeline-table th, .cd-timeline-table td{ padding:6px 10px; font-size:12.5px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
   .cd-timeline-table th{ color:var(--text-muted); font-weight:600; white-space:nowrap; }
   .cd-timeline-table td.note{ color:var(--text-secondary); line-height:1.45; max-width:320px; white-space:normal; }
-  .cd-timeline-label{ display:inline-block; padding:1px 8px; border-radius:999px; font-size:14px; font-weight:600; background:var(--accent-wash); color:var(--accent-ink); white-space:nowrap; }
+  .cd-timeline-label{ display:inline-block; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; background:var(--accent-wash); color:var(--accent-ink); white-space:nowrap; }
   .cd-timeline-label.first{ background:rgba(12,163,12,0.14); color:var(--good-ink); }
-
-  /* ===== Command Center + ปรับการใช้งาน (patch_command_center.py, 27 ต.ค. 2569) =====
-     Type scale เดียวทั้งหน้า: เล็กสุด 14px (อ่านได้เมื่อฉายห้องประชุม/มือถือ), เนื้อหา 16px,
-     หัวข้อการ์ด 18px, ตัวเลขใหญ่ 30px. หัวข้อหน้า (24pt) และตัวหนังสือพื้นฐาน (21pt) คงเดิม. */
-  :root{
-    --fs-min:14px; --fs-body:16px; --fs-card:18px; --fs-kpi:30px;
-    --good-wash: rgba(12,163,12,0.10); --warn-wash: rgba(184,121,15,0.14); --crit-wash: rgba(208,59,59,0.10);
-  }
-  .fresh-banner{ border-radius:10px; padding:10px 16px; margin:0 0 14px; font-size:var(--fs-body); line-height:1.5; border:1px solid; }
-  .fresh-banner.yellow{ background:#fff4d6; border-color:#e0a21a; color:#5c3d00; }
-  .fresh-banner.red{ background:#fde4e4; border-color:#d03b3b; color:#7a1414; }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]) .fresh-banner.yellow{ background:#3d2f10; color:#ffe9b0; }
-    :root:not([data-theme="light"]) .fresh-banner.red{ background:#401a1c; color:#ffd0d0; }
-  }
-  :root[data-theme="dark"] .fresh-banner.yellow{ background:#3d2f10; color:#ffe9b0; }
-  :root[data-theme="dark"] .fresh-banner.red{ background:#401a1c; color:#ffd0d0; }
-  .scope-bar{ font-size:var(--fs-min); color:var(--text-secondary); background:var(--surface-2); border-radius:8px; padding:8px 14px; margin:0 0 14px; line-height:1.5; }
-  .scope-bar b{ color:var(--text-primary); }
-  #mainTabSeg{ flex-wrap:wrap; }
-  #mainTabSeg .tab-sep{ align-self:center; font-size:var(--fs-min); color:var(--text-muted); padding:0 8px 0 14px; white-space:nowrap; border-left:1px solid var(--border-strong); margin-left:6px; }
-  #mainTabSeg button{ font-size:var(--fs-body); padding:8px 16px; }
-
-  .cc-head{ display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-  .cc-sub{ font-size:var(--fs-body); color:var(--text-secondary); }
-  .cc-summary{ background:var(--accent-ink); color:#fff; border-radius:12px; padding:14px 18px; margin-bottom:14px; font-size:var(--fs-card); line-height:1.65; }
-  .cc-tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-bottom:14px; }
-  .cc-tile{ background:var(--surface); border:1px solid var(--border); border-left:6px solid var(--text-muted); border-radius:10px; padding:12px 14px; box-shadow:var(--shadow); }
-  .cc-tile[data-go-tab]{ cursor:pointer; }
-  .cc-tile[data-go-tab]:hover{ border-color:var(--accent); }
-  .cc-tile.g{ border-left-color:var(--good); } .cc-tile.a{ border-left-color:var(--warning); } .cc-tile.r{ border-left-color:var(--critical); }
-  .cc-tile-l{ font-size:var(--fs-body); color:var(--text-secondary); font-weight:600; }
-  .cc-tile-v{ font-size:var(--fs-kpi); font-weight:700; line-height:1.25; color:var(--text-primary); }
-  .cc-tile-v small{ font-size:var(--fs-min); font-weight:500; color:var(--text-muted); }
-  .cc-tile-s{ font-size:var(--fs-min); color:var(--text-secondary); margin:2px 0 6px; }
-  .cc-chips{ display:flex; flex-wrap:wrap; gap:4px; }
-  .cc-chip{ font-size:var(--fs-min); line-height:1.3; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--text-secondary); border-radius:999px; padding:1px 9px; white-space:nowrap; font-weight:500; }
-  .cc-chip.erp{ background:var(--accent-wash); color:var(--accent-ink); border-color:transparent; font-weight:700; }
-  .cc-chip.lead{ background:var(--warn-wash); color:var(--warning); border-color:transparent; font-weight:700; }
-  .cc-dot{ display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--text-muted); vertical-align:middle; margin-right:4px; }
-  .cc-dot.g{ background:var(--good); } .cc-dot.a{ background:var(--warning); } .cc-dot.r{ background:var(--critical); }
-  .cc-card{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow); }
-  .cc-h{ font-size:var(--fs-card); font-weight:700; margin-bottom:2px; color:var(--text-primary); }
-  .cc-how{ font-size:var(--fs-min); color:var(--text-secondary); margin-bottom:10px; line-height:1.5; }
-  .cc-mut{ color:var(--text-muted); font-size:var(--fs-min); }
-  .cc-scroll{ overflow-x:auto; max-width:100%; }
-  .cc-card, .cc-grid2 > *, #tabPanelCommand{ min-width:0; }
-  table.cc-table{ width:100%; border-collapse:collapse; font-size:var(--fs-body); }
-  table.cc-table th{ text-align:left; font-size:var(--fs-min); color:var(--text-secondary); font-weight:600; padding:6px 10px; border-bottom:2px solid var(--border-strong); vertical-align:bottom; }
-  table.cc-table td{ padding:10px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.4; }
-  tr.cc-row{ cursor:pointer; } tr.cc-row:hover td{ background:var(--accent-wash); }
-  .cc-pc{ font-weight:700; font-size:var(--fs-card); color:var(--accent-ink); }
-  td.cc-l-g{ background:var(--good-wash); } td.cc-l-a{ background:var(--warn-wash); } td.cc-l-r{ background:var(--crit-wash); }
-  .cc-pbar{ display:block; height:6px; background:var(--grid); border-radius:3px; margin-top:4px; overflow:hidden; min-width:70px; }
-  .cc-pbar i{ display:block; height:100%; background:var(--text-muted); }
-  .cc-pbar i.g{ background:var(--good); } .cc-pbar i.a{ background:var(--warning); } .cc-pbar i.r{ background:var(--critical); }
-  .cc-legend{ font-size:var(--fs-min); color:var(--text-secondary); margin-top:10px; line-height:1.7; }
-  .cc-issues{ display:grid; gap:8px; }
-  .cc-issue{ border:1px solid var(--border); border-left:6px solid var(--text-muted); border-radius:8px; padding:8px 12px; font-size:var(--fs-body); }
-  .cc-issue.r{ border-left-color:var(--critical); background:var(--crit-wash); } .cc-issue.a{ border-left-color:var(--warning); background:var(--warn-wash); }
-  .cc-issue-h{ font-size:var(--fs-card); margin-bottom:4px; }
-  .cc-issue ul{ margin:0; padding-left:4px; list-style:none; }
-  .cc-issue li{ font-size:var(--fs-body); margin:3px 0; line-height:1.5; }
-  table.cc-table th .cc-chip{ margin-top:3px; }
-  .cc-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .cc-ch{ display:grid; grid-template-columns:150px 1fr 190px; gap:10px; align-items:center; margin:6px 0; font-size:var(--fs-min); }
-  .cc-chbar{ position:relative; height:16px; background:var(--grid); border-radius:4px; overflow:hidden; display:block; }
-  .cc-chbar i{ position:absolute; left:0; top:0; bottom:0; background:var(--seq-2); }
-  .cc-chbar u{ position:absolute; left:0; top:4px; bottom:4px; background:var(--accent); border-radius:2px; }
-  .cc-notes ul{ margin:6px 0 0; padding-left:20px; font-size:var(--fs-min); color:var(--text-secondary); line-height:1.6; }
-  @media (max-width: 860px){
-    .cc-grid2{ grid-template-columns:1fr; }
-    .cc-ch{ grid-template-columns:110px 1fr 150px; }
-    .wrap{ padding:16px 16px 48px; }
-    #mainTabSeg{ display:flex; max-width:100%; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
-    #mainTabSeg button, #mainTabSeg .tab-sep{ flex:0 0 auto; }
-    .cc-summary{ font-size:var(--fs-body); }
-  }
-  @media print{
-    body.cc-printing #printReportArea{ display:none !important; }
-    body.cc-printing #tabPanelCommand, body.cc-printing #tabPanelCommand *{ visibility:visible !important; }
-    body.cc-printing #tabPanelCommand{ position:absolute; top:0; left:0; width:100%; }
-    body.cc-printing #ccPrintBtn{ display:none !important; }
-    body.cc-printing .cc-card, body.cc-printing .cc-tile{ break-inside:avoid; box-shadow:none; }
-    body.cc-printing .cc-summary{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  }
 
 </style>
 
@@ -881,7 +795,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <label class="auth-remember"><input type="checkbox" id="authRemember" checked> จดจำฉันไว้ในเครื่องนี้</label>
       <div class="form-error" id="authError" hidden></div>
       <button type="submit" class="btn primary auth-submit" id="authSubmitBtn">เข้าสู่ระบบ</button>
-      <a href="#" id="forgotPwLink" style="text-align:center; font-size:14px; color:var(--text-secondary);">ลืมรหัสผ่าน?</a>
+      <a href="#" id="forgotPwLink" style="text-align:center; font-size:12px; color:var(--text-secondary);">ลืมรหัสผ่าน?</a>
     </form>
     <!-- Shown instead of the normal login form only on a brand-new deployment (Firestore's
          meta/bootstrap doc doesn't exist yet) so the very first person to open the site can
@@ -916,7 +830,6 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
 </div>
 
 <div class="wrap">
-  <div id="freshBanner" class="fresh-banner yellow" hidden></div>
   <header class="top">
     <div class="brand">
       <div class="brand-mark">PT</div>
@@ -978,30 +891,17 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
        filteredRows() on every filter change (see renderCustomerTrends() call inside the
        master render() below) so switching tabs never shows stale data. -->
   <div class="seg" id="mainTabSeg" style="margin-bottom:14px;">
-    <button type="button" data-tab="command" class="active">สรุปผู้บริหาร</button>
+    <button type="button" data-tab="overview" class="active">ภาพรวม</button>
+    <button type="button" data-tab="salesperf">Sales Performance</button>
     <button type="button" data-tab="salesstatus">สถานะการขาย</button>
     <button type="button" data-tab="projectprofile">โปรไฟล์โครงการ</button>
     <button type="button" data-tab="trends">เทรน &amp; แนวโน้มลูกค้า</button>
     <button type="button" data-tab="followup">สถานะการติดตามลูกค้า</button>
-    <span class="tab-sep">ปฏิบัติงาน</span>
-    <button type="button" data-tab="salesperf">Sales Performance</button>
-    <button type="button" data-tab="overview">ภาพรวม (Daily Log)</button>
     <button type="button" data-tab="customerdata" id="tabBtnCustomerData" hidden>ข้อมูลลูกค้าเพิ่มเติม</button>
   </div>
-  <div class="scope-bar" id="scopeBar"></div>
 
-  <div id="tabPanelCommand" class="tab-panel">
-    <div class="cc-head">
-      <div><div class="section-heading" style="margin:0;"><h2>สรุปผู้บริหาร</h2></div>
-        <div class="cc-sub">ภาพรวมยอดขาย การตลาด และข้อยกเว้นรายโครงการ &mdash; กดแถวหรือการ์ดเพื่อเจาะลึก</div></div>
-      <button id="ccPrintBtn" class="btn" type="button">พิมพ์ 1 หน้า (PDF)</button>
-    </div>
-    <div id="ccBody"></div>
-  </div>
+  <div id="tabPanelOverview" class="tab-panel">
 
-  <div id="tabPanelOverview" class="tab-panel" hidden>
-
-  <div class="scope-bar" style="margin-bottom:10px;"><b>หมายเหตุ:</b> ตัวเลข "ปิดการขาย" ในหน้านี้นับจาก Walk-in tracker ที่ทีมขายคีย์ (ตัวชี้วัดล่วงหน้า) คนละฐานกับยอดจองจาก ERP &mdash; ยอดขายที่เป็นทางการดูที่แท็บ "สรุปผู้บริหาร" / "สถานะการขาย"</div>
   <div class="kpi-grid" id="kpiGrid"></div>
 
   <div class="card trend">
@@ -1246,7 +1146,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     </div>
     <div class="modal-toolbar" style="margin:0 0 12px 0; padding:0;">
       <input type="text" id="cdTabSearch" placeholder="ค้นหาชื่อ, เบอร์โทร, เซล, โครงการ...">
-      <label style="display:flex; align-items:center; gap:6px; font-size:14px; color:var(--text-secondary); white-space:nowrap;">
+      <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); white-space:nowrap;">
         <input type="checkbox" id="cdTabShowClosed"> แสดงลูกค้าที่จบการติดตามแล้ว
       </label>
     </div>
@@ -1735,7 +1635,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
 <div class="modal-overlay" id="confirmModal" hidden>
   <div class="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="confirmModalMsg" style="max-width:440px;">
     <div class="modal-form-body">
-      <div id="confirmModalMsg" style="white-space:pre-line; font-size:14px; line-height:1.6; color:var(--text-primary);"></div>
+      <div id="confirmModalMsg" style="white-space:pre-line; font-size:13.5px; line-height:1.6; color:var(--text-primary);"></div>
     </div>
     <div class="modal-footer" style="justify-content:flex-end;">
       <button type="button" class="btn" id="confirmModalCancel">ยกเลิก</button>
@@ -1770,7 +1670,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
           <div class="form-field" id="uaPasswordField">
             <label>รหัสผ่านชั่วคราว <span id="uaPasswordReq" class="req">*</span></label>
             <input type="password" id="uaPassword" placeholder="อย่างน้อย 6 ตัวอักษร">
-            <div style="font-size:14px; color:var(--text-secondary); margin-top:4px;">ใช้ครั้งแรกเท่านั้น — แนะนำให้พนักงานกด "ลืมรหัสผ่าน" ที่หน้าล็อกอินเพื่อตั้งรหัสผ่านของตัวเองภายหลัง</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">ใช้ครั้งแรกเท่านั้น — แนะนำให้พนักงานกด "ลืมรหัสผ่าน" ที่หน้าล็อกอินเพื่อตั้งรหัสผ่านของตัวเองภายหลัง</div>
           </div>
           <div class="form-field">
             <label style="display:flex; align-items:center; gap:6px; margin-top:8px;">
@@ -1825,7 +1725,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
         <label>ไฟล์ข้อมูล (.json)</label>
         <input type="file" id="backendFile" accept=".json,application/json">
       </div>
-      <div id="backendUploadInfo" style="margin-top:12px; font-size:14px; line-height:1.6;"></div>
+      <div id="backendUploadInfo" style="margin-top:12px; font-size:13px; line-height:1.6;"></div>
       <div class="form-error" id="backendUploadError" hidden style="margin-top:10px;"></div>
     </div>
     <div class="modal-footer">
@@ -2287,7 +2187,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           segments.map(function(s){
             var pct = total? Math.round(s.value/total*1000)/10 : 0;
             var clickable = onSegmentClick && s.value>0;
-            return '<div class="donut-legend-row" data-label="'+escapeHTML(s.label)+'" style="display:flex; align-items:center; gap:8px; font-size:14px;'+(clickable?' cursor:pointer;':'')+'">'+
+            return '<div class="donut-legend-row" data-label="'+escapeHTML(s.label)+'" style="display:flex; align-items:center; gap:8px; font-size:13px;'+(clickable?' cursor:pointer;':'')+'">'+
               '<span style="width:10px;height:10px;border-radius:50%;background:'+s.color+';flex-shrink:0;"></span>'+
               '<span style="flex:1;">'+escapeHTML(s.label)+'</span>'+
               '<b>'+fmtInt(s.value)+'</b>'+
@@ -4204,7 +4104,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<div class="card-title" style="display:flex; align-items:center; gap:8px;"><span class="proj-dot" style="background:'+ssProjColor(proj)+'"></span>'+proj+'</div>'+
         '<div class="card-sub">สัญญา active ทั้งหมด '+fmtInt((SS_DATA.funnel[proj]||{}).total_active||0)+' แปลง</div>'+
         '<div class="ss-funnel-'+proj.replace(/\s+/g,'_')+'"></div>'+
-        '<div class="card-title" style="margin-top:10px; font-size:14px;">ยอดจองรายเดือน แยกตามปี</div>'+
+        '<div class="card-title" style="margin-top:10px; font-size:12px;">ยอดจองรายเดือน แยกตามปี</div>'+
         '<div class="ss-year-'+proj.replace(/\s+/g,'_')+'"></div>'+
       '</div>';
     }).join('');
@@ -4398,10 +4298,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var range = last ? ('ลงบัญชีแล้ว ม.ค.–'+MKT_TH_MONTH[parseInt(last.slice(5,7),10)]) : 'ยังไม่มียอดที่ลงบัญชี';
     var per = (posted>0 && closedCount>0) ? Math.round(posted/closedCount) : null;
     return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border, #bbb)">'+
-      '<div style="font-size:14px;opacity:.75;margin-bottom:2px">ตามระบบ ERP ('+range+')</div>'+
+      '<div style="font-size:11px;opacity:.75;margin-bottom:2px">ตามระบบ ERP ('+range+')</div>'+
       '<div>ค่าเช่า/ภาษีป้าย: <b>'+fmtInt(bb.posted||0)+' บาท</b> &middot; สื่อสิ่งพิมพ์: <b>'+fmtInt(pr.posted||0)+' บาท</b> &middot; รวม <b>'+fmtInt(posted)+' บาท</b></div>'+
       '<div>ต้นทุน ERP ต่อการปิดการขาย 1 ราย: <b>'+(per!=null ? fmtInt(per)+' บาท' : '&mdash;')+'</b></div>'+
-      '<div style="font-size:14px;opacity:.7">สื่อสิ่งพิมพ์ = รหัสต้นทุน G020051 ซึ่ง ERP แยกค่าผลิตป้ายออกจากสิ่งพิมพ์อื่นไม่ได้ · ยอดก่อน VAT · เป็นข้อมูลอ้างอิง แยกจากงบด้านบน (ชีตอาจรวมค่าเช่าป้ายไว้แล้ว)</div>'+
+      '<div style="font-size:11px;opacity:.7">สื่อสิ่งพิมพ์ = รหัสต้นทุน G020051 ซึ่ง ERP แยกค่าผลิตป้ายออกจากสิ่งพิมพ์อื่นไม่ได้ · ยอดก่อน VAT · เป็นข้อมูลอ้างอิง แยกจากงบด้านบน (ชีตอาจรวมค่าเช่าป้ายไว้แล้ว)</div>'+
       '</div>';
   }
 
@@ -4427,7 +4327,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<div>ผลลัพธ์ (Result): <b>'+fmtInt(res.total)+' Walk</b></div>'+
         '<div>ปิดการขาย: <b>'+fmtInt(res.closedCount)+' ราย</b>'+unitsText+'</div>'+
         '<div>ต้นทุนต่อการปิดการขาย 1 ราย: <b>'+(perSuccess!=null ? fmtInt(perSuccess)+' บาท' : '&mdash;')+'</b></div>'+
-'<div style="margin-top:6px;font-size:14px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–ต.ค.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
+'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–ต.ค.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
       '</div>'+
       '<div class="card-sub" style="margin:0;">'+
         res.series.map(function(s){ return escapeHTML(s.name)+': '+fmtInt(s.total)+' Walk'; }).join(' &middot; ')+
@@ -4624,7 +4524,6 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var startISO = profileState.start, endISO = profileState.end;
     var isFullRange = (startISO===PROFILE_BOUNDS.min && endISO===PROFILE_BOUNDS.max);
     var rangeLabel = isFullRange ? 'ทุกช่วงเวลาที่มีข้อมูล' : (fmtDateShort(startISO)+' – '+fmtDateShort(endISO));
-    ccUpdateScope();
 
     var w = computeProfileWalkinAgg(proj, startISO, endISO);
     var fRange = sumFunnelForRange(proj, startISO, endISO);
@@ -4658,10 +4557,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     html += '<div class="card-sub" style="margin-bottom:18px;">รวมข้อมูลตั้งแต่ลูกค้า Walk-in เข้าชมโครงการ จนถึงสถานะการขายจริงในระบบ ERP &middot; ช่วงที่แสดง: <b>'+escapeHTML(rangeLabel)+'</b></div>';
 
     html += '<div class="kpi-grid">'+
-      '<div class="kpi"><div class="kpi-label">ลูกค้าเข้าชม (Walk-in)</div><div class="kpi-value">'+fmtInt(w.total_visits||0)+' <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Walk</span></div><div class="kpi-sub">'+escapeHTML(rangeLabel)+'</div></div>'+
-      '<div class="kpi"><div class="kpi-label">ยอดจอง (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:14px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">บันทึกผ่าน Walk-in tracker '+fmtInt(walkinBooked)+' ราย'+(totalActive>walkinBooked?' &mdash; อีก '+fmtInt(totalActive-walkinBooked)+' รายมาจากช่องทางอื่น':'')+'</div></div>'+
-      '<div class="kpi"><div class="kpi-label">สัญญา Active (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:14px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">รวมทุกสถานะที่ยังไม่ยกเลิก'+(fFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':'')+'</div></div>'+
-      '<div class="kpi"><div class="kpi-label">โอนกรรมสิทธิ์แล้ว (ERP)</div><div class="kpi-value">'+fmtInt(transferred)+' <span style="font-size:14px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">นับตามวันที่โอนกรรมสิทธิ์จริง'+(transferFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':' &middot; '+escapeHTML(rangeLabel))+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ลูกค้าเข้าชม (Walk-in)</div><div class="kpi-value">'+fmtInt(w.total_visits||0)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">Walk</span></div><div class="kpi-sub">'+escapeHTML(rangeLabel)+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ยอดจอง (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">บันทึกผ่าน Walk-in tracker '+fmtInt(walkinBooked)+' ราย'+(totalActive>walkinBooked?' &mdash; อีก '+fmtInt(totalActive-walkinBooked)+' รายมาจากช่องทางอื่น':'')+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">สัญญา Active (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">รวมทุกสถานะที่ยังไม่ยกเลิก'+(fFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':'')+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">โอนกรรมสิทธิ์แล้ว (ERP)</div><div class="kpi-value">'+fmtInt(transferred)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">นับตามวันที่โอนกรรมสิทธิ์จริง'+(transferFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':' &middot; '+escapeHTML(rangeLabel))+'</div></div>'+
     '</div>';
 
     html += '<div class="section-heading"><h2>สถานะการขาย (ERP)</h2></div>';
@@ -4824,7 +4723,6 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // from the same filteredRows() on every filter change (see the master render()
   // function below) so switching tabs is instant and never shows stale data.
   var mainTabSegEl = document.getElementById('mainTabSeg');
-  var tabPanelCommandEl = document.getElementById('tabPanelCommand');
   var tabPanelOverviewEl = document.getElementById('tabPanelOverview');
   var tabPanelTrendsEl = document.getElementById('tabPanelTrends');
   var tabPanelFollowupEl = document.getElementById('tabPanelFollowup');
@@ -4839,7 +4737,6 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     if(!btn) return;
     Array.prototype.forEach.call(mainTabSegEl.querySelectorAll('button'), function(b){ b.classList.toggle('active', b===btn); });
     var tab = btn.dataset.tab;
-    tabPanelCommandEl.hidden = tab!=='command';
     tabPanelOverviewEl.hidden = tab!=='overview';
     tabPanelTrendsEl.hidden = tab!=='trends';
     tabPanelFollowupEl.hidden = tab!=='followup';
@@ -4852,382 +4749,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     if (tab==='projectprofile' && !ssProjectProfileRendered){ renderProjectProfileTab(); ssProjectProfileRendered = true; }
     if (tab==='salesperf' && !spfRendered){ renderSalesPerfTab(); spfRendered = true; }
     if (tab==='customerdata' && !cdTabRendered){ renderCustomerTabRows(); cdTabRendered = true; }
-    ccOnTabChange(tab);
   });
-
-  // ===================================================================================
-  // COMMAND CENTER (สรุปผู้บริหาร) -- เพิ่ม 27 ต.ค. 2569 (patch_command_center.py)
-  // กติกาเดียวทั้งหน้า: ยอดขาย/งบ/เป้า = ปีนี้ (YTD) · Walk-in = 30 วันล่าสุดนับถึงวันที่ Walk-in
-  // อัปเดตล่าสุด เทียบ 30 วันก่อนหน้า · สต็อก/รอโอน = ณ วันที่ ERP อัปเดต. ทุกตัวเลขมีป้ายช่วงเวลากำกับ.
-  // ยอดขายใช้ ERP เป็นตัวหลักแหล่งเดียว; Walk-in เป็นตัวชี้วัดล่วงหน้า (ไม่ใช่ยอดขาย).
-  // เกณฑ์ไฟเขียว/เหลือง/แดงอยู่ใน CC_RULES ด้านล่าง ปรับได้ที่เดียว.
-  // ===================================================================================
-  var CC_RULES = {
-    staleYellowDays: 2,            // ข้อมูลเก่ากว่านี้ (วัน) -> แถบเตือนเหลือง
-    staleRedDays: 7,               // เก่ากว่านี้ -> แถบเตือนแดง
-    salesGreen: 0.90, salesAmber: 0.70,   // คาดปิดปี / เป้า
-    walkinGreen: -0.10, walkinAmber: -0.30, walkinMinPrev: 10, // % เปลี่ยนแปลง 30 วัน
-    costGreen: 1.0, costAmber: 1.5,       // เท่าของต้นทุนต่อยูนิตเฉลี่ยทุกโครงการ
-    completeGreen: 80, completeAmber: 60, // % ความครบถ้วนของข้อมูล Walk-in
-    lowStockMonths: 3
-  };
-  var CC_CODE = {'HORIZON':'HRZ','ARCADE Autograph':'ACS','CHIEFTAIN':'CHF','CASCADE':'CAS','PATTA PILLAR':'PPL','PATTA TERRANE':'TER','PATTA RIVERINE':'RVR'};
-  var ccRendered = false;
-
-  function ccFmtD(d){ return d.getDate()+' '+THAI_MONTH[d.getMonth()]+' '+d.getFullYear(); }
-  function ccDaysBetween(a, b){ return Math.floor((b - a) / 86400000); }
-  function ccErpDate(){ return new Date(SS_DATA.erpUpdated); }
-  function ccWalkinDate(){ return parseISO(SS_DATA.walkinUpdated); }
-  function ccCompleteLabel(entries, naKey, total){
-    var na = 0;
-    (entries||[]).forEach(function(e){ if(e && e[0]===naKey) na = e[1]; });
-    var t = total || (entries||[]).reduce(function(a,e){ return a + (e[1]||0); }, 0);
-    if(!t) return 'ข้อมูลครบ -';
-    var p = Math.round((t - na) / t * 100);
-    return 'ข้อมูลครบ ' + p + '%' + (p < CC_RULES.completeAmber ? ' (ต่ำ — ระวังตีความผิด)' : '');
-  }
-  function ccFilled(v){ return !!v && v!=='N/A' && v!=='n/a' && v!=='-' && v!=='อื่นๆ' && v!=='ไม่ระบุ'; }
-  function ccNum(n, d){ return (n==null||isNaN(n)) ? '-' : Number(n).toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); }
-  function ccMB(n){ return (n/1e6).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-  function ccWorst(list){ return list.indexOf('r')>=0 ? 'r' : list.indexOf('a')>=0 ? 'a' : list.indexOf('g')>=0 ? 'g' : 'x'; }
-  function ccLightName(l){ return l==='g'?'ปกติ':l==='a'?'เฝ้าระวัง':l==='r'?'ต้องคุยก่อน':'ข้อมูลไม่พอ'; }
-  function ccIsClosed(r){
-    if(!(r.s==='Close Deal' || r.s==='จองแล้ว/เช่าแล้ว' || r.bd || r.bu)) return false;
-    if(r.bu){ var m = String(r.bu).match(/[A-Z]{3}/); if(m && CC_CODE[r.p] && m[0]!==CC_CODE[r.p]) return false; }
-    return true;
-  }
-  function ccChanName(m){
-    if(!m || m==='N/A') return 'ไม่ระบุ';
-    if(m.indexOf('Facebook')===0) return 'Facebook';
-    return m;
-  }
-
-  // ---- แถบเตือนความสดของข้อมูล (ทุกแท็บ) ----
-  function ccUpdateBanner(){
-    var el = document.getElementById('freshBanner');
-    if(!el || !SS_DATA || !SS_DATA.erpUpdated || !SS_DATA.walkinUpdated) return;
-    var now = new Date(), e = ccErpDate(), w = ccWalkinDate();
-    var ed = ccDaysBetween(e, now), wd = ccDaysBetween(w, now);
-    if(Math.max(ed, wd) <= CC_RULES.staleYellowDays){ el.hidden = true; return; }
-    var parts = [];
-    if(ed > CC_RULES.staleYellowDays) parts.push('ERP (ยอดขาย/โอน/ต้นทุน) อัปเดตล่าสุด '+ccFmtD(e)+' ค้าง <b>'+ed+' วัน</b>');
-    if(wd > CC_RULES.staleYellowDays) parts.push('Walk-in tracker ล่าสุด '+fmtDateShort(SS_DATA.walkinUpdated)+' ค้าง <b>'+wd+' วัน</b>');
-    el.className = 'fresh-banner ' + (Math.max(ed, wd) > CC_RULES.staleRedDays ? 'red' : 'yellow');
-    el.hidden = false;
-    el.innerHTML = '<b>ข้อมูลไม่เป็นปัจจุบัน</b> &mdash; ' + parts.join(' &middot; ') + ' &middot; ตัวเลขอาจต่ำกว่าความจริง';
-  }
-
-  // ---- แถบบอกช่วงเวลาที่ใช้อยู่ของแท็บนั้น ----
-  function ccActiveTab(){
-    var b = mainTabSegEl.querySelector('button.active');
-    return b ? b.dataset.tab : 'command';
-  }
-  function ccUpdateScope(){
-    var el = document.getElementById('scopeBar');
-    if(!el) return;
-    var tab = ccActiveTab(), txt = '';
-    var erpStr = (SS_DATA && SS_DATA.erpUpdated) ? ccFmtD(ccErpDate()) : '-';
-    if(tab==='command'){
-      txt = '<b>ช่วงเวลาที่ใช้:</b> ยอดขาย/งบ/เป้า = ปีนี้ (1 ม.ค. – ข้อมูล ERP '+erpStr+') &middot; Walk-in = 30 วันล่าสุดเทียบ 30 วันก่อนหน้า &middot; สต็อก/รอโอน = ณ วันที่ ERP อัปเดต (ตัวกรองด้านบนไม่ใช้กับหน้านี้)';
-    } else if(tab==='overview' || tab==='trends' || tab==='followup'){
-      txt = '<b>ช่วงเวลาที่ใช้:</b> '+fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+' &middot; โครงการ: '+(state.project==='ALL' ? 'ทุกโครงการ' : state.project)+' &middot; ข้อมูล Walk-in เท่านั้น (ไม่ใช่ยอดขาย ERP)';
-    } else if(tab==='projectprofile'){
-      var full = (typeof PROFILE_BOUNDS!=='undefined' && profileState.start===PROFILE_BOUNDS.min && profileState.end===PROFILE_BOUNDS.max);
-      txt = '<b>ช่วงเวลาที่ใช้:</b> '+(full ? 'ทุกช่วงเวลาที่มีข้อมูล' : fmtDateShort(profileState.start)+' – '+fmtDateShort(profileState.end))+' &middot; ใช้ทั้งหน้า รวมข้อมูล ERP (ตัวกรองของหน้านี้ด้านล่าง)';
-    } else if(tab==='salesstatus'){
-      txt = '<b>ช่วงเวลาที่ใช้:</b> สะสมทุกช่วงเวลา ณ วันที่ ERP อัปเดต '+erpStr;
-    } else if(tab==='salesperf'){
-      txt = '<b>ช่วงเวลาที่ใช้:</b> เป้าและยอดขายปี '+new Date().getFullYear()+' &middot; ณ วันที่ ERP อัปเดต '+erpStr;
-    } else {
-      txt = '<b>ช่วงเวลาที่ใช้:</b> ไม่ขึ้นกับตัวกรองช่วงเวลา';
-    }
-    el.innerHTML = txt;
-  }
-
-  // ---- สลับแท็บ: ตัวกรองด้านบนแสดงเฉพาะแท็บที่ใช้จริง (ภาพรวม/เทรน) ----
-  function ccOnTabChange(tab){
-    var fb = document.querySelector('.filterbar');
-    if(fb) fb.hidden = !(tab==='overview' || tab==='trends' || tab==='followup');
-    if(tab==='command') ccRender();
-    ccUpdateScope();
-  }
-  function ccPickLanding(){
-    var btns = Array.prototype.filter.call(mainTabSegEl.querySelectorAll('button[data-tab]'), function(b){ return !b.hidden; });
-    var pref = ['command','overview'];
-    for(var i=0;i<pref.length;i++){
-      var hit = btns.filter(function(b){ return b.dataset.tab===pref[i]; })[0];
-      if(hit) return hit;
-    }
-    return btns[0];
-  }
-  function ccGoTab(tab, proj){
-    var btn = mainTabSegEl.querySelector('button[data-tab="'+tab+'"]');
-    if(!btn || btn.hidden) return;
-    if(proj && tab==='projectprofile'){ ssActiveProfileProj = proj; ssProjectProfileRendered = false; }
-    btn.click();
-    window.scrollTo(0, 0);
-  }
-
-  // ---- คำนวณตัวเลขทั้งหมดของหน้าสรุป ----
-  function ccCompute(){
-    var now = new Date(), year = now.getFullYear();
-    var erpD = ccErpDate();
-    var anchor = ccWalkinDate();
-    var cur0 = toISO(addDays(anchor,-29)), cur1 = toISO(anchor);
-    var prv0 = toISO(addDays(anchor,-59)), prv1 = toISO(addDays(anchor,-30));
-    var y0 = year+'-01-01';
-    var projs = (SS_DATA.salesProjects || []).filter(function(p){ return SPF_DATA[p]; });
-    var out = { year:year, now:now, erpD:erpD, anchor:anchor, cur0:cur0, cur1:cur1, prv0:prv0, prv1:prv1, projs:[], channels:{} };
-
-    projs.forEach(function(p){
-      var s = SPF_DATA[p] || {};
-      var o = { p:p, code:CC_CODE[p] || p };
-      o.units = s.total_units || 0;
-      o.sold = s.sales_2026 || 0;
-      o.target = s.target_2026 || 0;
-      o.cum = s.sales_unit || 0;
-      o.transferred = s.transfer_unit || 0;
-      o.pending = s.pending_transfer || 0;
-      o.remaining = s.remaining_unsold || 0;
-      // คาดปิดปี: ความเร็วขายนับจากต้นปีหรือวันเปิดขาย (แล้วแต่อย่างไหนหลัง) ถึงวันนี้
-      var t0 = new Date(year,0,1);
-      if(s.launch_date){ var ld = parseISO(s.launch_date); if(ld > t0) t0 = ld; }
-      var monthsEl = Math.max(0.5, (now - t0) / (30.44*86400000));
-      var monthsLeft = Math.max(0, (new Date(year,11,31) - now) / (30.44*86400000));
-      o.proj = o.sold + (o.sold / monthsEl) * monthsLeft;
-      o.projPct = o.target ? o.proj / o.target : null;
-      o.nowPct = o.target ? o.sold / o.target : null;
-      o.sLight = o.projPct==null ? 'x' : (o.projPct>=CC_RULES.salesGreen ? 'g' : o.projPct>=CC_RULES.salesAmber ? 'a' : 'r');
-      o.gap = Math.max(0, o.target - o.sold);
-      o.capped = o.target>0 && o.remaining < o.gap;   // ของเหลือน้อยกว่าที่ต้องขายเพื่อถึงเป้า
-      if(o.capped) o.sLight = 'r';
-      // สต็อก
-      o.months = s.time_to_closeout_months;
-      if(o.remaining===0){ o.outTxt = 'ขายหมดแล้ว'; }
-      else if(o.months!=null){
-        var od = new Date(erpD.getTime() + o.months*30.44*86400000);
-        o.outTxt = 'ขายหมด ~'+THAI_MONTH[od.getMonth()]+' '+od.getFullYear();
-      } else o.outTxt = '-';
-      o.stockLight = (o.remaining>0 && o.months!=null && o.months<=CC_RULES.lowStockMonths) ? 'a' : 'g';
-      // Walk-in
-      var rows = RAW.filter(function(r){ return r.p===p; });
-      o.w30 = rows.filter(function(r){ return r.d>=cur0 && r.d<=cur1; }).length;
-      o.wPrev = rows.filter(function(r){ return r.d>=prv0 && r.d<=prv1; }).length;
-      o.wDelta = o.wPrev>0 ? (o.w30-o.wPrev)/o.wPrev : null;
-      o.nearlySoldOut = o.units>0 && (o.remaining / o.units) <= 0.10;
-      if(o.wPrev < CC_RULES.walkinMinPrev || o.nearlySoldOut) o.wLight = 'x';
-      else o.wLight = o.wDelta>=CC_RULES.walkinGreen ? 'g' : o.wDelta>=CC_RULES.walkinAmber ? 'a' : 'r';
-      var ytd = rows.filter(function(r){ return r.d>=y0; });
-      o.wYtd = ytd.length;
-      o.trackerBook = ytd.filter(ccIsClosed).length;
-      // ต้นทุนการตลาด
-      var ad = AD_SPEND[p] || {};
-      var mc = (SS_DATA.mktCost && SS_DATA.mktCost[p]) || null;
-      o.fb = ad.online || 0;
-      o.off = mc ? (((mc.billboard||{}).posted||0) + ((mc.print||{}).posted||0)) : (ad.offline || 0);
-      o.cost = o.fb + o.off;
-      o.cpu = o.sold>0 ? o.cost/o.sold : null;
-      o.cpw = o.wYtd>0 ? o.cost/o.wYtd : null;
-      o.offMissing = (o.off===0);
-      // ความครบถ้วนข้อมูล Walk-in ปีนี้
-      var n = ytd.length;
-      function pct(fn){ return n ? Math.round(ytd.filter(fn).length / n * 100) : null; }
-      o.comp = { n:n, b:pct(function(r){return ccFilled(r.b);}), g:pct(function(r){return ccFilled(r.g);}),
-                 m:pct(function(r){return ccFilled(r.m);}), nat:pct(function(r){return ccFilled(r.n);}) };
-      var cv = [o.comp.b,o.comp.g,o.comp.m,o.comp.nat].filter(function(v){return v!=null;});
-      o.comp.avg = cv.length ? Math.round(cv.reduce(function(a,b){return a+b;},0)/cv.length) : null;
-      var na = rows.length;
-      function pctAll(fn){ return na ? Math.round(rows.filter(fn).length / na * 100) : null; }
-      var av = [pctAll(function(r){return ccFilled(r.b);}), pctAll(function(r){return ccFilled(r.g);}), pctAll(function(r){return ccFilled(r.m);}), pctAll(function(r){return ccFilled(r.n);})].filter(function(v){return v!=null;});
-      o.comp.allAvg = av.length ? Math.round(av.reduce(function(a,b){return a+b;},0)/av.length) : null;
-      o.comp.allN = na;
-      o.cLightData = o.comp.avg==null ? 'x' : (o.comp.avg>=CC_RULES.completeGreen ? 'g' : o.comp.avg>=CC_RULES.completeAmber ? 'a' : 'r');
-      // ช่องทาง (ลูกค้าที่เข้าชมปีนี้)
-      ytd.forEach(function(r){
-        var k = ccChanName(r.m);
-        var c = out.channels[k] || (out.channels[k] = {w:0, b:0});
-        c.w++; if(ccIsClosed(r)) c.b++;
-      });
-      out.projs.push(o);
-    });
-
-    var totCost=0, totSold=0; out.projs.forEach(function(o){ if(!o.offMissing){ totCost+=o.cost; totSold+=o.sold; } });
-    out.avgCpu = totSold>0 ? totCost/totSold : null;
-    out.projs.forEach(function(o){
-      if(o.cpu==null || o.offMissing){ o.cLight = 'x'; }
-      else { var r = o.cpu / out.avgCpu; o.cLight = r<=CC_RULES.costGreen ? 'g' : r<=CC_RULES.costAmber ? 'a' : 'r'; }
-      o.light = ccWorst([o.sLight, o.wLight, o.cLight]);
-      o.reasons = [];
-      if(o.capped) o.reasons.push({l:'r', t:'เป้า '+o.target+' ยูนิต แต่ขายแล้ว '+o.sold+' และเหลือขายเพียง '+o.remaining+' ยูนิต (ต้องขายอีก '+o.gap+') — ถึงเป้าไม่ได้ถ้าไม่เปิดยูนิต/เฟสใหม่ หรือควรปรับเป้า'});
-      else if(o.sLight==='r'||o.sLight==='a') o.reasons.push({l:o.sLight, t:'ขายปีนี้ '+o.sold+' จากเป้า '+o.target+' ยูนิต คาดปิดปีที่ '+Math.round(o.projPct*100)+'% ของเป้า'});
-      if(o.wLight==='r'||o.wLight==='a') o.reasons.push({l:o.wLight, t:'Walk-in 30 วันล่าสุด '+o.w30+' ราย ลดลง '+Math.round(Math.abs(o.wDelta)*100)+'% จากช่วงก่อนหน้า ('+o.wPrev+' ราย)'});
-      if(o.cLight==='r'||o.cLight==='a') o.reasons.push({l:o.cLight, t:'ต้นทุนการตลาด '+ccNum(o.cpu)+' บาทต่อยูนิตที่ขาย สูงกว่าค่าเฉลี่ยทุกโครงการ ('+ccNum(out.avgCpu)+') '+(o.cpu/out.avgCpu).toFixed(1)+' เท่า'});
-      if(o.stockLight==='a' && !o.capped) o.reasons.push({l:'a', t:'เหลือ '+o.remaining+' ยูนิต คาดขายหมดใน '+o.months+' เดือน — ควรเตรียมเฟสถัดไป'});
-      if(o.cLightData==='r'||o.cLightData==='a') o.reasons.push({l:o.cLightData, t:'ข้อมูล Walk-in ปีนี้ครบเพียง '+o.comp.avg+'% (งบ '+o.comp.b+'% · เกรด '+o.comp.g+'% · ช่องทาง '+o.comp.m+'%) ตัวเลขช่องทาง/งบอาจคลาดเคลื่อน'});
-    });
-    return out;
-  }
-
-  function ccChip(t, cls){ return '<span class="cc-chip'+(cls?' '+cls:'')+'">'+t+'</span>'; }
-  function ccTile(label, value, sub, light, chips, go){
-    return '<div class="cc-tile '+(light||'x')+'"'+(go?' data-go-tab="'+go+'" role="button" tabindex="0"':'')+'>'+
-      '<div class="cc-tile-l"><span class="cc-dot '+(light||'x')+'"></span>'+label+'</div>'+
-      '<div class="cc-tile-v">'+value+'</div>'+
-      '<div class="cc-tile-s">'+sub+'</div>'+
-      '<div class="cc-chips">'+chips+'</div></div>';
-  }
-  function ccBar(pct, cls){ return '<span class="cc-pbar"><i class="'+(cls||'')+'" style="width:'+Math.max(0,Math.min(100,pct))+'%"></i></span>'; }
-
-  function ccRender(){
-    var host = document.getElementById('ccBody');
-    if(!host) return;
-    if(!SS_DATA || !SS_DATA.erpUpdated || !(SS_DATA.salesProjects || []).length){
-      host.innerHTML = '<div class="cc-card">ยังไม่มีข้อมูลสรุป — เข้าสู่ระบบแล้วข้อมูลจะแสดงที่นี่</div>';
-      return;
-    }
-    var D;
-    try { D = ccCompute(); }
-    catch(err){ host.innerHTML = '<div class="cc-card">ยังโหลดข้อมูลสรุปไม่ได้: '+escapeHTML(String(err && err.message || err))+'</div>'; return; }
-    ccUpdateBanner(); ccUpdateScope();
-    var P = D.projs, yr = D.year;
-
-    var sold=0, tgt=0, proj=0, cost=0, fb=0, off=0, rem=0, units=0, pend=0, tran=0, w30=0, wPrev=0, wYtd=0, trk=0;
-    P.forEach(function(o){ sold+=o.sold; tgt+=o.target; proj+=o.proj; cost+=o.cost; fb+=o.fb; off+=o.off; rem+=o.remaining; units+=o.units; pend+=o.pending; tran+=o.transferred; w30+=o.w30; wPrev+=o.wPrev; wYtd+=o.wYtd; trk+=o.trackerBook; });
-    var projPct = tgt ? proj/tgt : null;
-    var sAll = projPct==null?'x':(projPct>=CC_RULES.salesGreen?'g':projPct>=CC_RULES.salesAmber?'a':'r');
-    var wDel = wPrev>0 ? (w30-wPrev)/wPrev : null;
-    var wAll = wPrev<CC_RULES.walkinMinPrev ? 'x' : (wDel>=CC_RULES.walkinGreen?'g':wDel>=CC_RULES.walkinAmber?'a':'r');
-    var avgCpu = D.avgCpu, allCpu = sold>0 ? cost/sold : null;
-    var reds = P.filter(function(o){return o.light==='r';}), ambers = P.filter(function(o){return o.light==='a';});
-    var soonest = P.filter(function(o){return o.remaining>0 && o.months!=null;}).sort(function(a,b){return a.months-b.months;})[0];
-
-    var YTD = ccChip('ปี '+yr+' สะสม (YTD)');
-    var W30 = ccChip('30 วัน: '+fmtDateShort(D.cur0)+' – '+fmtDateShort(D.cur1));
-    var NOW = ccChip('ณ '+ccFmtD(D.erpD));
-    var ERP = ccChip('ERP — ตัวเลขหลัก','erp');
-    var hY = ccChip('YTD '+yr), hN = ccChip('ณ '+D.erpD.getDate()+' '+THAI_MONTH[D.erpD.getMonth()]), hE = ccChip('ERP','erp'), hL = ccChip('ล่วงหน้า','lead'), h30 = ccChip('30 วัน');
-    var LEAD = ccChip('Walk-in — ตัวชี้วัดล่วงหน้า ไม่ใช่ยอดขาย','lead');
-
-    // ---------- สรุป ----------
-    var sum = '<b>ปี '+yr+' (สะสม ณ '+ccFmtD(D.erpD)+'):</b> ขายใหม่ <b>'+sold+'</b> ยูนิต จากเป้า '+tgt+' ('+Math.round(sold/tgt*100)+'%) · คาดปิดปี '+Math.round(proj)+' ยูนิต ('+Math.round(projPct*100)+'% ของเป้า)'+
-      ' · งบการตลาด <b>'+ccMB(cost)+'</b> ล้านบาท ('+ccNum(allCpu)+' บาท/ยูนิต)'+
-      '<br>'+(reds.length ? '<b>ต้องคุยก่อน '+reds.length+' โครงการ:</b> '+reds.map(function(o){return o.code;}).join(', ') : 'ไม่มีโครงการสีแดง')+
-      (ambers.length ? ' · เฝ้าระวัง '+ambers.length+' โครงการ: '+ambers.map(function(o){return o.code;}).join(', ') : '')+
-      ' · รอโอน '+pend+' ยูนิต · เหลือขาย '+ccNum(rem)+' ยูนิต';
-
-    // ---------- การ์ด KPI ----------
-    var tiles = '';
-    tiles += ccTile('ยอดขายใหม่ปีนี้ (ERP)', sold+' <small>/ เป้า '+tgt+' ยูนิต</small>', 'คาดปิดปี '+Math.round(proj)+' ยูนิต = '+Math.round(projPct*100)+'% ของเป้า', sAll, YTD+ERP, 'salesperf');
-    tiles += ccTile('โอนแล้ว / รอโอน (ERP)', tran+' <small>โอนแล้วสะสม · รอโอน '+pend+'</small>', 'ยูนิตที่ทำสัญญาแล้วแต่ยังไม่ปลด Hold Transfer', 'x', NOW+ERP, 'salesstatus');
-    tiles += ccTile('งบการตลาด', ccMB(cost)+' <small>ล้านบาท</small>', ccNum(allCpu)+' บาทต่อยูนิตที่ขาย · Online '+Math.round(fb/cost*100)+'% / Offline '+Math.round(off/cost*100)+'%', 'x', YTD+ccChip('Facebook + ป้าย + สิ่งพิมพ์'), 'projectprofile');
-    tiles += ccTile('Walk-in 30 วันล่าสุด', ccNum(w30)+' <small>'+(wDel==null?'':(wDel>=0?'▲ ':'▼ ')+Math.round(Math.abs(wDel)*100)+'%')+'</small>', 'เทียบ 30 วันก่อนหน้า '+ccNum(wPrev)+' ราย', wAll, W30+LEAD, 'trends');
-    tiles += ccTile('ยูนิตเหลือขาย', ccNum(rem)+' <small>/ '+ccNum(units)+' ยูนิต</small>', soonest ? 'หมดเร็วสุด: '+soonest.code+' ('+soonest.outTxt.replace('ขายหมด ~','')+')' : '-', soonest && soonest.stockLight==='a' ? 'a' : 'g', NOW+ERP, 'salesstatus');
-    var compAvg = (function(){ var a=P.filter(function(o){return o.comp.avg!=null;}); return a.length ? Math.round(a.reduce(function(s,o){return s+o.comp.avg;},0)/a.length) : null; })();
-    tiles += ccTile('ความครบถ้วนข้อมูล Walk-in', (compAvg==null?'-':compAvg+'%'), 'งบประมาณ เกรด ช่องทาง สัญชาติ ที่ทีมขายกรอกแล้ว', compAvg==null?'x':(compAvg>=CC_RULES.completeGreen?'g':compAvg>=CC_RULES.completeAmber?'a':'r'), YTD+LEAD, null);
-
-    // ---------- ตารางรายโครงการ (เรียงตามความเร่งด่วน) ----------
-    var order = {r:0,a:1,g:2,x:3};
-    var sorted = P.slice().sort(function(a,b){ return order[a.light]-order[b.light] || a.code.localeCompare(b.code); });
-    var rowsHtml = sorted.map(function(o){
-      var sCell = o.target ? '<b>'+o.sold+'</b> / '+o.target+' <span class="cc-mut">('+Math.round(o.nowPct*100)+'%)</span><br><span class="cc-mut">คาดปิดปี '+Math.round(o.projPct*100)+'%</span>' : '<b>'+o.sold+'</b> <span class="cc-mut">(ไม่มีเป้า)</span>';
-      var wCell = o.wLight==='x' ? '<b>'+o.w30+'</b> <span class="cc-mut">(ช่วงก่อน '+o.wPrev+' — '+(o.nearlySoldOut?'ใกล้ขายหมด ไม่ตัดสินด้วย Walk-in':'น้อยเกินเทียบ')+')</span>' : '<b>'+o.w30+'</b> <span class="cc-mut">'+(o.wDelta>=0?'▲ ':'▼ ')+Math.round(Math.abs(o.wDelta)*100)+'%</span><br><span class="cc-mut">ก่อนหน้า '+o.wPrev+'</span>';
-      var tCell = '<b>'+o.pending+'</b> รอโอน<br><span class="cc-mut">โอนแล้ว '+o.transferred+' / ขายสะสม '+o.cum+'</span>';
-      var kCell = '<b>'+o.remaining+'</b> / '+o.units+'<br><span class="cc-mut">'+o.outTxt+'</span>';
-      var cCell = o.cpu==null ? '<span class="cc-mut">ยังไม่มียอดขาย</span>' : '<b>'+ccNum(o.cpu)+'</b> บาท/ยูนิต<br><span class="cc-mut">งบ '+ccMB(o.cost)+' ล.'+(o.offMissing?' · Offline ยังไม่ลงบัญชี':'')+'</span>';
-      var dCell = o.comp.avg==null ? '<span class="cc-mut">-</span>' : '<b>'+o.comp.avg+'%</b>'+ccBar(o.comp.avg, o.cLightData);
-      return '<tr class="cc-row" data-go-proj="'+escapeHTML(o.p)+'" title="กดเพื่อเจาะลึกโปรไฟล์โครงการ">'+
-        '<td><span class="cc-dot '+o.light+'"></span> <span class="cc-pc">'+o.code+'</span><br><span class="cc-mut">'+ccLightName(o.light)+'</span></td>'+
-        '<td class="cc-l-'+o.sLight+'">'+sCell+'</td>'+
-        '<td class="cc-l-'+o.wLight+'">'+wCell+'</td>'+
-        '<td>'+tCell+'</td>'+
-        '<td class="cc-l-'+o.stockLight+'">'+kCell+'</td>'+
-        '<td class="cc-l-'+o.cLight+'">'+cCell+'</td>'+
-        '<td>'+dCell+'</td></tr>';
-    }).join('');
-
-    var issueHtml = sorted.filter(function(o){ return o.reasons.length; }).map(function(o){
-      var rs = o.reasons.slice().sort(function(a,b){ return order[a.l]-order[b.l]; });
-      return '<div class="cc-issue '+o.light+'"><div class="cc-issue-h"><span class="cc-dot '+o.light+'"></span><b>'+o.code+'</b> <span class="cc-mut">'+ccLightName(o.light)+'</span></div><ul>'+
-        rs.map(function(r){ return '<li><span class="cc-dot '+r.l+'"></span>'+r.t+'</li>'; }).join('')+'</ul></div>';
-    }).join('') || '<div class="cc-mut">ไม่มีข้อยกเว้น</div>';
-
-    // ---------- ประสิทธิภาพการตลาด ----------
-    var effRows = P.slice().sort(function(a,b){ return (b.cost) - (a.cost); }).map(function(o){
-      return '<tr><td><span class="cc-pc">'+o.code+'</span></td>'+
-        '<td>'+ccNum(o.cost)+'</td>'+
-        '<td>'+ccNum(o.wYtd)+'</td><td>'+(o.cpw==null?'-':ccNum(o.cpw))+'</td>'+
-        '<td><b>'+o.sold+'</b></td><td>'+(o.cpu==null?'-':'<b>'+ccNum(o.cpu)+'</b>')+'</td>'+
-        '<td class="cc-mut">'+o.trackerBook+'</td></tr>';
-    }).join('');
-
-    var chArr = Object.keys(D.channels).map(function(k){ return {k:k, w:D.channels[k].w, b:D.channels[k].b}; }).sort(function(a,b){ return b.w-a.w; });
-    var chMax = chArr.length ? chArr[0].w : 1;
-    var chHtml = chArr.map(function(c){
-      var conv = c.w ? c.b/c.w*100 : 0;
-      return '<div class="cc-ch"><span>'+escapeHTML(c.k)+'</span><span class="cc-chbar"><i style="width:'+(c.w/chMax*100)+'%"></i><u style="width:'+(c.b/chMax*100)+'%"></u></span><span class="cc-mut">'+ccNum(c.w)+' ราย · จอง '+c.b+' · '+conv.toFixed(1)+'%</span></div>';
-    }).join('');
-
-    // ---------- ความครบถ้วน ----------
-    function cp(v){ var c = v==null?'x':(v>=CC_RULES.completeGreen?'g':v>=CC_RULES.completeAmber?'a':'r'); return '<td class="cc-l-'+c+'">'+(v==null?'-':'<b>'+v+'%</b>')+(v==null?'':ccBar(v,c))+'</td>'; }
-    var compRows = P.map(function(o){
-      return '<tr><td><span class="cc-pc">'+o.code+'</span><br><span class="cc-mut">ปีนี้ '+ccNum(o.comp.n)+' ราย</span></td>'+cp(o.comp.b)+cp(o.comp.g)+cp(o.comp.m)+cp(o.comp.nat)+cp(o.comp.allAvg).replace('<td','<td title="เฉลี่ย 4 ช่อง รวมทุกปี '+ccNum(o.comp.allN)+' ราย"')+'</tr>';
-    }).join('');
-
-    host.innerHTML =
-      '<div class="cc-summary">'+sum+'</div>'+
-      '<div class="cc-tiles">'+tiles+'</div>'+
-      '<div class="cc-card"><div class="cc-h">รายโครงการ: ไฟเขียว/เหลือง/แดง (เรียงโครงการที่ต้องคุยก่อนขึ้นบน)</div>'+
-        '<div class="cc-how">กดแถวเพื่อเจาะลึกโปรไฟล์โครงการ · ไฟรวม = ค่าที่แย่สุดของ ยอดขายเทียบเป้า, Walk-in 30 วัน และต้นทุนการตลาดต่อยูนิต</div>'+
-        '<div class="cc-scroll"><table class="cc-table"><thead><tr>'+
-          '<th>โครงการ</th>'+
-          '<th>ยอดขายใหม่ / เป้า<br>'+hY+hE+'</th>'+
-          '<th>Walk-in<br>'+h30+hL+'</th>'+
-          '<th>รอโอน<br>'+hN+hE+'</th>'+
-          '<th>เหลือขาย<br>'+hN+hE+'</th>'+
-          '<th>ต้นทุนการตลาด/ยูนิต<br>'+hY+'</th>'+
-          '<th>ข้อมูลครบ<br>'+hY+'</th>'+
-        '</tr></thead><tbody>'+rowsHtml+'</tbody></table></div>'+
-        '<div class="cc-legend"><span class="cc-dot g"></span>ปกติ <span class="cc-dot a"></span>เฝ้าระวัง <span class="cc-dot r"></span>ต้องคุยก่อน <span class="cc-dot x"></span>ข้อมูลไม่พอจะตัดสิน · เกณฑ์ตั้งใน CC_RULES (คาดปิดปี ≥90% เขียว / ≥70% เหลือง · Walk-in ลด ≤10% เขียว / ≤30% เหลือง · ต้นทุนต่อยูนิตไม่เกิน 1.0 / 1.5 เท่าของค่าเฉลี่ย)</div>'+
-      '</div>'+
-      '<div class="cc-card"><div class="cc-h">เรื่องที่ต้องตัดสินใจ / ติดตาม</div><div class="cc-how">สร้างอัตโนมัติจากไฟสีด้านบน เรียงจากเร่งด่วนสุด</div><div class="cc-issues">'+issueHtml+'</div></div>'+
-      '<div class="cc-grid2">'+
-        '<div class="cc-card"><div class="cc-h">ประสิทธิภาพการตลาด รายโครงการ '+YTD+'</div>'+
-          '<div class="cc-how">ฐานเดียวกัน: งบสะสมปีนี้ ÷ Walk-in ปีนี้ และ ÷ ยอดขายใหม่ ERP ปีนี้ · ยอดจองจากแทร็กเกอร์ (สีเทา) เป็นตัวชี้วัดล่วงหน้า อาจไม่เท่า ERP เพราะนับคนละฐาน</div>'+
-          '<div class="cc-scroll"><table class="cc-table"><thead><tr><th>โครงการ</th><th>งบรวม (บาท)</th><th>Walk-in</th><th>บาท/Walk-in</th><th>ขายใหม่ ERP</th><th>บาท/ยูนิต ERP</th><th>จองตามแทร็กเกอร์<br>'+hL+'</th></tr></thead><tbody>'+effRows+'</tbody></table></div>'+
-          '<div class="cc-how">งบ = Facebook (ชีต+ยอดเรียกเก็บ Meta) + ป้าย + สื่อสิ่งพิมพ์ (ERP ลงบัญชีแล้ว) ยังไม่รวมค่านายหน้า Agency/อีเวนต์</div></div>'+
-        '<div class="cc-card"><div class="cc-h">ลูกค้ามาจากช่องทางไหน '+YTD+'</div>'+
-          '<div class="cc-how">แท่งอ่อน = Walk-in ปีนี้ · แท่งเข้ม = จองตามแทร็กเกอร์ · % = จอง ÷ Walk-in '+LEAD+'</div>'+chHtml+'</div>'+
-      '</div>'+
-      '<div class="cc-card"><div class="cc-h">ความครบถ้วนของข้อมูล Walk-in '+YTD+'</div>'+
-        '<div class="cc-how">% ของ Walk-in ปีนี้ที่ทีมขายกรอกช่องนั้นแล้ว — ต่ำกว่า '+CC_RULES.completeAmber+'% (แดง) แปลว่ากราฟงบ/เกรด/ช่องทางอาจชวนเข้าใจผิด</div>'+
-        '<div class="cc-scroll"><table class="cc-table"><thead><tr><th>โครงการ</th><th>งบประมาณ</th><th>เกรดการตัดสินใจ</th><th>ช่องทาง/สื่อ</th><th>สัญชาติ</th><th>เฉลี่ย 4 ช่อง รวมทุกปี</th></tr></thead><tbody>'+compRows+'</tbody></table></div></div>'+
-      '<div class="cc-card cc-notes"><div class="cc-h">วิธีอ่านตัวเลขในหน้านี้</div><ul>'+
-        '<li><b>ยอดขาย = ERP แหล่งเดียว</b> (ยอดจองใหม่ปี '+yr+' ตัดย้ายแปลง/แปลงสิทธิ์แล้ว) · Walk-in และ "จองตามแทร็กเกอร์" เป็นตัวชี้วัดล่วงหน้าที่ทีมขายคีย์ จึงไม่ต้องเท่ากับ ERP</li>'+
-        '<li>ต้นทุนการตลาดยังไม่รวมค่านายหน้า Agency ค่าอีเวนต์ และแคมเปญ Brand ที่ใช้ร่วมกันหลายโครงการ · Offline ใช้เฉพาะยอดที่บัญชีลงแล้ว (โครงการที่เป็น 0 จะไม่ถูกตัดสินสี)</li>'+
-        '<li>เป้าหมายรายโครงการมาจากไฟล์ที่ดูแลด้วยมือ (target_2026) · ELEMENT ขายหมดแล้ว จึงไม่แสดง</li>'+
-      '</ul></div>';
-    ccRendered = true;
-  }
-
-  (function ccWire(){
-    var host = document.getElementById('tabPanelCommand');
-    if(!host) return;
-    host.addEventListener('click', function(e){
-      var pb = e.target.closest('#ccPrintBtn');
-      if(pb){
-        document.body.classList.add('cc-printing');
-        window.print();
-        setTimeout(function(){ document.body.classList.remove('cc-printing'); }, 500);
-        return;
-      }
-      var row = e.target.closest('[data-go-proj]');
-      if(row){ ccGoTab('projectprofile', row.getAttribute('data-go-proj')); return; }
-      var tile = e.target.closest('[data-go-tab]');
-      if(tile){ ccGoTab(tile.getAttribute('data-go-tab')); }
-    });
-  })();
-  // ============================ end COMMAND CENTER ===================================
-
 
   function renderKPIs(rows){
     kpiGrid.innerHTML = '';
@@ -5437,7 +4959,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     }
     closeDealModalBody.innerHTML = rows.map(function(r){
       var eff = getDate(r);
-      var dateHTML = escapeHTML(fmtDateShort(eff)) + (currentKpiModalConfig.showWalkinNote && !r.bd ? ' <span style="color:var(--text-muted);font-size:14px;">(วันที่ walk-in)</span>' : '');
+      var dateHTML = escapeHTML(fmtDateShort(eff)) + (currentKpiModalConfig.showWalkinNote && !r.bd ? ' <span style="color:var(--text-muted);font-size:10.5px;">(วันที่ walk-in)</span>' : '');
       return '<tr>'+
         '<td class="num">'+dateHTML+'</td>'+
         '<td class="proj">'+escapeHTML(r.p)+'</td>'+
@@ -6775,12 +6297,12 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // Budget (ordinal)
     var budM = countBy(rows,'b');
     var budEntries = orderedEntries(budM, BUDGET_ORDER, 'ไม่ระบุ/N/A');
-    renderBarCard('งบประมาณ', 'เรียงจากงบน้อย → มาก · ' + ccCompleteLabel(budEntries, 'ไม่ระบุ/N/A', total), budEntries, function(k){ return (k==='ไม่ระบุ/N/A') ? cssVar('--text-muted') : seqColor(BUDGET_ORDER,k); }, total);
+    renderBarCard('งบประมาณ', 'เรียงจากงบน้อย → มาก', budEntries, function(k){ return (k==='ไม่ระบุ/N/A') ? cssVar('--text-muted') : seqColor(BUDGET_ORDER,k); }, total);
 
     // Grade (ordinal)
     var gradeM = countBy(rows,'g');
     var gradeEntries = orderedEntries(gradeM, GRADE_ORDER, 'ไม่มีเกรด/N/A');
-    renderBarCard('เกรดการตัดสินใจ', 'A = ศักยภาพสูงสุด · ' + ccCompleteLabel(gradeEntries, 'ไม่มีเกรด/N/A', total), gradeEntries, function(k){ return (k==='ไม่มีเกรด/N/A') ? cssVar('--text-muted') : seqColor(GRADE_ORDER,k); }, total);
+    renderBarCard('เกรดการตัดสินใจ', 'A = ศักยภาพสูงสุด', gradeEntries, function(k){ return (k==='ไม่มีเกรด/N/A') ? cssVar('--text-muted') : seqColor(GRADE_ORDER,k); }, total);
 
     // Visit engagement (ordinal)
     var visitM = countBy(rows,'v');
@@ -6904,7 +6426,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
             '<button type="button" class="btn small danger delete-entry-btn" data-doc="'+escapeHTML(r._docId)+'">ลบ</button>'+
           '</div>') :
           ('<div class="row-actions">'+
-            '<span style="color:var(--text-muted);font-size:14px;" title="รายการนี้มาจากไฟล์ Excel ต้นทาง — แก้ไขหรือลบได้เฉพาะรายการที่กรอกเองผ่านปุ่ม + เพิ่มลูกค้าใหม่ ถ้าต้องแก้ข้อมูลนี้ให้แก้ที่ไฟล์ Excel">ข้อมูลจาก Excel</span>'+
+            '<span style="color:var(--text-muted);font-size:11px;" title="รายการนี้มาจากไฟล์ Excel ต้นทาง — แก้ไขหรือลบได้เฉพาะรายการที่กรอกเองผ่านปุ่ม + เพิ่มลูกค้าใหม่ ถ้าต้องแก้ข้อมูลนี้ให้แก้ที่ไฟล์ Excel">ข้อมูลจาก Excel</span>'+
           '</div>')) +
         '</td>'+
       '</tr>';
@@ -7370,12 +6892,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     renderBreakdowns(rows);
     renderCustomerTrends(rows);
     renderTable(rows);
-    ccRender();
   }
 
   buildTotalTrendYearChips();
   render();
-  ccOnTabChange('command');
   window.addEventListener('resize', function(){
     renderTrend(currentRows); renderTotalTrend();
     if (!tabPanelProjectProfileEl.hidden){
@@ -8047,8 +7567,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // (every account created before this feature existed) gets, so existing logins keep
   // working exactly as before: every main tab except the admin-only "ข้อมูลลูกค้าเพิ่มเติม".
   var PERMISSION_TABS = [
-    {key:'command', label:'สรุปผู้บริหาร (Command Center)'},
-    {key:'overview', label:'ภาพรวม (Daily Log)'},
+    {key:'overview', label:'ภาพรวม'},
     {key:'trends', label:'เทรน & แนวโน้มลูกค้า'},
     {key:'followup', label:'สถานะการติดตามลูกค้า'},
     {key:'salesstatus', label:'สถานะการขาย'},
@@ -8089,7 +7608,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // the panel stuck on a tab whose button no longer shows.
     var activeBtn = mainTabSegEl.querySelector('button.active');
     if(activeBtn && activeBtn.hidden){
-      var firstVisible = ccPickLanding();
+      var firstVisible = Array.prototype.filter.call(mainTabSegEl.querySelectorAll('button[data-tab]'), function(b){ return !b.hidden; })[0];
       if(firstVisible) firstVisible.click();
     }
   }
@@ -8163,8 +7682,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       return '<div class="user-row" style="display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border);">'+
         '<div style="flex:1; min-width:0;">'+
           '<div style="font-weight:600;">'+escapeHTML(acc.displayName)+(isSelf?' <span style="color:var(--text-secondary); font-weight:400;">(คุณ)</span>':'')+'</div>'+
-          '<div style="font-size:14px; color:var(--text-secondary);">'+escapeHTML(acc.email)+(acc.isAdmin?' · ผู้ดูแลระบบ':'')+'</div>'+
-          '<div style="font-size:14px; color:var(--text-secondary);">เห็น: '+escapeHTML(tabsLabel)+'</div>'+
+          '<div style="font-size:11.5px; color:var(--text-secondary);">'+escapeHTML(acc.email)+(acc.isAdmin?' · ผู้ดูแลระบบ':'')+'</div>'+
+          '<div style="font-size:11.5px; color:var(--text-secondary);">เห็น: '+escapeHTML(tabsLabel)+'</div>'+
         '</div>'+
         '<button type="button" class="btn small edit-user-btn" data-uid="'+escapeHTML(uid)+'">แก้ไข</button>'+
         '<button type="button" class="btn small pw-reset-btn" data-email="'+escapeHTML(acc.email)+'">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>'+
@@ -8751,7 +8270,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       // the ERP anyway.
       var manageCell = v._manual
         ? '<button type="button" class="btn small cd-edit-visit-btn" data-doc="'+escapeHTML(v._docId)+'">แก้ไข</button>'
-        : '<span style="color:#94a3b8;font-size:14px;" title="ข้อมูลนี้มาจากระบบ ERP (ซิงค์อัตโนมัติ) แก้ไขที่นี่ไม่ได้">มาจาก ERP</span>';
+        : '<span style="color:#94a3b8;font-size:12px;" title="ข้อมูลนี้มาจากระบบ ERP (ซิงค์อัตโนมัติ) แก้ไขที่นี่ไม่ได้">มาจาก ERP</span>';
       return '<tr>'+
         '<td class="num">'+escapeHTML(fmtDateShort(v.d))+'</td>'+
         '<td><span class="'+labelClass+'">'+escapeHTML(label)+'</span></td>'+
