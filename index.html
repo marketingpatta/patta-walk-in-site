@@ -488,6 +488,58 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   .pill.n{ background: var(--surface-2); color: var(--text-muted); }
   .pill.w{ background: rgba(208,59,59,0.12); color: var(--critical); }
 
+  /* ===== Executive per-project situation view (เทรน & แนวโน้มลูกค้า tab, redesigned 2026-10-26) ===== */
+  .pill.y{ background: rgba(184,121,15,0.14); color: var(--warning); }
+  .ex-kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin:6px 0 14px; }
+  .ex-kpi{ background:var(--surface-2); border-radius:10px; padding:10px 12px; }
+  .ex-kpi .ex-kpi-label{ font-size:14px; color:var(--text-secondary); }
+  .ex-kpi .ex-kpi-value{ font-size:22px; font-weight:700; margin-top:2px; }
+  .ex-kpi .ex-kpi-note{ font-size:14px; color:var(--text-muted); margin-top:2px; }
+  .ex-bullets{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; font-size:14px; line-height:1.55; }
+  .ex-head-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  #exTable td, #exTable th{ white-space:nowrap; }
+  a.ex-ab-link{ color:var(--accent-ink); font-weight:700; text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+  #exTable td .ex-sub{ display:block; font-size:14px; color:var(--text-muted); }
+  #exTable tbody tr{ cursor:pointer; }
+  #exTable tbody tr.ex-selected{ background:var(--accent-wash); }
+  #exTable tr.ex-total td{ font-weight:600; background:var(--surface-2); cursor:default; }
+  .ex-proj-dot{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  .ex-legend{ font-size:14px; color:var(--text-muted); margin-top:8px; line-height:1.6; }
+  .ex-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; margin-bottom:14px; }
+  .ex-grid .card{ margin:0; border-left:4px solid var(--border-strong); }
+  .ex-card-head{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
+  .ex-card-head .card-title{ margin:0; }
+  .ex-mini{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:10px; }
+  .ex-mini div{ background:var(--surface-2); border-radius:8px; padding:6px 8px; font-size:14px; color:var(--text-secondary); }
+  .ex-mini b{ display:block; font-size:16px; color:var(--text-primary); }
+  .ex-card-sec{ font-size:14px; font-weight:700; color:var(--text-secondary); margin:8px 0 4px; }
+  .ex-card ul{ margin:0; padding-left:18px; font-size:14px; line-height:1.55; display:flex; flex-direction:column; gap:3px; }
+  .ex-card ul.ex-reco li{ color:var(--accent-ink); }
+  #lnProjSeg{ flex-wrap:wrap; margin:8px 0 12px; }
+  .race-legend{ display:flex; flex-wrap:wrap; gap:4px 14px; font-size:14px; color:var(--text-secondary); margin:4px 0 10px; }
+  .race-legend span{ display:inline-flex; align-items:center; gap:4px; }
+  .race-pop{ position:fixed; z-index:9999; background:var(--surface); color:var(--text-primary); border:1px solid var(--border-strong); border-radius:12px; box-shadow:0 8px 28px rgba(0,0,0,.18); padding:12px 14px 10px; width:290px; max-width:calc(100vw - 24px); font-size:14px; }
+  .race-pop-title{ font-weight:700; font-size:14px; margin:0 22px 8px 0; }
+  .race-pop-row{ display:flex; justify-content:space-between; gap:10px; padding:3px 0; border-bottom:1px dashed var(--border); }
+  .race-pop-row > span:first-child{ color:var(--text-secondary); }
+  .race-pop-row > span:last-child{ text-align:right; }
+  .race-pop-list{ max-height:180px; overflow:auto; margin:2px 0 4px 6px; }
+  .race-pop-note{ font-size:14px; color:var(--text-muted); margin-top:6px; }
+  .race-pop-x{ position:absolute; top:6px; right:8px; border:0; background:transparent; font-size:20px; line-height:1; cursor:pointer; color:var(--text-muted); }
+  .race-pop .btn{ margin-top:10px; width:100%; }
+  #raceBody{ overflow-x:auto; }
+  #raceBody .race-dot:hover{ filter:brightness(1.1) drop-shadow(0 0 2px rgba(0,0,0,.35)); }
+  #lnSummary tbody tr{ cursor:pointer; }
+  #lnSummary tbody tr.ex-selected{ background:var(--accent-wash); }
+  #lnSummary td, #lnSummary th{ white-space:nowrap; }
+  .ln-cols{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+  .ln-cols .bar-row{ grid-template-columns: minmax(110px,46%) 1fr 44px; }
+  .ln-cols .bar-label{ white-space:normal; line-height:1.25; }
+  #lnProjSeg{ border:none; overflow:visible; gap:6px; }
+  #lnProjSeg button{ border:1px solid var(--border-strong); border-radius:8px; }
+  @media (max-width:900px){ .ln-cols{ grid-template-columns:1fr; } }
+  @media (max-width:640px){ .ex-grid{ grid-template-columns:1fr; } .ex-mini{ grid-template-columns:repeat(2,1fr); } }
+
   .kpi.clickable{ cursor:pointer; transition: box-shadow .12s ease, border-color .12s ease; }
   .kpi.clickable:hover{ border-color: var(--border-strong); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
   .kpi.clickable:hover .kpi-link{ text-decoration: underline; }
@@ -930,6 +982,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     <button type="button" data-tab="salesstatus">สถานะการขาย</button>
     <button type="button" data-tab="projectprofile">โปรไฟล์โครงการ</button>
     <button type="button" data-tab="trends">เทรน &amp; แนวโน้มลูกค้า</button>
+    <button type="button" data-tab="followup">สถานะการติดตามลูกค้า</button>
     <span class="tab-sep">ปฏิบัติงาน</span>
     <button type="button" data-tab="salesperf">Sales Performance</button>
     <button type="button" data-tab="overview">ภาพรวม (Daily Log)</button>
@@ -1031,10 +1084,76 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
 
   </div><!-- /#tabPanelOverview -->
 
+  <!-- เทรน & แนวโน้มลูกค้า: redesigned (2026-10-26) into an executive, per-project
+       "customer situation" report -- every project side by side for the selected date
+       range vs. the previous period of equal length, plus one summary card per project
+       with auto-generated insights. The follow-up pipeline cards that used to live here
+       (funnel / follow-up status donut / grade A-B leads) moved, unchanged, to their own
+       tab "สถานะการติดตามลูกค้า" below. -->
   <div id="tabPanelTrends" class="tab-panel" hidden>
     <div class="section-heading">
-      <h2>เทรน &amp; แนวโน้มลูกค้า</h2>
-      <div class="card-sub">มุมมองนี้ตอบว่า "ลูกค้าที่มาตอนนี้เป็นใคร ต้องการอะไร และกำลังเปลี่ยนไปทางไหน" — ใช้ตัวกรองโครงการ/ช่วงเวลาชุดเดียวกับด้านบน เทียบกับ "ช่วงก่อนหน้าความยาวเท่ากัน" แบบเดียวกับตัวเลข KPI ด้านบน</div>
+      <h2>เทรน &amp; แนวโน้มลูกค้า — สถานการณ์รายโครงการ</h2>
+      <div class="card-sub" id="exSub"></div>
+    </div>
+
+    <div class="card">
+      <div class="ex-head-row">
+        <div class="card-title">สรุปสำหรับผู้บริหาร</div>
+        <button type="button" class="btn small" id="exCopyBtn">คัดลอกสรุป (ส่งต่อ LINE/อีเมล)</button>
+      </div>
+      <div class="ex-kpis" id="exKpis"></div>
+      <ul class="ex-bullets" id="exSummary"></ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">เทียบสถานการณ์ลูกค้าทุกโครงการ</div>
+      <div class="card-sub" id="exTableSub"></div>
+      <div class="table-scroll"><table class="data" id="exTable">
+        <thead><tr>
+          <th class="col-start">โครงการ</th><th>สถานการณ์</th><th class="num">Walk-in</th><th class="num">เทียบช่วงก่อน</th>
+          <th class="num">กลับมาซ้ำ</th><th class="num">ปิดการขาย</th><th class="num">เกรด A/B</th><th class="num">A/B ค้างติดตาม</th>
+          <th>งบส่วนใหญ่</th><th>ช่องทางหลัก</th><th>สัญชาติหลัก</th><th>อุปสรรคหลัก</th>
+        </tr></thead>
+        <tbody id="exTableBody"></tbody>
+      </table></div>
+      <div class="ex-legend">สถานการณ์: <span class="pill g">ดี</span> Walk-in ไม่ลดลงและอัตราปิดการขายไม่ต่ำกว่าค่าเฉลี่ย · <span class="pill y">เฝ้าระวัง</span> มีจุดที่ควรติดตาม · <span class="pill w">น่ากังวล</span> Walk-in ลดลง ≥25% หรือมี Walk-in ≥15 รายแต่ยังไม่มีปิดการขาย · <span class="pill n">ข้อมูลน้อย</span> Walk-in น้อยกว่า 5 ราย — กดที่แถวเพื่อเลื่อนไปดูการ์ดของโครงการ</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">แนวโน้มตั้งแต่เปิดตัวโครงการ — ทุกโครงการ</div>
+      <div class="card-sub">ใช้ข้อมูลทั้งหมดตั้งแต่เปิดตัว/เริ่มมีข้อมูล Walk-in (ไม่ขึ้นกับตัวกรองช่วงเวลาด้านบน) แบ่งเป็นช่วงเท่า ๆ กันแล้วเทียบ "ช่วงแรก → ช่วงล่าสุด" · กดที่แถวเพื่อดูรายละเอียดด้านล่าง</div>
+      <div class="table-scroll"><table class="data" id="lnSummary">
+        <thead><tr><th class="col-start">โครงการ</th><th>เริ่มนับ</th><th>แนวโน้ม</th><th class="num">Walk-in/เดือน<span class="ex-sub" style="display:block;font-weight:400;">ช่วงแรก → ล่าสุด</span></th><th class="num">อัตราปิดการขาย<span class="ex-sub" style="display:block;font-weight:400;">ช่วงแรก → ล่าสุด</span></th><th>ลูกค้าชอบที่สุด</th><th>ไม่ชอบที่สุด</th><th>ติดที่สุด</th></tr></thead>
+        <tbody id="lnSummaryBody"></tbody>
+      </table></div>
+      <div class="ex-legend">แนวโน้ม: <span class="pill g">ดีขึ้น</span> Walk-in/เดือนเพิ่ม ≥10% หรืออัตราปิดการขายเพิ่ม ≥1.5 จุด (และไม่มีด้านที่แย่ลง) · <span class="pill w">แย่ลง</span> Walk-in/เดือนลด ≥20% หรืออัตราปิดการขายลด ≥1.5 จุด (และไม่มีด้านที่ดีขึ้น) · <span class="pill y">ผสม</span> เช่น ลูกค้าเข้าน้อยลงแต่ปิดการขายได้ดีขึ้น · <span class="pill b">ทรงตัว</span> · <span class="pill n">ข้อมูลยังน้อย</span></div>
+    </div>
+
+    <div class="card" id="lnDetailCard">
+      <div class="card-title">เจาะลึกรายโครงการ: ตั้งแต่เปิดตัวถึงปัจจุบัน</div>
+      <div class="seg" id="lnProjSeg"></div>
+      <div id="lnDetail"></div>
+    </div>
+
+    <div class="ex-grid" id="exCards"></div>
+  </div>
+
+  <!-- สถานะการติดตามลูกค้า: the follow-up pipeline view, moved out of the trends tab as-is. -->
+  <div id="tabPanelFollowup" class="tab-panel" hidden>
+    <div class="section-heading">
+      <h2>สถานะการติดตามลูกค้า</h2>
+      <div class="card-sub">ภาพรวมการติดตามลูกค้าของทีมขาย — ใช้ตัวกรองโครงการ/ช่วงเวลาชุดเดียวกับด้านบน</div>
+    </div>
+
+    <div class="card">
+      <div class="ex-head-row">
+        <div class="card-title">สนามสู่เส้นชัย: จาก Walk-in ครั้งแรกถึงปิดการขาย</div>
+        <div class="seg" id="raceModeSeg"><button type="button" data-mode="chance" class="active">ลูกค้าที่มีโอกาส</button><button type="button" data-mode="all">ทั้งหมด</button></div>
+      </div>
+      <div class="card-sub" id="raceSub"></div>
+      <div class="race-legend" id="raceLegend"></div>
+      <div class="table-scroll" id="raceBody"></div>
+      <div class="ex-legend">คะแนนความพร้อมซื้อ (0–95) คำนวณจากข้อมูลที่เซลบันทึก: จำนวนครั้งที่เข้าชม (2 ครั้ง +20, 3 ครั้ง +30, 4 ครั้งขึ้นไป +40) + เกรดล่าสุด (A +40, B +25, C +10) + สถานะล่าสุด (เช่น ปรึกษาครอบครัว/อยู่ระหว่างติดตาม +15, ไม่สนใจแล้ว/ซื้อที่อื่นแล้ว −15 ถึง −20) · "ลูกค้าที่มีโอกาส" = คะแนน ≥35 หรือเกรด A/B · วางเมาส์บนจุดเพื่อดูรายละเอียด กดที่จุดเพื่อเปิดการ์ด (สัญชาติ/แปลงที่จอง ฯลฯ) · กด "ไทย · ต่างชาติ" ใต้ชื่อโครงการเพื่อดูว่ามีชาติไหนบ้าง · ตัวเลข +N ด้านบนคือจำนวนที่ซ้อนกันเกินจะแสดง</div>
     </div>
 
     <div class="card trend">
@@ -1043,22 +1162,6 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div id="funnelBody"></div>
     </div>
 
-    <div class="card">
-      <div class="card-title">ภาพรวมสถานะการติดตามลูกค้า</div>
-      <div class="card-sub" id="fuOverviewSub"></div>
-      <div id="fuOverviewBody" style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">ลูกค้าเกรด A/B ที่ควรติดตามต่อ</div>
-      <div class="card-sub" id="hotLeadSub"></div>
-      <div id="hotLeadChart" style="margin-bottom:14px;"></div>
-      <div class="table-scroll"><table class="data" id="hotLeadTable">
-        <thead><tr><th class="col-start">ชื่อ</th><th class="num">เบอร์โทร</th><th>โครงการ</th><th>เซล</th><th>เกรด</th><th>งบประมาณ</th><th class="num">Walk-in ล่าสุด</th><th>สถานะล่าสุด</th><th>จัดการ</th></tr></thead>
-        <tbody id="hotLeadBody"></tbody>
-      </table></div>
-      <div class="modal-empty" id="hotLeadEmpty" hidden>ไม่พบลูกค้าเกรด A/B ที่ยังอยู่ระหว่างติดตามในโครงการที่เลือก</div>
-    </div>
   </div>
 
   <div id="tabPanelSalesStatus" class="tab-panel" hidden>
@@ -1173,6 +1276,29 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   <footer class="note">สร้างจากไฟล์ Walkin Daily Report &mdash; ข้อมูล 8 โครงการ: ARCADE Autograph, CASCADE, CHIEFTAIN, ELEMENT, HORIZON, PATTA RIVERINE, PATTA TERRANE, PATTA PILLAR</footer>
 </div>
 
+<div class="modal-overlay" id="exAbModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exAbModalTitle">
+    <div class="modal-head">
+      <div>
+        <h2 class="modal-title" id="exAbModalTitle">ลูกค้าเกรด A/B ค้างติดตาม</h2>
+        <div class="modal-sub" id="exAbModalSub"></div>
+      </div>
+      <button class="modal-close" id="exAbModalClose" aria-label="ปิด" type="button">&times;</button>
+    </div>
+    <div class="modal-toolbar">
+      <input type="text" id="exAbModalSearch" placeholder="ค้นหาชื่อ / โครงการ / เซล / สถานะ...">
+    </div>
+    <div class="modal-body">
+      <div class="table-scroll">
+        <table class="data">
+          <thead><tr><th class="num">Walk-in ล่าสุด</th><th>โครงการ</th><th class="col-start">ลูกค้า</th><th>เกรด</th><th>งบประมาณ</th><th>เซล</th><th class="num">เข้าชม (ครั้ง)</th><th>สถานะล่าสุด</th><th></th></tr></thead>
+          <tbody id="exAbModalBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-empty" id="exAbModalEmpty" hidden>ไม่พบลูกค้าในกลุ่มนี้</div>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="closeDealModal" hidden>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="closeDealModalTitle">
     <div class="modal-head">
@@ -2206,6 +2332,9 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       // etc. reflect the customer's real current standing, not just the visits in range).
       .filter(function(g){ return g.lastVisitDate>=state.start && g.lastVisitDate<=state.end; })
       .filter(function(g){ return !g.closed; })
+      // Customers who already booked/closed are no longer "to follow up" (2026-10-26) --
+      // keeps this list identical to the "A/B ค้างติดตาม" count on the trends tab.
+      .filter(function(g){ return !g.visits.some(isClosedDealRow); })
       .map(function(g){
         var last = g.visits[g.visits.length-1];
         return { g: g, last: last };
@@ -2261,7 +2390,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     }
   }
 
-  hotLeadBodyEl.addEventListener('click', function(e){
+  if(hotLeadBodyEl) hotLeadBodyEl.addEventListener('click', function(e){
     var btn = e.target.closest('.hot-lead-view-btn');
     if(!btn) return;
     var tabBtn = mainTabSegEl.querySelector('button[data-tab="customerdata"]');
@@ -2336,10 +2465,1201 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     });
   }
 
+  // ---- Keyword-based theme extraction from the sales notes (r.id = รายละเอียดความสนใจ,
+  // r.cd = รายละเอียดลูกค้า). Thai notes have no reliable word boundaries, so this is a
+  // transparent keyword lexicon, not NLP: each note is cut into short clauses (spaces,
+  // punctuation, "แต่"), a clause is "positive" when it carries a liking cue and
+  // "negative" when it carries a complaint/hesitation cue, and the topic keywords found in
+  // it are counted once per Walk-in row. Results are an estimate -- shown with that label.
+  var TH_TOPICS = [
+    { key:'design',   label:'แบบบ้าน/ดีไซน์',          re:/แบบบ้าน|ดีไซน์|design|สไตล์|style|หน้าตาบ้าน|รูปทรง|โมเดิร์น|modern|\btype\b|ไทป์|บ้านสวย|สวยงาม/i },
+    { key:'interior', label:'การตกแต่ง/วัสดุ/งานก่อสร้าง', re:/ตกแต่ง|ตกเเต่ง|วัสดุ|เฟอร์|built.?in|บิวท์|บิ้วท์|คุณภาพ|งานก่อสร้าง|งานสร้าง|สเปค|spec|ฝีมือ/i },
+    { key:'space',    label:'พื้นที่ใช้สอย/ฟังก์ชันห้อง',  re:/พื้นที่ใช้สอย|ใช้พื้นที่|ฟังก์ชั่น|ฟังก์ชัน|function|layout|เลย์เอาท์|เลย์เอาต์|เลเอ้าท์|ห้องนอน|ห้องน้ำ|ครัว|ห้องแม่บ้าน|ห้องนั่งเล่น|ห้องทำงาน|เพดาน|กว้างขวาง|โปร่ง|แคบ|ชั้นเดียว|ชั้นล่าง|ลิฟต์|ลิฟท์|บันได/i },
+    { key:'land',     label:'ขนาดแปลง/ที่ดิน/สวน',       re:/แปลง|ที่ดิน|เนื้อที่|ตารางวา|ตร\.?ว|ตรว|สวนหลังบ้าน|สวนหน้าบ้าน|สนามหญ้า|ที่จอดรถ|จอดรถ|โรงรถ|สระส่วนตัว|private pool/i },
+    { key:'location', label:'ทำเล/การเดินทาง',          re:/ทำเล|ใกล้|ไกล|เดินทาง|ถนน|ทางเข้า|รถติด|โรงเรียน|regent|รีเจ้นท์|เซนต์|ทะเล|ชายหาด|ห้าง|สนามบิน|มอเตอร์เวย์|location/i },
+    { key:'nature',   label:'วิว/ธรรมชาติ/บรรยากาศ',     re:/วิว|ภูเขา|ต้นไม้|ร่มรื่น|ร่มเย็น|รับลม|ลมเย็น|ธรรมชาติ|เงียบ|สงบ|บรรยากาศ|ทิศ|แดด|ร้อน|ฮวงจุ้ย|น้ำตก/i },
+    { key:'facility', label:'ส่วนกลาง/คลับเฮาส์',        re:/คลับเฮ้าส์|คลับเฮาส์|club.?house|สระว่ายน้ำ|สระน้ำ|ส่วนกลาง|ฟิตเนส|fitness|สนามเด็ก|ฟาซิลิตี้|facilit|ลู่วิ่ง/i },
+    { key:'price',    label:'ราคา/ค่าใช้จ่าย',           re:/ราคา|แพง|ถูก(?!ใจ)|งบ|ค่าส่วนกลาง|common|ค่าโอน|โปรโมชั่น|โปรฯ|ส่วนลด|ผ่อน|ดาวน์|price/i },
+    { key:'security', label:'ความปลอดภัย/ความเป็นส่วนตัว/สังคม', re:/ปลอดภัย|รปภ|security|เป็นส่วนตัว|ความเป็นส่วนตัว|privacy|เพื่อนบ้าน|สังคม|ชุมชน|จำนวนหลัง|หลังน้อย|ยูนิตน้อย/i },
+    { key:'ready',    label:'ความพร้อม/ระยะเวลาก่อสร้าง', re:/พร้อมอยู่|สร้างเสร็จ|รอสร้าง|ระยะเวลาสร้าง|ระยะเวลาก่อสร้าง|สร้างนาน|ยังไม่เสร็จ|ก่อสร้างเสร็จ|บ้านเสร็จ/i }
+  ];
+  var TH_POS = /ชอบ|ชื่นชม|ชม(?:ว่า|บ้าน|การ)|ประทับใจ|ถูกใจ|สวย|ดีมาก|เยี่ยม|โดนใจ|พอใจ|ตรงใจ|ตรงความต้องการ|อยากได้แบบนี้|สนใจ|น่าอยู่|โอเค|ok\b|good|love|like/i;
+  var TH_NEG = /ไม่ชอบ|ไม่ถูกใจ|ไม่โดน|ไม่ตรง|ไม่ค่อย|ไม่พอใจ|ติง|ติดใจ|ติดเรื่อง|ติดที่|เล็กไป|เล็กเกิน|แคบ|น้อยไป|ไกล|ร้อน|กังวล|เสียดาย|อยากได้.*(?:ใหญ่|กว้าง|เพิ่ม)|ต้องการ.*(?:ใหญ่|กว้าง|เพิ่ม)|ไม่มี(?!แพลน)|ขาด|ไม่สามารถ|ไม่ค่อยดี|เสียง|รถติด|ปัญหา|don.?t like|too small/i;
+  // Price complaints are attributed to the price topic only -- "ชอบแบบ Arbor แต่แพง" must not
+  // count as disliking the design.
+  var TH_PRICE_NEG = /แพง|เกินงบ|ราคาสูง|งบไม่ถึง|งบไม่พอ|ขยับงบไม่ได้|ไม่สามารถขยับงบ|expensive|over budget/i;
+  // Why customers hold off -- from the structured decision reason / status first, and
+  // from hesitation phrases in the notes when those were left blank.
+  var TH_HESITATE = [
+    { label:'เกินงบประมาณ/ราคาสูง',         re:/เกินงบ|งบไม่ถึง|งบไม่พอ|ราคาสูง|แพง|ขยับงบไม่ได้|ไม่สามารถขยับงบ/i },
+    { label:'ต้องปรึกษาครอบครัว/รอผู้ร่วมตัดสินใจ', re:/ปรึกษา|รอแฟน|รอสามี|รอภรรยา|คุยกับแฟน|คุยกับครอบครัว|ให้แฟนมาดู|พาครอบครัวมา|พาแฟนมา|ลูกมาดู/i },
+    { label:'ยังไม่รีบ/ยังไม่มีแพลนซื้อ',      re:/ยังไม่รีบ|ไม่รีบ|ยังไม่มีแพลน|ไม่มีแพลน|แค่ผ่านมา|แวะชม|ดูเป็นข้อมูล|survey|ขอดูก่อน|อีก ?\d+ ?(?:ปี|เดือน)/i },
+    { label:'เปรียบเทียบโครงการอื่น/คู่แข่ง',   re:/เปรียบเทียบ|เทียบกับ|ดูโครงการอื่น|ไปดู.*(?:โครงการ|ที่อื่น)|คู่แข่ง|land ?&? ?house|แลนด์|ศุภาลัย|ap\b|sc asset|เปรียบเที/i },
+    { label:'สินเชื่อ/การเงินยังไม่พร้อม',     re:/กู้|สินเชื่อ|ธนาคาร|การเงินไม่พร้อม|ขายบ้านเก่า|รอขาย|รอเงิน|เครดิต/i },
+    { label:'แบบบ้าน/แปลงยังไม่ตรงความต้องการ', re:/ยังไม่มีแบบที่สนใจ|ไม่มีแบบ|ไม่ตรงความต้องการ|ไม่ถูกใจ|ไม่ชอบ|แปลงที่ต้องการ.*(?:หมด|ไม่มี)|ห้องไม่พอ|เล็กไป|แคบ/i },
+    { label:'อยู่ต่างประเทศ/รอเดินทางกลับ',    re:/ต่างประเทศ|บินกลับ|กลับประเทศ|บินมา|อยู่จีน|อยู่รัสเซีย|วีซ่า|visa|ชื่อต่างชาติ|ถือครอง|freehold|leasehold|ลีสโฮลด์/i },
+    { label:'รอบ้าน/ห้องสร้างเสร็จ',          re:/รอบ้านเสร็จ|รอสร้างเสร็จ|รอดูบ้านจริง|รอบ้านตัวอย่าง|รอชมบ้านตัวอย่าง|อยากเห็นบ้านจริง/i }
+  ];
+  var TH_DC_MAP = {
+    'เกินงบประมาณ':'เกินงบประมาณ/ราคาสูง', 'ปรึกษาครอบครัว':'ต้องปรึกษาครอบครัว/รอผู้ร่วมตัดสินใจ', 'ปรึกษาครอบครัวก่อน':'ต้องปรึกษาครอบครัว/รอผู้ร่วมตัดสินใจ',
+    'ยังไม่รีบตัดสินใจ':'ยังไม่รีบ/ยังไม่มีแพลนซื้อ', 'ยังไม่มีแพลนซื้อ':'ยังไม่รีบ/ยังไม่มีแพลนซื้อ', 'ขอดูเป็นข้อมูลเบื้องต้น':'ยังไม่รีบ/ยังไม่มีแพลนซื้อ', 'Survey/แวะชมเฉยๆ':'ยังไม่รีบ/ยังไม่มีแพลนซื้อ',
+    'เปรียบเทียบโครงการอื่น':'เปรียบเทียบโครงการอื่น/คู่แข่ง', 'เปรียบเทียบโครงการในภัททา':'เปรียบเทียบโครงการอื่น/คู่แข่ง', 'ซื้อโครงการอื่นแล้ว':'เปรียบเทียบโครงการอื่น/คู่แข่ง',
+    'กู้ไม่ผ่าน/การเงินไม่พร้อม':'สินเชื่อ/การเงินยังไม่พร้อม', 'กลับต่างประเทศแล้ว':'อยู่ต่างประเทศ/รอเดินทางกลับ',
+    'รอชมบ้านตัวอย่าง':'รอบ้าน/ห้องสร้างเสร็จ', 'จะนัดเข้าชมอีกครั้ง':'ต้องปรึกษาครอบครัว/รอผู้ร่วมตัดสินใจ'
+  };
+
+  function thClauses(text){
+    return (text||'').replace(/ไม่แพง|ราคาไม่สูง/g,'คุ้ม').replace(/\|\|/g,' . ')
+      .split(/(?<!ตก|ตกเ)แต่|[,.;!?\n•–()]|\s-\s|\s{2,}/)
+      .map(function(s){ return s.trim(); }).filter(function(s){ return s.length>1; });
+  }
+  function thPositions(re, text){
+    var g = new RegExp(re.source, 'gi'), m, out = [];
+    while((m = g.exec(text))){ out.push(m.index); if(m[0].length===0) g.lastIndex++; }
+    return out;
+  }
+  // One row -> { pos:{topicKey:true}, neg:{topicKey:true}, hes:{label:true}, noted:bool }
+  // Each topic mention takes the polarity of the NEAREST liking/complaint cue in the same
+  // clause (so "ชอบสระ ... ค่า common แพง" splits correctly); a clause with no cue at all
+  // inherits the previous clause's polarity ("ลูกค้าชอบ Type Arbor" -> next clause).
+  function thAnalyzeRow(r){
+    var res = { pos:{}, neg:{}, hes:{}, noted:false };
+    var text = [r.id, r.cd].filter(function(t){ return t && t!=='N/A' && t!=='-'; }).join(' || ');
+    if(text.replace(/\s/g,'').length>=8) res.noted = true;
+    var carry = 0;
+    thClauses(r.id||'').forEach(function(cl){
+      if(TH_PRICE_NEG.test(cl)) res.neg.price = true;
+      var negPos = thPositions(TH_NEG, cl), posPos = thPositions(TH_POS, cl);
+      // a "ไม่ชอบ" hit also matches "ชอบ" -- drop positive hits that sit inside a negative one
+      posPos = posPos.filter(function(p){ return !negPos.some(function(n){ return p>n && p-n<=4; }); });
+      var cues = negPos.map(function(p){ return [p,-1]; }).concat(posPos.map(function(p){ return [p,1]; }));
+      TH_TOPICS.forEach(function(t){
+        thPositions(t.re, cl).forEach(function(tp){
+          var pol = carry, best = Infinity;
+          cues.forEach(function(c){ var d = Math.abs(c[0]-tp); if(d<best){ best = d; pol = c[1]; } });
+          if(!pol) return;
+          if(t.key==='price' && pol<0) return; // price negatives come from TH_PRICE_NEG only
+          if(t.key==='price' && pol>0 && !/คุ้ม|ราคาดี|ราคาน่าสนใจ|โปรโมชั่นดี|ส่วนลดดี/.test(cl)) return;
+          (pol>0?res.pos:res.neg)[t.key] = true;
+        });
+      });
+      if(cues.length) carry = cues.sort(function(a,b){ return a[0]-b[0]; })[cues.length-1][1];
+    });
+    Object.keys(res.neg).forEach(function(k){ if(res.pos[k]) delete res.pos[k]; });
+    if(TH_DC_MAP[r.dc]) res.hes[TH_DC_MAP[r.dc]] = true;
+    if(TH_DC_MAP[r.s]) res.hes[TH_DC_MAP[r.s]] = true;
+    if(text) TH_HESITATE.forEach(function(h){ if(h.re.test(text)) res.hes[h.label] = true; });
+    return res;
+  }
+  function thSummarize(rows){
+    var out = { n: rows.length, noted:0, pos:{}, neg:{}, hes:{}, hesBase:0 };
+    rows.forEach(function(r){
+      var a = thAnalyzeRow(r);
+      if(a.noted) out.noted++;
+      Object.keys(a.pos).forEach(function(k){ out.pos[k]=(out.pos[k]||0)+1; });
+      // dislikes / hold-backs only from customers who have NOT bought -- "why not buying"
+      if(isClosedDealRow(r)) return;
+      out.openN = (out.openN||0)+1;
+      Object.keys(a.neg).forEach(function(k){ out.neg[k]=(out.neg[k]||0)+1; });
+      var hk = Object.keys(a.hes);
+      if(hk.length) out.hesBase++;
+      hk.forEach(function(k){ out.hes[k]=(out.hes[k]||0)+1; });
+    });
+    function ranked(m, labelOf){ return Object.keys(m).map(function(k){ return { key:k, label: labelOf(k), n:m[k] }; }).sort(function(a,b){ return b.n-a.n; }); }
+    function topicLabel(k){ var t = TH_TOPICS.filter(function(x){ return x.key===k; })[0]; return t ? t.label : k; }
+    out.likes = ranked(out.pos, topicLabel);
+    out.dislikes = ranked(out.neg, topicLabel);
+    out.hesitations = ranked(out.hes, function(k){ return k; });
+    return out;
+  }
+
+  // ================= EXECUTIVE PER-PROJECT SITUATION (เทรน & แนวโน้มลูกค้า) =================
+  // Redesigned 2026-10-26 for management reporting: every project side by side for the
+  // selected date range vs. the previous period of equal length (same comparison window
+  // as the KPI tiles' ▲/▼ badges), plus one card per project with auto-generated
+  // insights. Date-scoped by the top filter; NOT narrowed by the project filter (an
+  // executive comparison needs all projects) -- the selected project is highlighted in
+  // the table and is the only card shown. Counts are Walk-in visit rows, the same basis
+  // as the funnel card, so "ปิดการขาย" here = isClosedDealRow() on this period's visits.
+  // No customer names/phones are shown anywhere in this view.
+  var exSubEl = document.getElementById('exSub');
+  var exKpisEl = document.getElementById('exKpis');
+  var exSummaryEl = document.getElementById('exSummary');
+  var exTableSubEl = document.getElementById('exTableSub');
+  var exTableBodyEl = document.getElementById('exTableBody');
+  var exCardsEl = document.getElementById('exCards');
+  var exCopyBtn = document.getElementById('exCopyBtn');
+  var exLastSummaryText = '';
+  var exOpenABList = [];
+
+  // Customer names in this view follow company policy: first name + first letter of the
+  // family name (or nickname), never the full name. Parenthesised nicknames are kept.
+  function exMaskName(nm){
+    if(!nm) return 'N/A';
+    var nick = (nm.match(/\([^)]*\)/g)||[]).join(' ');
+    var main = nm.replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
+    var parts = main.split(/\s*\/\s*|\s+(?:และ|and|&)\s+/i).map(function(part){
+      var toks = part.split(' ').filter(Boolean), out = [];
+      var hon = /^(คุณ|คุุณ|คุุุณ|คุุุุณ|นาย|นาง|นางสาว|น\.ส\.|mr\.?|mrs\.?|ms\.?|miss|k\.?|khun|dr\.?)$/i;
+      while(toks.length && hon.test(toks[0])) out.push(toks.shift());
+      if(toks.length) out.push(toks.shift());
+      if(toks.length) out.push(toks[0].charAt(0)+'.');
+      return out.join(' ');
+    });
+    return (parts.join(' / ') + (nick ? ' '+nick : '')).trim();
+  }
+
+  var exAbModal = document.getElementById('exAbModal');
+  var exAbModalTitle = document.getElementById('exAbModalTitle');
+  var exAbModalSub = document.getElementById('exAbModalSub');
+  var exAbModalBody = document.getElementById('exAbModalBody');
+  var exAbModalSearch = document.getElementById('exAbModalSearch');
+  var exAbModalEmpty = document.getElementById('exAbModalEmpty');
+  var exAbModalRows = [];
+  function renderExAbModalRows(){
+    var term = (exAbModalSearch.value||'').trim().toLowerCase();
+    var rows = exAbModalRows.filter(function(l){
+      return !term || (l.p+' '+exMaskName(l.nm)+' '+(l.sl||'')+' '+l.status+' '+(l.budget||'')).toLowerCase().indexOf(term)>=0;
+    });
+    exAbModalEmpty.hidden = rows.length>0;
+    var canView = (function(){ var b = mainTabSegEl.querySelector('button[data-tab="customerdata"]'); return b && !b.hidden; })();
+    function orNA(s){ return (s && s!=='N/A') ? escapeHTML(s) : 'N/A'; }
+    exAbModalBody.innerHTML = rows.map(function(l){
+      return '<tr>'+
+        '<td class="num">'+escapeHTML(fmtDateShort(l.lastVisitDate))+'</td>'+
+        '<td class="proj">'+escapeHTML(l.p)+'</td>'+
+        '<td class="col-start name">'+escapeHTML(exMaskName(l.nm))+'</td>'+
+        '<td><span class="pill '+(l.grade==='A'?'b':'n')+'">เกรด '+l.grade+'</span></td>'+
+        '<td>'+orNA(l.budget)+'</td>'+
+        '<td>'+orNA(l.sl)+'</td>'+
+        '<td class="num">'+fmtInt(l.visitCount)+'</td>'+
+        '<td>'+escapeHTML(l.status)+'</td>'+
+        '<td>'+(canView ? '<button type="button" class="btn small ex-ab-view-btn" data-key="'+escapeHTML(l.key)+'">ดูข้อมูล &rarr;</button>' : '')+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+  function openExAbModal(proj){
+    exAbModalRows = exOpenABList.filter(function(l){ return !proj || l.p===proj; })
+      .sort(function(a,b){
+        if(a.grade!==b.grade) return a.grade==='A' ? -1 : 1;
+        return b.lastVisitDate<a.lastVisitDate?-1:b.lastVisitDate>a.lastVisitDate?1:0;
+      });
+    exAbModalTitle.textContent = 'ลูกค้าเกรด A/B ค้างติดตาม: '+(proj || 'รวมทุกโครงการ');
+    exAbModalSub.textContent = fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+' · '+fmtInt(exAbModalRows.length)+' ราย · ยังไม่ปิดการขายและยังไม่จบการติดตาม · Walk-in ล่าสุดอยู่ในช่วงนี้ · เรียงเกรด A ก่อน แล้วตามวันที่ล่าสุด';
+    exAbModalSearch.value = '';
+    renderExAbModalRows();
+    exAbModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeExAbModal(){ exAbModal.hidden = true; document.body.style.overflow = ''; }
+  if(exAbModal){
+    document.getElementById('exAbModalClose').addEventListener('click', closeExAbModal);
+    exAbModal.addEventListener('click', function(e){ if(e.target===exAbModal) closeExAbModal(); });
+    exAbModalSearch.addEventListener('input', renderExAbModalRows);
+    window.addEventListener('keydown', function(e){ if(e.key==='Escape' && !exAbModal.hidden) closeExAbModal(); });
+    exAbModalBody.addEventListener('click', function(e){
+      var btn = e.target.closest('.ex-ab-view-btn');
+      if(!btn) return;
+      var item = exAbModalRows.filter(function(l){ return l.key===btn.dataset.key; })[0];
+      var tabBtn = mainTabSegEl.querySelector('button[data-tab="customerdata"]');
+      if(!item || !tabBtn || tabBtn.hidden) return;
+      closeExAbModal();
+      tabBtn.click();
+      cdTabShowClosed.checked = false;
+      cdTabSearch.value = item.nm || '';
+      cdTabPage = 0;
+      cdTabExpanded[item.key] = true;
+      if(cdTabRendered) renderCustomerTabRows();
+    });
+  }
+  function exAbLink(proj, n){
+    if(!n) return '0';
+    return '<a href="#" class="ex-ab-link" data-proj="'+escapeHTML(proj||'')+'" title="ดูรายชื่อ">'+fmtInt(n)+'</a>';
+  }
+
+  var EX_OBSTACLE_MAP = {
+    'เกินงบประมาณ':'เกินงบประมาณ',
+    'ยังไม่รีบตัดสินใจ':'ยังไม่รีบตัดสินใจ',
+    'ปรึกษาครอบครัว':'ปรึกษาครอบครัว',
+    'ปรึกษาครอบครัวก่อน':'ปรึกษาครอบครัว',
+    'เปรียบเทียบโครงการอื่น':'เปรียบเทียบโครงการอื่น',
+    'เปรียบเทียบโครงการในภัททา':'เปรียบเทียบโครงการในภัททา',
+    'กู้ไม่ผ่าน/การเงินไม่พร้อม':'กู้ไม่ผ่าน/การเงินไม่พร้อม',
+    'ซื้อโครงการอื่นแล้ว':'ซื้อโครงการอื่นแล้ว',
+    'ยังไม่สนใจ/ไม่สนใจแล้ว':'ยังไม่สนใจ/ไม่สนใจแล้ว'
+  };
+  var EX_RECO = {
+    'เกินงบประมาณ':'ลูกค้าติดเรื่องงบ — พิจารณาโปรโมชัน/เงื่อนไขผ่อนดาวน์ หรือเสนอแบบบ้าน/แปลงที่ราคาเข้าถึงง่ายกว่า',
+    'ยังไม่รีบตัดสินใจ':'ลูกค้ายังไม่รีบ — ใช้ข้อเสนอแบบจำกัดเวลาและนัดติดตามเป็นรอบที่ชัดเจน',
+    'ปรึกษาครอบครัว':'ต้องปรึกษาครอบครัว — ชวนนัดชมซ้ำพร้อมครอบครัว/ผู้ร่วมตัดสินใจ',
+    'เปรียบเทียบโครงการอื่น':'ลูกค้าเทียบกับคู่แข่ง — เตรียมเอกสารเปรียบเทียบจุดเด่นโครงการให้เซลใช้',
+    'เปรียบเทียบโครงการในภัททา':'ลูกค้าเทียบระหว่างโครงการภัททา — ช่วยแนะนำโครงการที่ตรงงบ/ความต้องการเพื่อไม่ให้หลุด',
+    'กู้ไม่ผ่าน/การเงินไม่พร้อม':'ติดเรื่องสินเชื่อ — คัดกรองการเงินตั้งแต่ต้นและประสานธนาคารพันธมิตร',
+    'ซื้อโครงการอื่นแล้ว':'เสียลูกค้าให้โครงการอื่น — ทบทวนราคา/จุดขายเทียบคู่แข่ง',
+    'ยังไม่สนใจ/ไม่สนใจแล้ว':'ลูกค้าหมดความสนใจ — ทบทวนกลุ่มเป้าหมายและข้อความโฆษณาของช่องทางหลัก'
+  };
+
+  function exIsRevisit(r){ return !!(r.v && r.v.indexOf('Revisit')===0); }
+  function exObstacle(r){
+    if(r.dc && EX_OBSTACLE_MAP[r.dc]) return EX_OBSTACLE_MAP[r.dc];
+    if(r.s && EX_OBSTACLE_MAP[r.s]) return EX_OBSTACLE_MAP[r.s];
+    return null;
+  }
+  function exPct(n, d){ return d ? Math.round(n/d*1000)/10 : 0; }
+  function exTopOf(m){
+    var best = null;
+    Object.keys(m).forEach(function(k){ if(!best || m[k]>m[best]) best = k; });
+    return best;
+  }
+  function exBudgetBand(b){ var i = BUDGET_ORDER.indexOf(b); return i; }
+
+  function exStats(rows){
+    var st = { n: rows.length, revisit:0, closed:0, graded:0, ab:0,
+      budget:{}, budgetKnown:0, budgetIdx:[], media:{}, nat:{}, natKnown:0, foreign:0,
+      obstacle:{}, obstacleKnown:0 };
+    rows.forEach(function(r){
+      if(exIsRevisit(r)) st.revisit++;
+      if(isClosedDealRow(r)) st.closed++;
+      if(GRADE_ORDER.indexOf(r.g)>=0){ st.graded++; if(r.g==='A'||r.g==='B') st.ab++; }
+      var bi = exBudgetBand(r.b);
+      if(bi>=0){ st.budgetKnown++; st.budget[r.b]=(st.budget[r.b]||0)+1; st.budgetIdx.push(bi); }
+      if(r.m && r.m!=='N/A') st.media[r.m]=(st.media[r.m]||0)+1;
+      if(r.n && r.n!=='N/A'){ st.natKnown++; st.nat[r.n]=(st.nat[r.n]||0)+1; if(r.n!=='ไทย') st.foreign++; }
+      var ob = exObstacle(r);
+      if(ob){ st.obstacleKnown++; st.obstacle[ob]=(st.obstacle[ob]||0)+1; }
+    });
+    st.revisitRate = exPct(st.revisit, st.n);
+    st.closeRate = exPct(st.closed, st.n);
+    st.abRate = exPct(st.ab, st.graded);
+    st.topBudget = exTopOf(st.budget);
+    st.topMedia = exTopOf(st.media);
+    st.topNat = exTopOf(st.nat);
+    st.topObstacle = exTopOf(st.obstacle);
+    st.budgetNA = exPct(st.n - st.budgetKnown, st.n);
+    st.gradeNA = exPct(st.n - st.graded, st.n);
+    if(st.budgetIdx.length){
+      var s = st.budgetIdx.slice().sort(function(a,b){ return a-b; });
+      st.medianBudget = BUDGET_ORDER[s[Math.floor((s.length-1)/2)]];
+    }
+    return st;
+  }
+
+  function exStatus(cur, prev, hasPrev, company){
+    if(cur.n<5) return { key:'n', label:'ข้อมูลน้อย' };
+    var delta = (hasPrev && prev.n>=5) ? pctDelta(cur.n, prev.n) : null;
+    if((delta!==null && delta<=-25) || (cur.n>=15 && cur.closed===0)) return { key:'w', label:'น่ากังวล' };
+    if((delta===null || delta>=-5) && cur.closeRate>=company.closeRate) return { key:'g', label:'ดี' };
+    return { key:'y', label:'เฝ้าระวัง' };
+  }
+
+  function exDeltaText(cur, prev){
+    if(!prev) return cur>0 ? 'ใหม่' : '—';
+    var d = Math.round(pctDelta(cur, prev)*10)/10;
+    if(d===0) return 'เท่าเดิม';
+    return (d>0?'↑ ':'↓ ')+Math.abs(d)+'%';
+  }
+  function exShare(m, k, total){ return k ? exPct(m[k], total) : 0; }
+  function exProjColor(p){ return PCOLOR[p] ? 'var('+PCOLOR[p]+')' : 'var(--border-strong)'; }
+  function exCardId(p){ return 'exCard_'+p.replace(/[^A-Za-z0-9]/g,'_'); }
+
+  function computeExecTrends(){
+    var s = state.start, e = state.end;
+    var curAll = RAW.filter(function(r){ return r.d>=s && r.d<=e; });
+    var sD = parseISO(s), eD = parseISO(e);
+    var lenDays = Math.round((eD-sD)/86400000)+1;
+    var prevEnd = toISO(addDays(sD,-1)), prevStart = toISO(addDays(sD, -lenDays));
+    var prevAll = RAW.filter(function(r){ return r.d>=prevStart && r.d<=prevEnd; });
+    var hasPrev = prevAll.length>0;
+
+    // A/B leads still in follow-up whose latest Walk-in is in range (same rule as the
+    // "ลูกค้าเกรด A/B ที่ควรติดตามต่อ" card on the follow-up tab), counted per project.
+    var openAB = {};
+    exOpenABList = [];
+    computeCustomerGroups().forEach(function(g){
+      if(g.closed || g.lastVisitDate<s || g.lastVisitDate>e) return;
+      if(g.visits.some(isClosedDealRow)) return;
+      var last = g.visits[g.visits.length-1];
+      if(last.g==='A' || last.g==='B'){
+        openAB[g.p] = (openAB[g.p]||0)+1;
+        exOpenABList.push({ key:g.key, nm:g.nm, p:g.p, sl:g.sl, grade:last.g, budget:last.b,
+          visitCount:g.visitCount, lastVisitDate:g.lastVisitDate,
+          status:(last.s && last.s!=='N/A') ? last.s : 'ไม่มี Feedback' });
+      }
+    });
+
+    var company = exStats(curAll), companyPrev = exStats(prevAll);
+    company.openAB = Object.keys(openAB).reduce(function(a,k){ return a+openAB[k]; }, 0);
+    var projNames = PROJECTS.slice();
+    curAll.concat(prevAll).forEach(function(r){ if(r.p && projNames.indexOf(r.p)<0) projNames.push(r.p); });
+    var projects = projNames.map(function(p){
+      var curRows = curAll.filter(function(r){ return r.p===p; });
+      var cur = exStats(curRows);
+      cur.th = thSummarize(curRows);
+      var prev = exStats(prevAll.filter(function(r){ return r.p===p; }));
+      cur.openAB = openAB[p]||0;
+      return { p:p, cur:cur, prev:prev, status: exStatus(cur, prev, hasPrev, company) };
+    }).filter(function(x){ return x.cur.n>0 || x.prev.n>0; })
+      .sort(function(a,b){ return b.cur.n-a.cur.n; });
+    return { company:company, companyPrev:companyPrev, hasPrev:hasPrev, projects:projects,
+      prevStart:prevStart, prevEnd:prevEnd };
+  }
+
+  function exProjectInsights(x, res){
+    var c = x.cur, pv = x.prev, co = res.company, out = [], reco = [];
+    // 1) volume
+    if(res.hasPrev && pv.n>0){
+      var d = Math.round(pctDelta(c.n, pv.n)*10)/10;
+      out.push('Walk-in '+fmtInt(c.n)+' ราย '+(d>0?'เพิ่มขึ้น '+d+'%':d<0?'ลดลง '+Math.abs(d)+'%':'เท่ากับ')+' จากช่วงก่อน ('+fmtInt(pv.n)+' ราย)');
+      if(d<=-25) reco.push('Walk-in ลดลงชัดเจน — ทบทวนงบสื่อ/กิจกรรมดึงลูกค้าเข้าโครงการ');
+    } else if(res.hasPrev && pv.n===0){
+      out.push('Walk-in '+fmtInt(c.n)+' ราย (ช่วงก่อนหน้าไม่มี Walk-in)');
+    } else {
+      out.push('Walk-in '+fmtInt(c.n)+' ราย คิดเป็น '+exPct(c.n, co.n)+'% ของทั้งบริษัท');
+    }
+    if(c.n===0) return { insights: out, reco: reco };
+    // 2) conversion vs company
+    var cmp = c.closeRate>co.closeRate ? 'สูงกว่า' : c.closeRate<co.closeRate ? 'ต่ำกว่า' : 'เท่ากับ';
+    out.push('ปิดการขาย '+fmtInt(c.closed)+' ราย ('+c.closeRate+'%) '+cmp+'ค่าเฉลี่ยบริษัท ('+co.closeRate+'%)');
+    // 3) revisit
+    if(c.n>=5) out.push('กลับมาเยี่ยมซ้ำ '+c.revisitRate+'% (บริษัท '+co.revisitRate+'%)'+(c.revisitRate<co.revisitRate*0.6?' — ต่ำ ควรเพิ่มการนัดชมซ้ำ':''));
+    // 4) lead quality
+    if(c.graded>0) out.push('ลูกค้าเกรด A/B '+c.abRate+'% ของลูกค้าที่มีเกรด'+(c.openAB?' · ยังค้างติดตาม '+fmtInt(c.openAB)+' ราย':''));
+    if(c.openAB>=5 && c.closeRate<co.closeRate) reco.push('มีลูกค้า A/B ค้างติดตาม '+fmtInt(c.openAB)+' ราย แต่ปิดการขายต่ำกว่าค่าเฉลี่ย — เร่งปิดกลุ่มนี้ก่อน (กดตัวเลข "A/B ค้าง" เพื่อดูรายชื่อ)');
+    // 5) budget
+    if(c.topBudget){
+      var bt = 'งบส่วนใหญ่ '+c.topBudget+' ('+exShare(c.budget, c.topBudget, c.budgetKnown)+'% ของที่ระบุงบ)';
+      if(res.hasPrev && pv.medianBudget && c.medianBudget && pv.medianBudget!==c.medianBudget){
+        bt += ' · งบกลางขยับ'+(exBudgetBand(c.medianBudget)>exBudgetBand(pv.medianBudget)?'ขึ้น':'ลง')+'จาก '+pv.medianBudget+' → '+c.medianBudget;
+      }
+      out.push(bt);
+    }
+    // 6) who
+    if(c.topNat) out.push('สัญชาติหลัก '+c.topNat+' '+exShare(c.nat, c.topNat, c.natKnown)+'% · ลูกค้าต่างชาติ '+exPct(c.foreign, c.natKnown)+'%');
+    // 7) channel
+    if(c.topMedia){
+      var mShare = exShare(c.media, c.topMedia, c.n);
+      var mt = 'ช่องทางหลัก '+c.topMedia+' '+mShare+'%';
+      if(res.hasPrev && pv.n>=5){
+        var prevShare = exPct(pv.media[c.topMedia]||0, pv.n);
+        var pts = Math.round((mShare-prevShare)*10)/10;
+        if(Math.abs(pts)>=5) mt += ' ('+(pts>0?'+':'')+pts+' จุดจากช่วงก่อน)';
+      }
+      out.push(mt);
+    }
+    // 8) obstacle
+    if(c.topObstacle){
+      out.push('อุปสรรคหลัก: '+c.topObstacle+' ('+exShare(c.obstacle, c.topObstacle, c.obstacleKnown)+'% ของลูกค้าที่ระบุเหตุผล)');
+      if(EX_RECO[c.topObstacle]) reco.push(EX_RECO[c.topObstacle]);
+    }
+    if(c.th && c.th.noted>=3){
+      var vc = [];
+      if(c.th.likes[0]) vc.push('ชอบ '+c.th.likes[0].label);
+      if(c.th.dislikes[0]) vc.push('ไม่ชอบ '+c.th.dislikes[0].label);
+      if(c.th.hesitations[0]) vc.push('ติด '+c.th.hesitations[0].label+' ('+exPct(c.th.hesitations[0].n, c.th.openN||0)+'%)');
+      if(vc.length) out.push('เสียงลูกค้า: '+vc.join(' · '));
+    }
+    if(c.n>=15 && c.closed===0) reco.push('ยังไม่มีการปิดการขายในช่วงนี้ — ทบทวนราคา/โปรโมชันและการติดตามของทีมขาย');
+    // 9) data quality
+    if(c.n>=5 && (c.budgetNA>=50 || c.gradeNA>=50)){
+      out.push('⚠ ข้อมูลไม่ครบ: ไม่ระบุงบ '+c.budgetNA+'% · ไม่มีเกรด '+c.gradeNA+'% — ตัวเลขด้านบนอาจคลาดเคลื่อน');
+    }
+    return { insights: out, reco: reco.slice(0,3) };
+  }
+
+  function renderExecTrends(){
+    if(!exTableBodyEl) return;
+    var res = computeExecTrends();
+    var co = res.company, cp = res.companyPrev;
+    var rangeTxt = fmtDateShort(state.start)+' – '+fmtDateShort(state.end);
+    var prevTxt = res.hasPrev ? fmtDateShort(res.prevStart)+' – '+fmtDateShort(res.prevEnd) : '';
+    exSubEl.textContent = 'ช่วง '+rangeTxt+(res.hasPrev ? ' · เทียบกับช่วงก่อนหน้า '+prevTxt : ' · ไม่มีข้อมูลช่วงก่อนหน้าให้เทียบ (เลือกช่วงที่แคบลง เช่น 30/90 วันล่าสุด เพื่อดูแนวโน้ม)')+
+      ' · แสดงทุกโครงการเพื่อเทียบกัน (ตัวกรองโครงการด้านบนใช้ไฮไลต์และเลือกการ์ด)';
+
+    // ---- KPI strip ----
+    function kpi(label, value, note){ return '<div class="ex-kpi"><div class="ex-kpi-label">'+label+'</div><div class="ex-kpi-value">'+value+'</div><div class="ex-kpi-note">'+note+'</div></div>'; }
+    exKpisEl.innerHTML =
+      kpi('Walk-in ทั้งหมด', fmtInt(co.n), res.hasPrev ? deltaBadgeHTML(co.n, cp.n, true)+' ช่วงก่อน '+fmtInt(cp.n) : 'ทุกโครงการ') +
+      kpi('อัตรากลับมาเยี่ยมซ้ำ', co.revisitRate+'%', fmtInt(co.revisit)+' ราย'+(res.hasPrev?' · ช่วงก่อน '+cp.revisitRate+'%':'')) +
+      kpi('อัตราปิดการขาย', co.closeRate+'%', fmtInt(co.closed)+' ราย'+(res.hasPrev?' · ช่วงก่อน '+cp.closeRate+'%':'')) +
+      kpi('ลูกค้าเกรด A/B', co.abRate+'%', 'ของลูกค้าที่มีเกรด · ค้างติดตาม '+exAbLink('', co.openAB)+' ราย');
+
+    // ---- company-level bullets ----
+    var bullets = [];
+    var projs = res.projects;
+    bullets.push('Walk-in รวม '+fmtInt(co.n)+' ราย'+(res.hasPrev ? ' ('+exDeltaText(co.n, cp.n)+' จากช่วงก่อน '+fmtInt(cp.n)+' ราย)' : '')+
+      ' · ปิดการขาย '+fmtInt(co.closed)+' ราย ('+co.closeRate+'%)');
+    var top = projs.filter(function(x){ return x.cur.n>0; }).slice(0,3);
+    if(top.length) bullets.push('โครงการที่มีลูกค้าเข้ามากที่สุด: '+top.map(function(x){ return x.p+' '+fmtInt(x.cur.n)+' ราย ('+exPct(x.cur.n, co.n)+'%)'; }).join(', '));
+    if(res.hasPrev){
+      var movers = projs.filter(function(x){ return x.prev.n>=5; }).map(function(x){ return { p:x.p, d: Math.round(pctDelta(x.cur.n, x.prev.n)*10)/10 }; });
+      var ups = movers.filter(function(m){ return m.d>=10; }).sort(function(a,b){ return b.d-a.d; });
+      var downs = movers.filter(function(m){ return m.d<=-10; }).sort(function(a,b){ return a.d-b.d; });
+      if(ups.length) bullets.push('Walk-in เพิ่มขึ้น: '+ups.map(function(m){ return m.p+' +'+m.d+'%'; }).join(', '));
+      if(downs.length) bullets.push('Walk-in ลดลง: '+downs.map(function(m){ return m.p+' '+m.d+'%'; }).join(', '));
+    }
+    var convRank = projs.filter(function(x){ return x.cur.n>=10; }).sort(function(a,b){ return b.cur.closeRate-a.cur.closeRate; });
+    if(convRank.length>=2){
+      var best = convRank[0], worst = convRank[convRank.length-1];
+      bullets.push('อัตราปิดการขายสูงสุด: '+best.p+' '+best.cur.closeRate+'% · ต่ำสุด: '+worst.p+' '+worst.cur.closeRate+'% (นับเฉพาะโครงการที่มี Walk-in ≥10 ราย)');
+    }
+    if(co.topMedia) bullets.push('ช่องทางหลักของบริษัท: '+co.topMedia+' '+exPct(co.media[co.topMedia], co.n)+'%'+
+      (co.topNat ? ' · ลูกค้าสัญชาติ '+co.topNat+' '+exPct(co.nat[co.topNat], co.natKnown)+'%, ต่างชาติ '+exPct(co.foreign, co.natKnown)+'%' : ''));
+    if(co.topBudget) bullets.push('งบที่ลูกค้าระบุมากที่สุด: '+co.topBudget+' ('+exPct(co.budget[co.topBudget], co.budgetKnown)+'% ของที่ระบุงบ)');
+    if(co.topObstacle){
+      var obs = Object.keys(co.obstacle).sort(function(a,b){ return co.obstacle[b]-co.obstacle[a]; }).slice(0,3);
+      bullets.push('อุปสรรคการตัดสินใจหลัก: '+obs.map(function(k){ return k+' '+exPct(co.obstacle[k], co.obstacleKnown)+'%'; }).join(', '));
+    }
+    var watch = projs.filter(function(x){ return x.status.key==='w'; }).map(function(x){ return x.p; });
+    if(watch.length) bullets.push('โครงการที่ควรให้ความสำคัญ: '+watch.join(', '));
+    if(co.n && (co.budgetNA>=40 || co.gradeNA>=40)) bullets.push('คุณภาพข้อมูล: ไม่ระบุงบ '+co.budgetNA+'% · ไม่มีเกรด '+co.gradeNA+'% ของ Walk-in — ควรให้ทีมขายบันทึกให้ครบเพื่อให้การวิเคราะห์แม่นยำขึ้น');
+    exSummaryEl.innerHTML = bullets.map(function(b){ return '<li>'+escapeHTML(b)+'</li>'; }).join('');
+
+    // ---- comparison table ----
+    exTableSubEl.textContent = rangeTxt+' · นับจากจำนวน Walk-in (ครั้งที่เข้าชม) · % กลับมาซ้ำ/ปิดการขาย คิดจาก Walk-in ของโครงการนั้น · เกรด A/B คิดจากลูกค้าที่มีเกรด';
+    function cell(main, sub){ return main+(sub?'<span class="ex-sub">'+sub+'</span>':''); }
+    function row(name, c, pv, status, cls){
+      return '<tr class="'+(cls||'')+'" data-proj="'+escapeHTML(name)+'">'+
+        '<td class="col-start">'+(PCOLOR[name]?'<span class="ex-proj-dot" style="background:'+exProjColor(name)+'"></span>':'')+escapeHTML(name)+'</td>'+
+        '<td>'+(status?'<span class="pill '+status.key+'">'+status.label+'</span>':'')+'</td>'+
+        '<td class="num">'+fmtInt(c.n)+'</td>'+
+        '<td class="num">'+(res.hasPrev ? cell(deltaBadgeHTML(c.n, pv.n, true)||'—', 'ช่วงก่อน '+fmtInt(pv.n)) : '—')+'</td>'+
+        '<td class="num">'+cell(c.revisitRate+'%', fmtInt(c.revisit)+' ราย')+'</td>'+
+        '<td class="num">'+cell(c.closeRate+'%', fmtInt(c.closed)+' ราย')+'</td>'+
+        '<td class="num">'+(c.graded?cell(c.abRate+'%', fmtInt(c.ab)+' ราย'):'—')+'</td>'+
+        '<td class="num">'+exAbLink(status ? name : '', c.openAB||0)+'</td>'+
+        '<td>'+(c.topBudget?cell(escapeHTML(c.topBudget), exShare(c.budget,c.topBudget,c.budgetKnown)+'%'):'—')+'</td>'+
+        '<td>'+(c.topMedia?cell(escapeHTML(c.topMedia), exShare(c.media,c.topMedia,c.n)+'%'):'—')+'</td>'+
+        '<td>'+(c.topNat?cell(escapeHTML(c.topNat), exShare(c.nat,c.topNat,c.natKnown)+'%'):'—')+'</td>'+
+        '<td>'+(c.topObstacle?cell(escapeHTML(c.topObstacle), exShare(c.obstacle,c.topObstacle,c.obstacleKnown)+'%'):'—')+'</td>'+
+      '</tr>';
+    }
+    exTableBodyEl.innerHTML = projs.map(function(x){
+      return row(x.p, x.cur, x.prev, x.status, state.project===x.p ? 'ex-selected' : '');
+    }).join('') + row('รวมทุกโครงการ', co, cp, null, 'ex-total');
+
+    // ---- per-project cards ----
+    var cardProjs = state.project==='ALL' ? projs : projs.filter(function(x){ return x.p===state.project; });
+    var copyLines = ['สรุปสถานการณ์ลูกค้า Walk-in ('+rangeTxt+(res.hasPrev?' เทียบ '+prevTxt:'')+')'].concat(bullets.map(function(b){ return '• '+b; }));
+    copyLines.push('');
+    exCardsEl.innerHTML = cardProjs.length ? cardProjs.map(function(x){
+      var c = x.cur, ins = exProjectInsights(x, res);
+      copyLines.push('▪ '+x.p+' — '+x.status.label);
+      ins.insights.forEach(function(t){ copyLines.push('   - '+t); });
+      ins.reco.forEach(function(t){ copyLines.push('   → '+t); });
+      return '<div class="card ex-card" id="'+exCardId(x.p)+'" style="border-left-color:'+exProjColor(x.p)+'">'+
+        '<div class="ex-card-head"><div class="card-title">'+escapeHTML(x.p)+'</div><span class="pill '+x.status.key+'">'+x.status.label+'</span></div>'+
+        '<div class="ex-mini">'+
+          '<div>Walk-in<b>'+fmtInt(c.n)+'</b>'+(res.hasPrev?deltaBadgeHTML(c.n, x.prev.n, true):'')+'</div>'+
+          '<div>กลับมาซ้ำ<b>'+c.revisitRate+'%</b></div>'+
+          '<div>ปิดการขาย<b>'+fmtInt(c.closed)+'</b>'+c.closeRate+'%</div>'+
+          '<div>A/B ค้าง<b>'+exAbLink(x.p, c.openAB||0)+'</b>'+(c.openAB?'<span style="font-size:14px;">กดดูรายชื่อ</span>':'')+'</div>'+
+        '</div>'+
+        '<div class="ex-card-sec">ข้อสังเกต</div>'+
+        '<ul>'+ins.insights.map(function(t){ return '<li>'+escapeHTML(t)+'</li>'; }).join('')+'</ul>'+
+        (ins.reco.length ? '<div class="ex-card-sec">ข้อเสนอแนะเบื้องต้น</div><ul class="ex-reco">'+ins.reco.map(function(t){ return '<li>'+escapeHTML(t)+'</li>'; }).join('')+'</ul>' : '')+
+      '</div>';
+    }).join('') : '<div class="card"><div class="card-sub" style="margin:0;">ไม่มีข้อมูล Walk-in ของโครงการที่เลือกในช่วงนี้</div></div>';
+    exLastSummaryText = copyLines.join('\n');
+  }
+
+  if(exTableBodyEl){
+    exTableBodyEl.addEventListener('click', function(e){
+      if(e.target.closest('.ex-ab-link')) return;
+      var tr = e.target.closest('tr[data-proj]');
+      if(!tr) return;
+      var card = document.getElementById(exCardId(tr.dataset.proj));
+      if(card) card.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  }
+  var exPanelEl = document.getElementById('tabPanelTrends');
+  if(exPanelEl){
+    exPanelEl.addEventListener('click', function(e){
+      var a = e.target.closest('.ex-ab-link');
+      if(!a) return;
+      e.preventDefault();
+      openExAbModal(a.dataset.proj || null);
+    });
+  }
+  if(exCopyBtn){
+    exCopyBtn.addEventListener('click', function(){
+      var txt = exLastSummaryText;
+      if(typeof lnLastTrends!=='undefined' && lnLastTrends.length){
+        txt += '\n\nแนวโน้มตั้งแต่เปิดตัว (ช่วงแรก → ช่วงล่าสุด)';
+        lnLastTrends.forEach(function(t){
+          var f = t.phases[0].st, l = t.phases[t.phases.length-1].st, th = t.all.th;
+          txt += '\n▪ '+t.p+' — '+t.verdict.label+': Walk-in/เดือน '+f.perMonth+' → '+l.perMonth+', ปิดการขาย '+f.closeRate+'% → '+l.closeRate+'%';
+          t.drivers.slice(0,3).forEach(function(d){ txt += '\n   - '+d.text; });
+          var vc = [];
+          if(th.likes[0]) vc.push('ชอบ '+th.likes[0].label);
+          if(th.dislikes[0]) vc.push('ไม่ชอบ '+th.dislikes[0].label);
+          if(th.hesitations[0]) vc.push('ติด '+th.hesitations[0].label);
+          if(vc.length) txt += '\n   - เสียงลูกค้า: '+vc.join(' · ');
+        });
+      }
+      function done(){ var o = exCopyBtn.textContent; exCopyBtn.textContent = 'คัดลอกแล้ว ✓'; setTimeout(function(){ exCopyBtn.textContent = o; }, 1800); }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(done, function(){ window.prompt('คัดลอกข้อความนี้', txt); });
+      } else { window.prompt('คัดลอกข้อความนี้', txt); }
+    });
+  }
+
+  // ================= SINCE-LAUNCH TREND + WHAT CUSTOMERS LIKE / DISLIKE / HOLD BACK ON =================
+  // Added 2026-10-26 (executive request): per project, how the customer situation has
+  // moved from launch until now, why it got better/worse, what visitors like or dislike,
+  // and what stops them from buying. Uses ALL history (not the top date-range filter);
+  // the project timeline is split into equal phases (ช่วงแรก / ช่วงกลาง / ช่วงล่าสุด) and
+  // the first and latest phases are compared. Launch date comes from the ERP master data
+  // (SPF_DATA[p].launch_date) when present; Walk-in records only start mid-2024, so for
+  // older projects the comparison starts at the first Walk-in on file (stated on screen).
+  var lnSummaryEl = document.getElementById('lnSummaryBody');
+  var lnDetailEl = document.getElementById('lnDetail');
+  var lnProjSegEl = document.getElementById('lnProjSeg');
+  var lnSelected = null;
+
+  function lnMonthKey(iso){ return iso.slice(0,7); }
+  function lnMonthLabel(key){ var y = +key.slice(0,4), m = +key.slice(5,7); return THAI_MONTH[m-1]+' '+String(y).slice(2); }
+  function lnMonthsBetween(a, b){
+    var out = [], y = +a.slice(0,4), m = +a.slice(5,7), ey = +b.slice(0,4), em = +b.slice(5,7);
+    while(y<ey || (y===ey && m<=em)){ out.push(y+'-'+String(m).padStart(2,'0')); m++; if(m>12){ m=1; y++; } }
+    return out;
+  }
+  function lnTopShare(m, total){
+    var k = exTopOf(m); return k ? { key:k, pct: exPct(m[k], total) } : null;
+  }
+  function lnPhaseStats(rows, months, effMonths){
+    var st = exStats(rows), th = thSummarize(rows);
+    st.months = effMonths || months.length;
+    st.perMonth = st.months ? Math.round(rows.length/st.months*10)/10 : 0;
+    st.foreignRate = exPct(st.foreign, st.natKnown);
+    st.th = th;
+    st.hesShare = {};
+    th.hesitations.forEach(function(h){ st.hesShare[h.key] = exPct(h.n, th.openN||0); });
+    st.mediaShare = {};
+    Object.keys(st.media).forEach(function(k){ st.mediaShare[k] = exPct(st.media[k], st.n); });
+    return st;
+  }
+
+  function computeLaunchTrend(p){
+    var rows = RAW.filter(function(r){ return r.p===p && r.d; });
+    if(!rows.length) return null;
+    var dataStart = rows.reduce(function(a,r){ return r.d<a?r.d:a; }, rows[0].d);
+    var spf = (SPF_DATA && SPF_DATA[p]) || {};
+    var launch = spf.launch_date || null;
+    var months = lnMonthsBetween(lnMonthKey(dataStart), lnMonthKey(DATA_MAX));
+    var monthly = months.map(function(k){ return { key:k, n:0, closed:0 }; });
+    var idx = {}; months.forEach(function(k,i){ idx[k] = i; });
+    rows.forEach(function(r){ var i = idx[lnMonthKey(r.d)]; if(i==null) return; monthly[i].n++; if(isClosedDealRow(r)) monthly[i].closed++; });
+
+    // The first and the current month are usually partial -- weight them by the share of
+    // days actually covered so "Walk-in เฉลี่ย/เดือน" isn't dragged down by a half month.
+    function dim(key){ return new Date(Date.UTC(+key.slice(0,4), +key.slice(5,7), 0)).getUTCDate(); }
+    var firstKey = months[0], lastKey = months[months.length-1];
+    var weight = {};
+    months.forEach(function(k){ weight[k] = 1; });
+    weight[firstKey] = (dim(firstKey) - (+dataStart.slice(8,10)) + 1)/dim(firstKey);
+    weight[lastKey] = Math.min(weight[lastKey], (+DATA_MAX.slice(8,10))/dim(lastKey));
+    if(firstKey===lastKey) weight[firstKey] = Math.max(1/31, ((+DATA_MAX.slice(8,10)) - (+dataStart.slice(8,10)) + 1)/dim(firstKey));
+    function effOf(list){ return list.reduce(function(a,k){ return a+weight[k]; }, 0); }
+    var nPhases = months.length>=6 ? 3 : months.length>=2 ? 2 : 1;
+    var size = Math.ceil(months.length/nPhases), phases = [];
+    for(var i=0;i<nPhases;i++){
+      var pm = months.slice(i*size, (i+1)*size);
+      if(!pm.length) continue;
+      var set = {}; pm.forEach(function(k){ set[k]=true; });
+      var pr = rows.filter(function(r){ return set[lnMonthKey(r.d)]; });
+      var label = nPhases===1 ? 'ทั้งหมด' : i===0 ? 'ช่วงแรก' : i===nPhases-1 ? 'ช่วงล่าสุด' : 'ช่วงกลาง';
+      phases.push({ label:label, range: lnMonthLabel(pm[0])+(pm.length>1?' – '+lnMonthLabel(pm[pm.length-1]):''), st: lnPhaseStats(pr, pm, effOf(pm)) });
+    }
+    var all = lnPhaseStats(rows, months, effOf(months));
+    var first = phases[0].st, last = phases[phases.length-1].st;
+
+    // ---- verdict: latest phase vs first phase ----
+    var verdict = { key:'n', label:'ข้อมูลยังน้อย' }, walkDelta = null, closeDelta = null;
+    if(phases.length>=2 && first.n>=10 && last.n>=5){
+      walkDelta = first.perMonth ? Math.round((last.perMonth-first.perMonth)/first.perMonth*1000)/10 : null;
+      closeDelta = Math.round((last.closeRate-first.closeRate)*10)/10;
+      var up = (walkDelta!=null && walkDelta>=10) || closeDelta>=1.5;
+      var down = (walkDelta!=null && walkDelta<=-20) || closeDelta<=-1.5;
+      verdict = up && !down ? { key:'g', label:'ดีขึ้น' } : down && !up ? { key:'w', label:'แย่ลง' } : (up && down) ? { key:'y', label:'ผสม' } : { key:'b', label:'ทรงตัว' };
+    }
+
+    // ---- likely drivers (first phase -> latest phase) ----
+    var drivers = [];
+    if(phases.length>=2 && first.n>=10 && last.n>=5){
+      var mk = {}; Object.keys(first.mediaShare).concat(Object.keys(last.mediaShare)).forEach(function(k){ mk[k]=true; });
+      Object.keys(mk).map(function(k){ return { k:k, a:first.mediaShare[k]||0, b:last.mediaShare[k]||0 }; })
+        .filter(function(x){ return Math.abs(x.b-x.a)>=8; })
+        .sort(function(x,y){ return Math.abs(y.b-y.a)-Math.abs(x.b-x.a); }).slice(0,2)
+        .forEach(function(x){ drivers.push({ dir: x.b>x.a?1:-1, text:'ลูกค้าจากช่องทาง '+x.k+' '+(x.b>x.a?'เพิ่มขึ้น':'ลดลง')+' จาก '+x.a+'% → '+x.b+'% ของ Walk-in' }); });
+      var hk = {}; Object.keys(first.hesShare).concat(Object.keys(last.hesShare)).forEach(function(k){ hk[k]=true; });
+      Object.keys(hk).map(function(k){ return { k:k, a:first.hesShare[k]||0, b:last.hesShare[k]||0 }; })
+        .filter(function(x){ return Math.abs(x.b-x.a)>=4; })
+        .sort(function(x,y){ return Math.abs(y.b-y.a)-Math.abs(x.b-x.a); }).slice(0,3)
+        .forEach(function(x){ drivers.push({ dir: x.b>x.a?-1:1, text:'ลูกค้าที่ติดเรื่อง "'+x.k+'" '+(x.b>x.a?'เพิ่มขึ้น':'ลดลง')+' จาก '+x.a+'% → '+x.b+'%' }); });
+      if(first.graded>=5 && last.graded>=5 && Math.abs(last.abRate-first.abRate)>=5)
+        drivers.push({ dir: last.abRate>first.abRate?1:-1, text:'คุณภาพลูกค้า (เกรด A/B) '+(last.abRate>first.abRate?'ดีขึ้น':'ลดลง')+' จาก '+first.abRate+'% → '+last.abRate+'%' });
+      if(Math.abs(last.revisitRate-first.revisitRate)>=5)
+        drivers.push({ dir: last.revisitRate>first.revisitRate?1:-1, text:'ลูกค้ากลับมาเยี่ยมซ้ำ '+(last.revisitRate>first.revisitRate?'มากขึ้น':'น้อยลง')+' จาก '+first.revisitRate+'% → '+last.revisitRate+'%' });
+      if(first.natKnown>=5 && last.natKnown>=5 && Math.abs(last.foreignRate-first.foreignRate)>=10)
+        drivers.push({ dir:0, text:'สัดส่วนลูกค้าต่างชาติ'+(last.foreignRate>first.foreignRate?'เพิ่มขึ้น':'ลดลง')+' จาก '+first.foreignRate+'% → '+last.foreignRate+'%' });
+      if(first.medianBudget && last.medianBudget && first.medianBudget!==last.medianBudget)
+        drivers.push({ dir:0, text:'งบกลางของลูกค้าขยับ'+(exBudgetBand(last.medianBudget)>exBudgetBand(first.medianBudget)?'ขึ้น':'ลง')+' จาก '+first.medianBudget+' → '+last.medianBudget });
+    }
+    if(spf.sales_pct!=null && spf.sales_pct>=80)
+      drivers.push({ dir:-1, text:'ขายไปแล้ว '+spf.sales_pct+'% (เหลือ '+fmtInt(spf.remaining_unsold||0)+' หลัง) — ตัวเลือกแปลง/แบบบ้านเหลือน้อย อาจทำให้ Walk-in และการปิดการขายลดลงตามธรรมชาติ' });
+
+    var erpSales = ['2024','2025','2026'].filter(function(y){ return spf['avg_monthly_'+y]!=null; })
+      .map(function(y){ return y+': '+spf['avg_monthly_'+y]; });
+    return { p:p, rows:rows, dataStart:dataStart, launch:launch, months:months, monthly:monthly,
+      phases:phases, all:all, verdict:verdict, walkDelta:walkDelta, closeDelta:closeDelta,
+      drivers:drivers, spf:spf, erpSales:erpSales };
+  }
+
+  function lnMonthlyChartHTML(t){
+    var W = 1100, H = 210, pad = 26, n = t.monthly.length;
+    var max = Math.max.apply(null, t.monthly.map(function(m){ return m.n; }).concat([1]));
+    var bw = (W-pad*2)/n;
+    var accent = cssVar('--accent'), good = cssVar('--good'), muted = cssVar('--text-muted'), grid = cssVar('--grid');
+    var bars = t.monthly.map(function(m, i){
+      var h = (m.n/max)*(H-pad*2), x = pad+i*bw, y = H-pad-h;
+      var ch = (m.closed/max)*(H-pad*2);
+      return '<g class="ln-bar" data-tip="'+escapeHTML(lnMonthLabel(m.key)+' · Walk-in '+m.n+' · ปิดการขาย '+m.closed)+'">'+
+        '<rect x="'+(x+1).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(bw-2,1).toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="'+accent+'" opacity="0.75"></rect>'+
+        (m.closed ? '<rect x="'+(x+1).toFixed(1)+'" y="'+(H-pad-ch).toFixed(1)+'" width="'+Math.max(bw-2,1).toFixed(1)+'" height="'+ch.toFixed(1)+'" rx="2" fill="'+good+'"></rect>' : '')+
+        '<rect x="'+x.toFixed(1)+'" y="'+pad+'" width="'+bw.toFixed(1)+'" height="'+(H-pad*2)+'" fill="transparent"></rect>'+
+      '</g>';
+    }).join('');
+    var step = Math.max(1, Math.ceil(n/8));
+    var labels = t.monthly.map(function(m, i){
+      if(i%step!==0 && i!==n-1) return '';
+      return '<text x="'+(pad+i*bw+bw/2).toFixed(1)+'" y="'+(H-6)+'" font-size="14" text-anchor="middle" fill="'+muted+'">'+lnMonthLabel(m.key)+'</text>';
+    }).join('');
+    var bounds = '';
+    if(t.phases.length>=2){
+      var size = Math.ceil(n/t.phases.length);
+      for(var i=1;i<t.phases.length;i++){
+        var x = pad+i*size*bw;
+        bounds += '<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+(pad-8)+'" y2="'+(H-pad)+'" stroke="'+muted+'" stroke-dasharray="3 3"></line>';
+      }
+    }
+    return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:100%; display:block;" role="img" aria-label="Walk-in รายเดือน">'+
+      '<line x1="'+pad+'" x2="'+(W-pad)+'" y1="'+(H-pad)+'" y2="'+(H-pad)+'" stroke="'+grid+'"></line>'+
+      '<text x="'+pad+'" y="14" font-size="14" fill="'+muted+'">สูงสุด '+max+' ราย/เดือน</text>'+
+      bounds+bars+labels+'</svg>'+
+      '<div class="ex-legend" style="margin-top:4px;"><span class="ex-proj-dot" style="background:var(--accent);opacity:.75"></span>Walk-in รายเดือน · <span class="ex-proj-dot" style="background:var(--good)"></span>ในจำนวนนั้นปิดการขาย · เส้นประ = แบ่งช่วงเปรียบเทียบ</div>';
+  }
+
+  function lnRankListHTML(items, base, color, emptyText){
+    if(!items.length || !base) return '<div class="card-sub" style="margin:0;">'+emptyText+'</div>';
+    var max = items[0].n;
+    return items.slice(0,6).map(function(it){
+      return '<div class="bar-row"><div class="bar-label" title="'+escapeHTML(it.label)+'">'+escapeHTML(it.label)+'</div>'+
+        '<div class="bar-track"><div class="bar-fill" style="width:'+(it.n/max*100).toFixed(1)+'%; background:'+color+'"></div></div>'+
+        '<div class="bar-value">'+exPct(it.n, base)+'%</div></div>';
+    }).join('');
+  }
+
+  function renderLaunchDetail(t){
+    if(!t){ lnDetailEl.innerHTML = '<div class="card-sub">ไม่มีข้อมูล Walk-in ของโครงการนี้</div>'; return; }
+    var first = t.phases[0], last = t.phases[t.phases.length-1];
+    var startNote = t.launch
+      ? 'เปิดตัว '+fmtDateShort(t.launch)+(t.launch<t.dataStart ? ' · ข้อมูล Walk-in ในระบบเริ่ม '+fmtDateShort(t.dataStart)+' (ก่อนหน้านั้นไม่มีข้อมูลให้เทียบ)' : '')
+      : 'ข้อมูล Walk-in เริ่ม '+fmtDateShort(t.dataStart);
+    var head = '<div class="ex-card-head"><div class="card-title" style="margin:0;">'+escapeHTML(t.p)+'</div><span class="pill '+t.verdict.key+'">แนวโน้ม: '+t.verdict.label+'</span></div>'+
+      '<div class="card-sub">'+escapeHTML(startNote)+' · ถึง '+fmtDateShort(DATA_MAX)+' · Walk-in รวม '+fmtInt(t.rows.length)+' ราย · ปิดการขาย '+fmtInt(t.all.closed)+' ราย ('+t.all.closeRate+'%)'+
+      (t.erpSales.length ? ' · ยอดขายเฉลี่ย/เดือนจาก ERP '+escapeHTML(t.erpSales.join(' · '))+' หลัง' : '')+'</div>';
+    var verdictText = '';
+    if(t.walkDelta!=null){
+      verdictText = '<p style="margin:6px 0 10px; font-size:14px; line-height:1.6;">เทียบ<b>'+escapeHTML(last.label)+'</b> ('+escapeHTML(last.range)+') กับ<b>'+escapeHTML(first.label)+'</b> ('+escapeHTML(first.range)+'): '+
+        'Walk-in เฉลี่ย '+first.st.perMonth+' → <b>'+last.st.perMonth+'</b> ราย/เดือน ('+(t.walkDelta>0?'+':'')+t.walkDelta+'%) · '+
+        'อัตราปิดการขาย '+first.st.closeRate+'% → <b>'+last.st.closeRate+'%</b> ('+(t.closeDelta>0?'+':'')+t.closeDelta+' จุด)</p>';
+    }
+    // phase table
+    function phRow(label, fn){ return '<tr><td class="col-start">'+label+'</td>'+t.phases.map(function(ph){ return '<td>'+fn(ph.st)+'</td>'; }).join('')+'</tr>'; }
+    function topLbl(arr, base){ return arr && arr.length ? escapeHTML(arr[0].label)+' <span class="ex-sub" style="display:inline;">'+exPct(arr[0].n, base)+'%</span>' : '—'; }
+    var table = '<div class="table-scroll"><table class="data compact-table"><thead><tr><th class="col-start">ตัวชี้วัด</th>'+
+      t.phases.map(function(ph){ return '<th>'+escapeHTML(ph.label)+'<span class="ex-sub" style="display:block;font-weight:400;">'+escapeHTML(ph.range)+'</span></th>'; }).join('')+'</tr></thead><tbody>'+
+      phRow('Walk-in เฉลี่ย/เดือน', function(s){ return s.perMonth+' <span class="ex-sub" style="display:inline;">(รวม '+fmtInt(s.n)+')</span>'; })+
+      phRow('อัตราปิดการขาย', function(s){ return s.closeRate+'% <span class="ex-sub" style="display:inline;">('+s.closed+')</span>'; })+
+      phRow('กลับมาเยี่ยมซ้ำ', function(s){ return s.revisitRate+'%'; })+
+      phRow('เกรด A/B (ของที่มีเกรด)', function(s){ return s.graded ? s.abRate+'%' : '—'; })+
+      phRow('ช่องทางหลัก', function(s){ var x = lnTopShare(s.media, s.n); return x ? escapeHTML(x.key)+' '+x.pct+'%' : '—'; })+
+      phRow('ลูกค้าต่างชาติ', function(s){ return s.natKnown ? s.foreignRate+'%' : '—'; })+
+      phRow('งบกลาง', function(s){ return s.medianBudget ? escapeHTML(s.medianBudget) : '—'; })+
+      phRow('ชอบมากที่สุด', function(s){ return topLbl(s.th.likes, s.th.noted); })+
+      phRow('ไม่ชอบมากที่สุด', function(s){ return topLbl(s.th.dislikes, s.th.openN||0); })+
+      phRow('ติดมากที่สุด', function(s){ return topLbl(s.th.hesitations, s.th.openN||0); })+
+      '</tbody></table></div>';
+    var drivers = t.drivers.length
+      ? '<ul class="ex-bullets">'+t.drivers.map(function(d){ return '<li>'+(d.dir>0?'<span style="color:var(--good-ink);font-weight:700;">▲</span> ':d.dir<0?'<span style="color:var(--critical);font-weight:700;">▼</span> ':'• ')+escapeHTML(d.text)+'</li>'; }).join('')+'</ul>'
+      : '<div class="card-sub" style="margin:0;">ไม่พบการเปลี่ยนแปลงที่ชัดเจนระหว่างช่วงแรกกับช่วงล่าสุด (หรือข้อมูลยังน้อยเกินไป)</div>';
+    var th = t.all.th;
+    var cols = '<div class="ln-cols">'+
+      '<div><div class="ex-card-sec">ลูกค้าชอบอะไร</div><div class="card-sub" style="margin:0 0 6px;">% ของ Walk-in ที่มีบันทึกจากเซล ('+fmtInt(th.noted)+')</div>'+lnRankListHTML(th.likes, th.noted, cssVar('--good'), 'ยังไม่พบข้อมูล')+'</div>'+
+      '<div><div class="ex-card-sec">ลูกค้าไม่ชอบอะไร</div><div class="card-sub" style="margin:0 0 6px;">% ของลูกค้าที่ยังไม่ซื้อ ('+fmtInt(th.openN||0)+')</div>'+lnRankListHTML(th.dislikes, th.openN||0, cssVar('--critical'), 'ยังไม่พบข้อมูล')+'</div>'+
+      '<div><div class="ex-card-sec">ติดตรงไหนถึงยังไม่ซื้อ</div><div class="card-sub" style="margin:0 0 6px;">% ของลูกค้าที่ยังไม่ซื้อ ('+fmtInt(th.openN||0)+')</div>'+lnRankListHTML(th.hesitations, th.openN||0, cssVar('--warning'), 'ยังไม่พบข้อมูล')+'</div>'+
+    '</div>';
+    lnDetailEl.innerHTML = head + verdictText + lnMonthlyChartHTML(t) +
+      '<div class="ex-card-sec" style="margin-top:14px;">เปรียบเทียบแต่ละช่วงตั้งแต่เปิดตัว</div>'+table+
+      '<div class="ex-card-sec" style="margin-top:14px;">ทำไมถึงดีขึ้น/แย่ลง (ปัจจัยที่เปลี่ยนไประหว่างช่วงแรกกับช่วงล่าสุด)</div>'+drivers+
+      '<div class="ex-card-sec" style="margin-top:14px;">เสียงลูกค้าตั้งแต่เปิดตัว</div>'+cols+
+      '<div class="ex-legend">วิธีคำนวณ: "ชอบ/ไม่ชอบ" วิเคราะห์จากคำสำคัญในช่องรายละเอียดความสนใจที่เซลบันทึก (ประมาณการ ไม่ใช่การอ่านทีละรายการ) · "ติดตรงไหน" รวมเหตุผลการตัดสินใจ/สถานะที่เลือกไว้ กับคำสำคัญในบันทึก · ลูกค้า 1 รายนับได้หลายหัวข้อ % จึงรวมกันเกิน 100%</div>';
+    Array.prototype.forEach.call(lnDetailEl.querySelectorAll('.ln-bar'), function(g){
+      g.addEventListener('pointermove', function(ev){ showTooltip(ev.clientX, ev.clientY, '<div class="tt-title">'+g.dataset.tip+'</div>'); });
+      g.addEventListener('pointerleave', hideTooltip);
+    });
+  }
+
+  function renderLaunchSection(){
+    if(!lnSummaryEl) return;
+    var projs = PROJECTS.slice();
+    RAW.forEach(function(r){ if(r.p && projs.indexOf(r.p)<0) projs.push(r.p); });
+    var trends = projs.map(computeLaunchTrend).filter(Boolean)
+      .sort(function(a,b){ return b.rows.length-a.rows.length; });
+    lnLastTrends = trends;
+    lnSummaryEl.innerHTML = trends.map(function(t){
+      var f = t.phases[0].st, l = t.phases[t.phases.length-1].st, th = t.all.th;
+      return '<tr data-proj="'+escapeHTML(t.p)+'" class="'+(t.p===lnSelected?'ex-selected':'')+'">'+
+        '<td class="col-start"><span class="ex-proj-dot" style="background:'+exProjColor(t.p)+'"></span>'+escapeHTML(t.p)+'</td>'+
+        '<td>'+escapeHTML(fmtDateShort(t.launch && t.launch>t.dataStart ? t.launch : t.dataStart))+'</td>'+
+        '<td><span class="pill '+t.verdict.key+'">'+t.verdict.label+'</span></td>'+
+        '<td class="num">'+(t.phases.length>=2 ? f.perMonth+' → <b>'+l.perMonth+'</b>' : l.perMonth)+'</td>'+
+        '<td class="num">'+(t.phases.length>=2 ? f.closeRate+'% → <b>'+l.closeRate+'%</b>' : l.closeRate+'%')+'</td>'+
+        '<td>'+(th.likes[0] ? escapeHTML(th.likes[0].label) : '—')+'</td>'+
+        '<td>'+(th.dislikes[0] ? escapeHTML(th.dislikes[0].label) : '—')+'</td>'+
+        '<td>'+(th.hesitations[0] ? escapeHTML(th.hesitations[0].label) : '—')+'</td>'+
+      '</tr>';
+    }).join('');
+    if(state.project!=='ALL' && trends.some(function(t){ return t.p===state.project; })) lnSelected = state.project;
+    else if(!lnSelected || !trends.some(function(t){ return t.p===lnSelected; })) lnSelected = trends[0] && trends[0].p;
+    lnProjSegEl.innerHTML = trends.map(function(t){ return '<button type="button" data-proj="'+escapeHTML(t.p)+'" class="'+(t.p===lnSelected?'active':'')+'">'+escapeHTML(t.p)+'</button>'; }).join('');
+    Array.prototype.forEach.call(lnSummaryEl.querySelectorAll('tr'), function(tr){ tr.classList.toggle('ex-selected', tr.dataset.proj===lnSelected); });
+    renderLaunchDetail(trends.filter(function(t){ return t.p===lnSelected; })[0]);
+  }
+  var lnLastTrends = [];
+  function lnSelect(p){
+    lnSelected = p;
+    Array.prototype.forEach.call(lnProjSegEl.querySelectorAll('button'), function(b){ b.classList.toggle('active', b.dataset.proj===p); });
+    Array.prototype.forEach.call(lnSummaryEl.querySelectorAll('tr'), function(tr){ tr.classList.toggle('ex-selected', tr.dataset.proj===p); });
+    renderLaunchDetail(lnLastTrends.filter(function(t){ return t.p===p; })[0]);
+  }
+  if(lnSummaryEl){
+    lnSummaryEl.addEventListener('click', function(e){
+      var tr = e.target.closest('tr[data-proj]'); if(!tr) return;
+      lnSelect(tr.dataset.proj);
+      document.getElementById('lnDetailCard').scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+    lnProjSegEl.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-proj]'); if(b) lnSelect(b.dataset.proj);
+    });
+  }
+
+  // ================= "สนามสู่เส้นชัย" -- customer race from first Walk-in to closing =================
+  // Added 2026-10-26 on the สถานะการติดตามลูกค้า tab. One lane per project; every customer
+  // still being followed up is a face placed on a 0-100 "ความพร้อมซื้อ" (buying-readiness)
+  // track built only from fields already in the tracker -- number of visits, latest grade,
+  // latest status -- and customers who already booked sit past the finish line. Same scope
+  // as the other cards on this tab: project filter + customers whose latest Walk-in is in
+  // the selected date range. Names are shown masked (exMaskName) in the tooltip only.
+  var raceBodyEl = document.getElementById('raceBody');
+  var raceSubEl = document.getElementById('raceSub');
+  var raceModeSegEl = document.getElementById('raceModeSeg');
+  var raceMode = 'chance';         // 'chance' = มีโอกาส (default) | 'all'
+  var RACE_STALE_DAYS = 30;
+  var RACE_STATUS_POS = { 'ปรึกษาครอบครัวก่อน':15, 'อยู่ระหว่างติดตาม Feedback':15, 'Active Follow-up':15, 'เปรียบเทียบโครงการในภัททา':10,
+    'เปรียบเทียบโครงการอื่น':5, 'เกินงบประมาณ':0, 'ยังไม่รีบตัดสินใจ':0, 'กู้ไม่ผ่าน/การเงินไม่พร้อม':-5,
+    'ยังไม่มีแพลนซื้อ':-10, 'Survey/แวะชมเฉยๆ':-10, 'ขอดูเป็นข้อมูลเบื้องต้น':-10, 'ไม่ให้ข้อมูลติดต่อ':-10, 'ติดต่อไม่ได้':-10,
+    'ยังไม่สนใจ/ไม่สนใจแล้ว':-15, 'ซื้อโครงการอื่นแล้ว':-20, 'ซื้อที่ดินปลูกบ้านเอง':-20, 'กลับต่างประเทศแล้ว':-15 };
+  var RACE_ZONES = [
+    { from:0,  to:35, label:'เริ่มต้น', sub:'เข้าชมครั้งแรก / ยังไม่ชัดเจน' },
+    { from:35, to:60, label:'สนใจจริง', sub:'กลับมาซ้ำ หรือเกรด B ขึ้นไป' },
+    { from:60, to:100, label:'Potential', sub:'ลูกค้าศักยภาพสูง ใกล้ตัดสินใจ' }
+  ];
+  // House ID convention (company rule): always XXXYYY -- 3-letter project code + 3-digit lot,
+  // zero-padded (CAS021, HRZ059). Booked-unit codes coming from ERP/the tracker in any other
+  // shape ("CAS 21", "cas-021", "21") are normalised here; anything unrecognisable is shown as-is.
+  var RACE_PROJ_CODE = { 'CHIEFTAIN':'CHF', 'HORIZON':'HRZ', 'ARCADE Autograph':'ACS', 'CASCADE':'CAS', 'PATTA PILLAR':'PPL',
+    'PATTA TERRANE':'TER', 'PATTA RIVERINE':'RVR', 'ELEMENT':'ELE', 'PATTA Manor Lane':'PML', 'PATTA Forest Park':'PFP' };
+  function raceHouseIds(code, proj){
+    var c = String(code||'').trim(), out = [];
+    if(!c) return out;
+    var m = c.match(/^([A-Za-z]{3})\s*[-_]?\s*0*(\d{1,3})((?:\s*[-,/&+]\s*(?:[A-Za-z]{3})?\s*0*\d{1,3})+)$/);
+    if(m){
+      var pre = m[1].toUpperCase();
+      out.push(pre + ('00'+m[2]).slice(-3));
+      (m[3].match(/(?:[A-Za-z]{3})?\s*0*\d{1,3}/g)||[]).forEach(function(part){
+        var pm = part.trim().match(/^([A-Za-z]{3})?\s*0*(\d{1,3})$/);
+        if(pm && +pm[2]>0) out.push((pm[1]?pm[1].toUpperCase():pre) + ('00'+pm[2]).slice(-3));
+      });
+      return out;
+    }
+    var one = raceHouseId(c, proj);
+    return one ? [one] : out;
+  }
+  function raceHouseId(code, proj){
+    var c = String(code||'').trim();
+    if(!c) return '';
+    var m = c.match(/^([A-Za-z]{3})\s*[-_/.]?\s*0*(\d{1,3})$/);
+    if(m) return m[1].toUpperCase() + ('00'+m[2]).slice(-3);
+    m = c.match(/^0*(\d{1,3})$/);
+    if(m && RACE_PROJ_CODE[proj]) return RACE_PROJ_CODE[proj] + ('00'+m[1]).slice(-3);
+    return c.toUpperCase();
+  }
+  function raceGradeColor(g){
+    // first-version palette (restored on request 2026-10-26): A blue, B orange, C violet, D/none grey
+    return g==='A' ? cssVar('--accent') : g==='B' ? cssVar('--s2') : g==='C' ? cssVar('--s7') : cssVar('--text-muted');
+  }
+  function raceScore(visitCount, grade, status){
+    var s = visitCount>=4 ? 40 : visitCount===3 ? 30 : visitCount===2 ? 20 : 0;
+    s += grade==='A' ? 40 : grade==='B' ? 25 : grade==='C' ? 10 : grade==='D' ? 0 : 5;
+    s += RACE_STATUS_POS[status] || 0;
+    return Math.max(0, Math.min(95, s));
+  }
+
+  function computeRace(){
+    var today = toISO(new Date());
+    var lastContact = {};
+    (followupLogRecords || []).forEach(function(rec){
+      if(!rec.nm || !rec.p || !rec.d) return;
+      var k = customerKey(rec)+'|'+rec.p;
+      if(!lastContact[k] || rec.d>lastContact[k]) lastContact[k] = rec.d;
+    });
+    var dueKeys = {};
+    computeFollowupDue().forEach(function(d){ dueKeys[customerKey(d)+'|'+d.p] = true; });
+    // Fallback for bookings whose Walk-in rows carry no unit code: look the customer up in
+    // the ERP active-contract list of the same project by normalised name (same good-faith
+    // matching the Agency card uses) -- flagged "(จาก ERP)" in the tooltip.
+    function normName(v){ return (v||'').replace(/\([^)]*\)/g,' ').replace(/^(คุณ|คุุณ|Mr\.|Mrs\.|Ms\.|K\.|Khun|นาย|นาง|นางสาว)\s*/i,'').replace(/\s+/g,' ').trim().toLowerCase(); }
+    var erpUnits = {};
+    Object.keys((SS_DATA && SS_DATA.contractDetail) || {}).forEach(function(proj){
+      (SS_DATA.contractDetail[proj]||[]).forEach(function(c){
+        if(!c.nm || !c.rc) return;
+        var k = normName(c.nm)+'|'+proj;
+        (erpUnits[k] = erpUnits[k] || []).push(c.rc);
+      });
+    });
+    var lanes = {};
+    computeCustomerGroups().forEach(function(g){
+      if(state.project!=='ALL' && g.p!==state.project) return;
+      if(g.lastVisitDate<state.start || g.lastVisitDate>state.end) return;
+      var lane = lanes[g.p] = lanes[g.p] || { p:g.p, racers:[], finished:[], discontinued:0, hidden:0 };
+      var last = g.visits[g.visits.length-1];
+      var status = (last.s && last.s!=='N/A') ? last.s : 'ไม่มี Feedback';
+      var grade = GRADE_ORDER.indexOf(last.g)>=0 ? last.g : 'N/A';
+      var contact = lastContact[g.key] && lastContact[g.key]>g.lastVisitDate ? lastContact[g.key] : g.lastVisitDate;
+      var natRaw = ''; g.visits.forEach(function(v){ if(v.n && v.n!=='N/A') natRaw = v.n; });
+      var item = { key:g.key, nm:g.nm, p:g.p, sl:g.sl, grade:grade, status:status, visitCount:g.visitCount,
+        natRaw: natRaw || 'ไม่ระบุ', nat: raceNatGroup(natRaw),
+        firstVisitDate:g.firstVisitDate, lastVisitDate:g.lastVisitDate, lastContact:contact,
+        daysIdle: Math.round((parseISO(today)-parseISO(contact))/86400000), due: !!dueKeys[g.key] };
+      if(g.visits.some(isClosedDealRow)){
+        var bookRow = g.visits.filter(isClosedDealRow).pop();
+        item.bookDate = bookRow.bd || bookRow.d;
+        var units = [];
+        g.visits.forEach(function(v){ raceHouseIds(v.bu, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
+        if(!units.length){
+          (erpUnits[normName(g.nm)+'|'+g.p] || []).forEach(function(rc){ raceHouseIds(rc, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
+          item.unitsFromErp = units.length>0;
+        }
+        item.units = units;
+        item.daysToClose = Math.max(0, Math.round((parseISO(item.bookDate.slice(0,10))-parseISO(g.firstVisitDate))/86400000));
+        lane.finished.push(item); return;
+      }
+      if(g.closed){ lane.discontinued++; return; }
+      item.score = raceScore(item.visitCount, grade, status);
+      item.stale = item.daysIdle>RACE_STALE_DAYS;
+      if(raceMode==='chance' && !(item.score>=35 || grade==='A' || grade==='B')){ lane.hidden++; return; }
+      lane.racers.push(item);
+    });
+    var order = PROJECTS.slice();
+    return Object.keys(lanes).map(function(k){ return lanes[k]; })
+      .sort(function(a,b){ var ia = order.indexOf(a.p), ib = order.indexOf(b.p); return (ia<0?99:ia)-(ib<0?99:ib); })
+      .sort(function(a,b){ return (b.racers.length+b.finished.length)-(a.racers.length+a.finished.length); });
+  }
+
+  // Nationality flag on the head (option 3, chosen 2026-10-26): Thai = no flag; foreign
+  // customers get a small pennant coloured by nationality group; Thai-foreign couples get a
+  // pennant with a white stripe; unknown = small "?".
+  var RACE_NAT = {
+    CN:  { label:'จีน/ฮ่องกง/ไต้หวัน', color:'#d94a3d' },
+    RU:  { label:'รัสเซีย/ยุโรปตะวันออก', color:'#3b6fd1' },
+    W:   { label:'ตะวันตก (อเมริกา/อังกฤษ/ยุโรป/ออสเตรเลีย)', color:'#7b4fc9' },
+    AS:  { label:'เอเชียอื่น ๆ', color:'#e08a1e' },
+    F:   { label:'ต่างชาติอื่น ๆ', color:'#6b6b63' },
+    MIX: { label:'ไทย-ต่างชาติ', color:'#2a9d8f' }
+  };
+  function raceNatGroup(n){
+    n = String(n||'').trim();
+    if(!n || n==='N/A' || n==='-') return 'NA';
+    if(/ไทย/.test(n) && /[-\/,&]|และ/.test(n)) return 'MIX';
+    if(/^ไทย$|^thai$/i.test(n)) return 'TH';
+    if(/จีน|ฮ่องกง|ไต้หวัน|china|chinese|hong ?kong|taiwan/i.test(n)) return 'CN';
+    if(/รัสเซีย|ยูเครน|คาซัค|เบลารุส|อุซเบก|โปแลนด์|russia|ukrain|kazakh|belarus/i.test(n)) return 'RU';
+    if(/อเมริกา|อังกฤษ|เยอรมัน|ฝรั่งเศส|ออสเตรเลีย|แคนาดา|สวิส|สวีเดน|นอร์เวย์|เดนมาร์ก|อิตาลี|เนเธอร์แลนด์|ฮอลแลนด์|เบลเยียม|ไอร์แลนด์|ฟินแลนด์|นิวซีแลนด์|ออสเตรีย|สเปน|โปรตุเกส|ยุโรป|สก็อต|usa|america|uk|english|british|german|french|austral|canad|swiss|swed|norw|danish|ital|dutch|belg|irish|finn|zealand|europe/i.test(n)) return 'W';
+    if(/ญี่ปุ่น|เกาหลี|สิงคโปร์|มาเลเซีย|อินเดีย|เวียดนาม|ฟิลิปปินส์|อินโดนีเซีย|พม่า|เมียนมา|ลาว|กัมพูชา|japan|korea|singapore|malaysia|india|vietnam|philippin|indonesia/i.test(n)) return 'AS';
+    return 'F';
+  }
+  // Flag = two groups only (2026-10-26): Thai -> no flag, any foreign nationality (incl.
+  // Thai-foreign couples) -> one blue flag. The exact nationality is in the click card.
+  function raceIsForeign(nat){ return nat && nat!=='TH' && nat!=='NA'; }
+  // Nationality mark on the head (2026-10-26): Thai = gold crown, foreign = dark hat,
+  // unknown = small "?". The exact nationality is in the click card.
+  function raceFlagSVG(x, y, r, nat){
+    if(!nat) return '';
+    var f = function(v){ return v.toFixed(1); };
+    var top = y - r;           // top of the marker body
+    if(nat==='NA') return '<text x="'+f(x+r-1)+'" y="'+f(top+2)+'" font-size="11" font-weight="700" fill="#8b897f">?</text>';
+    if(nat==='TH'){
+      var w = r*1.25, h = r*0.85, bx = x - w/2, by = top - 1;   // crown: 3 points + band
+      return '<polygon points="'+
+        f(bx)+','+f(by)+' '+f(bx)+','+f(by-h)+' '+f(bx+w*0.25)+','+f(by-h*0.45)+' '+f(x)+','+f(by-h*1.15)+' '+
+        f(bx+w*0.75)+','+f(by-h*0.45)+' '+f(bx+w)+','+f(by-h)+' '+f(bx+w)+','+f(by)+
+        '" fill="#F2B705" stroke="#9A6B00" stroke-width="0.7" stroke-linejoin="round"></polygon>';
+    }
+    // foreign: hat = dome + brim
+    var bw = r*1.7, dome = r*0.62, by2 = top + r*0.15;
+    return '<path d="M'+f(x-dome)+' '+f(by2)+' A'+f(dome)+' '+f(dome*0.95)+' 0 0 1 '+f(x+dome)+' '+f(by2)+' Z" fill="#2B2B2B"></path>'+
+      '<rect x="'+f(x-bw/2)+'" y="'+f(by2-0.6)+'" width="'+f(bw)+'" height="1.9" rx="0.9" fill="#2B2B2B"></rect>';
+  }
+  function raceFaceSVG(x, y, r, color, happy, ring, square, nat){
+    // plain markers (faces removed 2026-10-26): circle = still in follow-up, square = booked
+    var body = square
+      ? '<rect x="'+(x-r).toFixed(1)+'" y="'+(y-r).toFixed(1)+'" width="'+(2*r)+'" height="'+(2*r)+'" rx="2.5" fill="'+color+'" stroke="#fff" stroke-width="1.2"></rect>'
+      : '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r+'" fill="'+color+'" stroke="rgba(0,0,0,0.28)" stroke-width="0.8"></circle>';
+    return (ring ? '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(r+3)+'" fill="none" stroke="'+cssVar('--critical')+'" stroke-width="2"></circle>' : '')+
+      body+
+      raceFlagSVG(x, y, r, nat);
+  }
+
+  var raceItemsById = [], raceLanesData = [];
+  function renderRaceChart(){
+    if(!raceBodyEl) return;
+    var panel = document.getElementById('tabPanelFollowup');
+    if(panel && panel.hidden) return; // laid out from real width -> render when visible
+    var raceLegendEl = document.getElementById('raceLegend');
+    if(raceLegendEl && !raceLegendEl.dataset.done){
+      function ic(color, happy, ring, square, nat){ return '<svg width="22" height="24" viewBox="0 -2 22 24" style="vertical-align:middle;">'+raceFaceSVG(10, 13, 7, color, happy, ring, square, nat)+'</svg>'; }
+      raceLegendEl.innerHTML = [
+        ic(raceGradeColor('A'), true)+'เกรด A', ic(raceGradeColor('B'), true)+'เกรด B', ic(raceGradeColor('C'), true)+'เกรด C', ic(raceGradeColor('N/A'), true)+'เกรด D / ไม่มีเกรด',
+        ic(cssVar('--surface-2'), true, true)+'วงแดง = ครบกำหนดติดตาม (7/30/90 วัน)', ic(raceGradeColor('A'), true, false, true)+'สี่เหลี่ยม = ปิดการขายแล้ว (ตัวเลขข้าง ๆ = แปลงที่จอง)'
+      ].concat(['<b style="font-weight:600;">สัญชาติ:</b> '+ic(raceGradeColor('N/A'), true, false, false, 'TH')+'คนไทย (มงกุฎ)',
+        ic(raceGradeColor('N/A'), true, false, false, 'F')+'ต่างชาติ (หมวก · กดที่จุดเพื่อดูว่าชาติไหน)',
+        ic(raceGradeColor('N/A'), true, false, false, 'NA')+'ไม่ระบุ']).map(function(x){ return '<span>'+x+'</span>'; }).join('');
+      raceLegendEl.dataset.done = '1';
+    }
+    var lanes = computeRace();
+    raceItemsById = []; raceLanesData = [];
+    var totalRacers = 0, totalFinished = 0, totalHidden = 0, totalDisc = 0, zoneCount = [0,0,0];
+    lanes.forEach(function(l){
+      totalRacers += l.racers.length; totalFinished += l.finished.length; totalHidden += l.hidden; totalDisc += l.discontinued;
+      l.racers.forEach(function(it){ zoneCount[it.score>=60?2:it.score>=35?1:0]++; });
+    });
+    var scopeLabel = state.project==='ALL' ? 'ทุกโครงการ' : state.project;
+    raceSubEl.textContent = scopeLabel+' · ลูกค้าที่ Walk-in ล่าสุดอยู่ใน '+fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+
+      ' · อยู่ในสนาม '+fmtInt(totalRacers)+' ราย · เข้าเส้นชัย (ปิดการขาย) '+fmtInt(totalFinished)+' ราย'+
+      (totalHidden ? ' · ซ่อนลูกค้าโอกาสต่ำ '+fmtInt(totalHidden)+' ราย (กด "ทั้งหมด" เพื่อแสดง)' : '')+
+      (totalDisc ? ' · จบการติดตามแล้ว '+fmtInt(totalDisc)+' ราย (ไม่แสดง)' : '');
+    if(!lanes.length){ raceBodyEl.innerHTML = '<div class="card-sub" style="margin:0;">ไม่มีลูกค้าในช่วงที่เลือก</div>'; return; }
+
+    var W = Math.max(860, (raceBodyEl.clientWidth || 1100));
+    var labelW = 170, finishW = Math.max(250, Math.round(W*0.25)), trackL = labelW+14, trackR = W-finishW-18;
+    var headH = 54, r = 7, cell = 2*r+3, cellY = 2*r+11, maxStack = 9;
+    function xOf(score){ return trackL + (score/100)*(trackR-trackL); }
+    var muted = cssVar('--text-muted'), border = cssVar('--border'), text = cssVar('--text-primary'), text2 = cssVar('--text-secondary');
+
+    // ---- lane layout (beeswarm per x-bin, stacking out from the lane centre) ----
+    var laneBlocks = lanes.map(function(l){
+      var bins = {}, placed = [], overflow = [];
+      l.racers.slice().sort(function(a,b){ return b.score-a.score || a.daysIdle-b.daysIdle; }).forEach(function(it){
+        // spread inside a score by how fresh the last contact is (fresher = further right)
+        // customers sharing a score are fanned out over ±4 points (stable per customer, from
+        // a hash of the key) so a lane reads as a field of runners instead of one tall stack
+        var h = 0; for(var i=0;i<it.key.length;i++){ h = (h*31 + it.key.charCodeAt(i)) >>> 0; }
+        var x = xOf(Math.max(0, Math.min(97, it.score + ((h % 900)/100 - 4.5))));
+        var b = Math.round((x-trackL)/cell);
+        bins[b] = bins[b] || [];
+        if(bins[b].length>=maxStack){ overflow[b] = (overflow[b]||0)+1; return; }
+        var k = bins[b].length; bins[b].push(it);
+        placed.push({ it:it, x: trackL + b*cell, slot: k===0 ? 0 : (k%2 ? Math.ceil(k/2) : -k/2) });
+      });
+      var maxSlot = 0; placed.forEach(function(p){ maxSlot = Math.max(maxSlot, Math.abs(p.slot)); });
+      var finCellW = 78, finCellH = cell+11;   // square + XXXYYY label
+      var finCols = Math.max(1, Math.floor((finishW-20)/finCellW));
+      var finShown = Math.min(l.finished.length, finCols*8);
+      var finRows = Math.ceil(finShown/finCols);
+      var h = Math.max(84, (2*maxSlot+1)*cellY + 26, finRows*finCellH + 30);
+      return { l:l, placed:placed, overflow:overflow, h:h, finCols:finCols, finShown:finShown, finCellW:finCellW, finCellH:finCellH };
+    });
+    var H = headH + laneBlocks.reduce(function(a,b){ return a+b.h; }, 0) + 26;
+    var svg = [];
+    // zone backgrounds + headers
+    // zone backgrounds (2026-10-26): สนใจจริง = light yellow, Potential = light green, finish = green
+    var zoneFill = [ 'transparent', 'rgba(255,214,64,0.20)', 'rgba(12,163,12,0.10)' ];
+    RACE_ZONES.forEach(function(z, i){
+      var x1 = xOf(z.from), x2 = i===RACE_ZONES.length-1 ? trackR+8 : xOf(z.to);
+      svg.push('<rect x="'+x1.toFixed(1)+'" y="'+headH+'" width="'+(x2-x1).toFixed(1)+'" height="'+(H-headH-26)+'" fill="'+zoneFill[i]+'"></rect>');
+      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="18" font-size="14" font-weight="700" fill="'+text+'">'+z.label+' '+fmtInt(zoneCount[i])+' ราย</text>');
+      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="34" font-size="13" fill="'+muted+'">'+z.sub+'</text>');
+    });
+    var finX = W-finishW;
+    svg.push('<rect x="'+finX+'" y="'+headH+'" width="'+finishW+'" height="'+(H-headH-26)+'" fill="'+cssVar('--good')+'" opacity="0.30"></rect>');
+    svg.push('<text x="'+(finX+10)+'" y="18" font-size="14" font-weight="700" fill="'+cssVar('--good-ink')+'">เข้าเส้นชัย (ปิดการขาย) '+fmtInt(totalFinished)+' ราย</text>');
+    svg.push('<text x="'+(finX+10)+'" y="34" font-size="13" fill="'+muted+'">จองแล้ว/เช่าแล้ว</text>');
+    // checkered finish line
+    for(var cy=headH, ci=0; cy<H-26; cy+=6, ci++){
+      svg.push('<rect x="'+(finX-6)+'" y="'+cy+'" width="3" height="6" fill="'+(ci%2?'#fff':'#111')+'"></rect><rect x="'+(finX-3)+'" y="'+cy+'" width="3" height="6" fill="'+(ci%2?'#111':'#fff')+'"></rect>');
+    }
+    // lanes
+    var y0 = headH;
+    laneBlocks.forEach(function(b){
+      var l = b.l, cy = y0 + b.h/2;
+      svg.push('<line x1="0" x2="'+W+'" y1="'+(y0+b.h)+'" y2="'+(y0+b.h)+'" stroke="'+border+'"></line>');
+      var near = l.racers.filter(function(it){ return it.score>=60; }).length;
+      svg.push('<text x="4" y="'+(cy-8)+'" font-size="15" font-weight="700" fill="'+text+'">'+escapeHTML(l.p)+'</text>');
+      svg.push('<text x="4" y="'+(cy+8)+'" font-size="13" fill="'+text2+'">ในสนาม '+l.racers.length+' · Potential '+near+'</text>');
+      svg.push('<text x="4" y="'+(cy+22)+'" font-size="13" fill="'+text2+'">ปิดการขาย '+l.finished.length+'</text>');
+      var all = l.racers.concat(l.finished);
+      var nTh = all.filter(function(it){ return it.nat==='TH'; }).length, nFo = all.filter(function(it){ return raceIsForeign(it.nat); }).length;
+      var laneIdx = raceLanesData.push(l)-1;
+      svg.push('<text class="race-lane-nat" data-lane="'+laneIdx+'" x="4" y="'+(cy+38)+'" font-size="13" font-weight="600" fill="'+cssVar('--accent-ink')+'" style="cursor:pointer; text-decoration:underline;">ไทย '+nTh+' · ต่างชาติ '+nFo+' ▸</text>');
+      b.placed.forEach(function(pl){
+        var id = raceItemsById.push(pl.it)-1, it = pl.it;
+        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(pl.x, cy + 4 + pl.slot*cellY, r, raceGradeColor(it.grade), !it.stale, it.due, false, it.nat)+'</g>');
+      });
+      b.overflow.forEach(function(n, bi){
+        if(!n) return;
+        svg.push('<text x="'+(trackL+bi*cell).toFixed(1)+'" y="'+(y0+12)+'" font-size="12.5" font-weight="700" text-anchor="middle" fill="'+text2+'">+'+n+'</text>');
+      });
+      // finished customers: squares in a grid, newest bookings first
+      l.finished.sort(function(a,c){ return a.bookDate<c.bookDate?1:-1; }).slice(0,b.finShown).forEach(function(it, i){
+        var col = i % b.finCols, row = Math.floor(i/b.finCols);
+        var fx = finX + 14 + col*b.finCellW + r, fy = y0 + 20 + row*b.finCellH + r;
+        var id = raceItemsById.push(it)-1;
+        var unitTxt = it.units.length ? it.units[0] + (it.units.length>1 ? '+'+(it.units.length-1) : '') : 'ไม่ระบุ';
+        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(fx, fy, r, raceGradeColor(it.grade), true, false, true, it.nat)+
+          '<text x="'+(fx+r+9).toFixed(1)+'" y="'+(fy+3.5).toFixed(1)+'" font-size="12.5" font-weight="600" fill="'+(it.units.length?text:muted)+'">'+escapeHTML(unitTxt)+'</text></g>');
+      });
+      if(l.finished.length>b.finShown) svg.push('<text x="'+(W-8)+'" y="'+(y0+b.h-6)+'" font-size="12.5" text-anchor="end" fill="'+text2+'">+'+(l.finished.length-b.finShown)+' ราย</text>');
+      y0 += b.h;
+    });
+    // axis
+    [0,25,50,75,95].forEach(function(v){
+      svg.push('<text x="'+xOf(v).toFixed(1)+'" y="'+(H-8)+'" font-size="13" text-anchor="middle" fill="'+muted+'">'+v+'</text>');
+      svg.push('<line x1="'+xOf(v).toFixed(1)+'" x2="'+xOf(v).toFixed(1)+'" y1="'+headH+'" y2="'+(H-26)+'" stroke="'+border+'" stroke-dasharray="2 4"></line>');
+    });
+    svg.push('<text x="'+trackL+'" y="'+(H-8)+'" font-size="13" fill="'+muted+'" text-anchor="start" dx="-'+(trackL-4)+'">คะแนนความพร้อมซื้อ →</text>');
+    raceBodyEl.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" style="display:block;">'+svg.join('')+'</svg>';
+  }
+
+  if(raceBodyEl){
+    raceBodyEl.addEventListener('pointermove', function(ev){
+      var g = ev.target.closest('.race-dot'); if(!g){ hideTooltip(); return; }
+      var it = raceItemsById[+g.dataset.id]; if(!it) return;
+      var rows = [
+        ['เกรด', it.grade], ['เข้าชม', it.visitCount+' ครั้ง'],
+        ['Walk-in ครั้งแรก', fmtDateShort(it.firstVisitDate)], ['Walk-in ล่าสุด', fmtDateShort(it.lastVisitDate)]
+      ];
+      if(it.bookDate) rows.push(['แปลงที่จอง', it.units.length ? it.units.join(', ')+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
+      if(it.bookDate) rows.push(['วันที่จอง', fmtDateShort(it.bookDate.slice(0,10))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
+      else rows.push(['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน'], ['คะแนนความพร้อม', String(it.score)]);
+      rows.push(['สัญชาติ', it.natRaw]);
+      rows.push(['สถานะล่าสุด', it.status], ['เซล', it.sl || 'N/A']);
+      showTooltip(ev.clientX, ev.clientY,
+        '<div class="tt-title">'+escapeHTML(exMaskName(it.nm))+' · '+escapeHTML(it.p)+'</div>'+
+        rows.map(function(r){ return '<div class="tt-row"><span>'+escapeHTML(r[0])+'</span><span class="tt-val">'+escapeHTML(r[1])+'</span></div>'; }).join('')+
+        (it.due ? '<div class="tt-row"><span style="color:var(--critical);font-weight:600;">ครบกำหนดติดตาม</span></div>' : ''));
+    });
+    raceBodyEl.addEventListener('pointerleave', hideTooltip);
+    // Click -> a small card (instead of jumping straight to another tab): the customer's
+    // nationality and journey facts, with an optional "open full record" button; clicking a
+    // lane's "ไทย n · ต่างชาติ m" opens the nationality breakdown for that project.
+    var racePop = document.createElement('div');
+    racePop.className = 'race-pop'; racePop.hidden = true;
+    document.body.appendChild(racePop);
+    var racePopItem = null;
+    function raceShowPop(ev, html){
+      hideTooltip();
+      racePop.innerHTML = '<button type="button" class="race-pop-x" aria-label="ปิด">&times;</button>'+html;
+      racePop.hidden = false;
+      var w = racePop.offsetWidth, h = racePop.offsetHeight;
+      var x = Math.min(ev.clientX+12, window.innerWidth-w-12), y = Math.min(ev.clientY+12, window.innerHeight-h-12);
+      racePop.style.left = Math.max(12, x)+'px'; racePop.style.top = Math.max(12, y)+'px';
+    }
+    function raceHidePop(){ racePop.hidden = true; racePopItem = null; }
+    function raceNatBadge(it){
+      var lbl = it.nat==='TH' ? 'คนไทย' : it.nat==='NA' ? 'ไม่ระบุ' : 'ต่างชาติ';
+      var cls = it.nat==='TH' ? 'n' : it.nat==='NA' ? 'n' : 'b';
+      return '<span class="pill '+cls+'">'+lbl+'</span> <b>'+escapeHTML(it.natRaw)+'</b>';
+    }
+    raceBodyEl.addEventListener('click', function(ev){
+      var lane = ev.target.closest('.race-lane-nat');
+      if(lane){
+        var l = raceLanesData[+lane.dataset.lane]; if(!l) return;
+        var all = l.racers.concat(l.finished), counts = {}, th = 0, fo = 0, na = 0;
+        all.forEach(function(it){
+          if(it.nat==='TH') th++; else if(it.nat==='NA') na++; else { fo++; counts[it.natRaw] = (counts[it.natRaw]||0)+1; }
+        });
+        var list = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+        raceShowPop(ev,
+          '<div class="race-pop-title">'+escapeHTML(l.p)+' · สัญชาติลูกค้าในกราฟ</div>'+
+          '<div class="race-pop-row"><span>คนไทย</span><b>'+th+' ราย</b></div>'+
+          '<div class="race-pop-row"><span>ต่างชาติ</span><b>'+fo+' ราย</b></div>'+
+          (list.length ? '<div class="race-pop-list">'+list.map(function(k){ return '<div class="race-pop-row"><span>· '+escapeHTML(k)+'</span><span>'+counts[k]+'</span></div>'; }).join('')+'</div>' : '')+
+          (na ? '<div class="race-pop-row"><span>ไม่ระบุสัญชาติ</span><b>'+na+' ราย</b></div>' : '')+
+          '<div class="race-pop-note">นับเฉพาะลูกค้าที่แสดงในกราฟตอนนี้ (รวมที่ปิดการขายแล้ว)</div>');
+        return;
+      }
+      var g = ev.target.closest('.race-dot'); if(!g) return;
+      var it = raceItemsById[+g.dataset.id]; if(!it) return;
+      racePopItem = it;
+      var rows = [['สัญชาติ', raceNatBadge(it)], ['เกรด', 'เกรด '+escapeHTML(it.grade)], ['เข้าชม', it.visitCount+' ครั้ง'],
+        ['Walk-in ครั้งแรก', escapeHTML(fmtDateShort(it.firstVisitDate))], ['Walk-in ล่าสุด', escapeHTML(fmtDateShort(it.lastVisitDate))]];
+      if(it.bookDate){
+        rows.push(['แปลงที่จอง', it.units.length ? '<b>'+escapeHTML(it.units.join(', '))+'</b>'+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
+        rows.push(['วันที่จอง', escapeHTML(fmtDateShort(it.bookDate.slice(0,10)))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
+      } else {
+        rows.push(['คะแนนความพร้อม', String(it.score)], ['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน']);
+      }
+      rows.push(['สถานะล่าสุด', escapeHTML(it.status)], ['เซล', escapeHTML(it.sl || 'N/A')]);
+      var tabBtn = mainTabSegEl.querySelector('button[data-tab="customerdata"]');
+      raceShowPop(ev,
+        '<div class="race-pop-title">'+escapeHTML(exMaskName(it.nm))+' · '+escapeHTML(it.p)+'</div>'+
+        rows.map(function(r){ return '<div class="race-pop-row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>'; }).join('')+
+        (it.due ? '<div class="race-pop-row"><span style="color:var(--critical);font-weight:600;">ครบกำหนดติดตาม</span></div>' : '')+
+        (tabBtn && !tabBtn.hidden ? '<button type="button" class="btn small race-pop-open">ดูข้อมูลลูกค้าเต็ม &rarr;</button>' : ''));
+    });
+    racePop.addEventListener('click', function(e){
+      if(e.target.closest('.race-pop-x')){ raceHidePop(); return; }
+      if(e.target.closest('.race-pop-open') && racePopItem){
+        var it = racePopItem, tabBtn = mainTabSegEl.querySelector('button[data-tab="customerdata"]');
+        raceHidePop();
+        if(!tabBtn || tabBtn.hidden) return;
+        tabBtn.click();
+        cdTabShowClosed.checked = false;
+        cdTabSearch.value = it.nm || '';
+        cdTabPage = 0;
+        cdTabExpanded[it.key] = true;
+        if(cdTabRendered) renderCustomerTabRows();
+      }
+    });
+    document.addEventListener('pointerdown', function(e){ if(!racePop.hidden && !racePop.contains(e.target) && !e.target.closest('.race-dot, .race-lane-nat')) raceHidePop(); });
+    window.addEventListener('keydown', function(e){ if(e.key==='Escape') raceHidePop(); });
+    window.addEventListener('scroll', function(){ if(!racePop.hidden) raceHidePop(); }, true);
+    raceModeSegEl.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-mode]'); if(!b) return;
+      raceMode = b.dataset.mode;
+      Array.prototype.forEach.call(raceModeSegEl.querySelectorAll('button'), function(x){ x.classList.toggle('active', x===b); });
+      renderRaceChart();
+    });
+    var raceResizeT = null;
+    window.addEventListener('resize', function(){ clearTimeout(raceResizeT); raceResizeT = setTimeout(renderRaceChart, 200); });
+  }
+
   function renderCustomerTrends(rows){
     renderFunnel(rows);
-    renderFollowupStatusOverview();
-    renderHotLeads();
+    renderExecTrends();
+    renderLaunchSection();
+    renderRaceChart();
   }
 
 
@@ -3507,6 +4827,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   var tabPanelCommandEl = document.getElementById('tabPanelCommand');
   var tabPanelOverviewEl = document.getElementById('tabPanelOverview');
   var tabPanelTrendsEl = document.getElementById('tabPanelTrends');
+  var tabPanelFollowupEl = document.getElementById('tabPanelFollowup');
   var tabPanelSalesStatusEl = document.getElementById('tabPanelSalesStatus');
   var tabPanelProjectProfileEl = document.getElementById('tabPanelProjectProfile');
   var tabPanelSalesPerfEl = document.getElementById('tabPanelSalesPerf');
@@ -3521,6 +4842,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     tabPanelCommandEl.hidden = tab!=='command';
     tabPanelOverviewEl.hidden = tab!=='overview';
     tabPanelTrendsEl.hidden = tab!=='trends';
+    tabPanelFollowupEl.hidden = tab!=='followup';
+    if(tab==='followup') renderRaceChart();
     tabPanelSalesStatusEl.hidden = tab!=='salesstatus';
     tabPanelProjectProfileEl.hidden = tab!=='projectprofile';
     tabPanelSalesPerfEl.hidden = tab!=='salesperf';
@@ -3624,7 +4947,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // ---- สลับแท็บ: ตัวกรองด้านบนแสดงเฉพาะแท็บที่ใช้จริง (ภาพรวม/เทรน) ----
   function ccOnTabChange(tab){
     var fb = document.querySelector('.filterbar');
-    if(fb) fb.hidden = !(tab==='overview' || tab==='trends');
+    if(fb) fb.hidden = !(tab==='overview' || tab==='trends' || tab==='followup');
     if(tab==='command') ccRender();
     ccUpdateScope();
   }
@@ -6727,6 +8050,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     {key:'command', label:'สรุปผู้บริหาร (Command Center)'},
     {key:'overview', label:'ภาพรวม (Daily Log)'},
     {key:'trends', label:'เทรน & แนวโน้มลูกค้า'},
+    {key:'followup', label:'สถานะการติดตามลูกค้า'},
     {key:'salesstatus', label:'สถานะการขาย'},
     {key:'projectprofile', label:'โปรไฟล์โครงการ'},
     {key:'salesperf', label:'Sales Performance'},
@@ -6737,7 +8061,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     {key:'juristic', label:'PATTA นิติบุคคล (หน้าแยก)'},
     {key:'referral', label:'PATTA แนะนำเพื่อน (หน้าแยก)'}
   ];
-  var DEFAULT_NONADMIN_TABS = ['overview','trends','salesstatus','projectprofile','salesperf'];
+  var DEFAULT_NONADMIN_TABS = ['overview','trends','followup','salesstatus','projectprofile','salesperf'];
   function allowedTabsFor(acc){
     if(!acc) return [];
     if(acc.isAdmin) return PERMISSION_TABS.map(function(t){ return t.key; });
@@ -6755,7 +8079,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     PERMISSION_TABS.forEach(function(t){
       var btn = mainTabSegEl.querySelector('button[data-tab="'+t.key+'"]');
       if(!btn) return;
-      btn.hidden = !(currentUser.isAdmin || allowed.indexOf(t.key)>=0);
+      // 'followup' was split out of 'trends' (2026-10-26): accounts saved before then
+      // keep seeing it through their existing 'trends' permission.
+      btn.hidden = !(currentUser.isAdmin || allowed.indexOf(t.key)>=0 ||
+        (t.key==='followup' && allowed.indexOf('trends')>=0));
     });
     // If the tab the person was looking at just became hidden (e.g. an admin edited their
     // own permissions), fall back to the first tab they can still see instead of leaving
