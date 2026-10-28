@@ -1911,8 +1911,44 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // "MANUAL DATA ENTRY" section near the end of this script). RAW is rebuilt and the
   // page re-rendered whenever the manual set changes.
   var manualRecords = [];
-  var RAW = EXCEL_RAW;
-  function rebuildRAW(){ RAW = manualRecords.length ? EXCEL_RAW.concat(manualRecords) : EXCEL_RAW; }
+  // ---- WALKIN_LAYERS_V2 (28 ต.ค. 2569) -- กฎนับ Walk-in ใหม่: แยกชั้นข้อมูล ----
+  //  ALLREC  = ทุกแถว (รวมแถวบันทึกโทรติดตามแบบเก่า)
+  //  RAW     = ทุก visit (First + Revisit + ซ้ำ) ไม่รวมแถวติดตามของเซลล์  -> ใช้กับ Close Deal / ข้อมูลระดับลูกค้า
+  //  WALKIN  = เฉพาะลูกค้าเข้ามาครั้งแรก (ตัวเลข "Walk-in")
+  //  REVISIT = ลูกค้าเดิมกลับมาเยี่ยมซ้ำ (ป้าย Revisit หรือระบบตรวจพบว่าเคยมาแล้ว) -> แสดงแยก
+  var ALLREC = EXCEL_RAW, RAW = EXCEL_RAW, WALKIN = EXCEL_RAW, REVISIT = [];
+  var VISIT_KIND = new Map();
+  function visitKind(r){ return VISIT_KIND.get(r) || 'first'; }
+  function isNewWalkin(r){ return visitKind(r)==='first'; }
+  function isFollowupRec(r){ return !!r.fu || /^ติดตามลูกค้า/.test(r.v||''); }
+  function classifyVisits(all){
+    VISIT_KIND = new Map();
+    var order = all.map(function(r,i){ return {r:r,i:i}; }).sort(function(a,b){
+      var x=a.r.d||'', y=b.r.d||''; return x<y?-1:x>y?1:a.i-b.i; });
+    var seenAny = {}, seenMonth = {}, seenDay = {};
+    order.forEach(function(o){
+      var r = o.r;
+      if(isFollowupRec(r)){ VISIT_KIND.set(r,'followup'); return; }
+      if(!r.nm || !r.d || !r.p){ VISIT_KIND.set(r,'first'); return; }
+      var key = customerKey(r)+'|'+r.p, ym = r.d.slice(0,7);
+      if(seenDay[key+'|'+r.d]){ VISIT_KIND.set(r,'dup'); return; }
+      seenDay[key+'|'+r.d] = 1;
+      var kind = 'first', lab = r.v||'';
+      if(lab.indexOf('Revisit')===0) kind = 'revisit';
+      else if(lab==='First Visit'){ if(seenMonth[key+'|'+ym]) kind = 'revisitD'; }
+      else if(seenAny[key]) kind = 'revisitD';
+      seenAny[key] = 1; seenMonth[key+'|'+ym] = 1;
+      VISIT_KIND.set(r,kind);
+    });
+  }
+  function rebuildRAW(){
+    ALLREC = manualRecords.length ? EXCEL_RAW.concat(manualRecords) : EXCEL_RAW;
+    classifyVisits(ALLREC);
+    RAW = ALLREC.filter(function(r){ return visitKind(r)!=='followup'; });
+    WALKIN = RAW.filter(function(r){ return visitKind(r)==='first'; });
+    REVISIT = RAW.filter(function(r){ var k=visitKind(r); return k==='revisit' || k==='revisitD'; });
+  }
+  rebuildRAW();
 
   // -------- data bounds --------
   var allDates, DATA_MIN, DATA_MAX, ALL_YEARS;
@@ -2009,7 +2045,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     dateEndEl.min = DATA_MIN; dateEndEl.max = DATA_MAX;
     if(resetInputs){ dateStartEl.value = DATA_MIN; dateEndEl.value = DATA_MAX; }
     document.getElementById('coverageText').textContent =
-      'ข้อมูลครอบคลุม ' + fmtDateShort(DATA_MIN) + ' – ' + fmtDateShort(DATA_MAX) + ' (' + fmtInt(RAW.length) + ' รายการ)';
+      'ข้อมูลครอบคลุม ' + fmtDateShort(DATA_MIN) + ' – ' + fmtDateShort(DATA_MAX) + ' (Walk-in ใหม่ ' + fmtInt(WALKIN.length) + ' · Revisit ' + fmtInt(REVISIT.length) + ' ครั้ง)';
   }
   updateCoverageAndBounds(true);
 
@@ -2028,7 +2064,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // ================= FILTERED DATA =================
   function filteredRows(){
     var proj = state.project, s = state.start, e = state.end;
-    return RAW.filter(function(r){ return (proj==='ALL' || r.p===proj) && r.d>=s && r.d<=e; });
+    return WALKIN.filter(function(r){ return (proj==='ALL' || r.p===proj) && r.d>=s && r.d<=e; });
+  }
+  function inStateScope(r, s, e){ return (state.project==='ALL' || r.p===state.project) && r.d>=s && r.d<=e; }
+  function filteredRevisitRows(){ return REVISIT.filter(function(r){ return inStateScope(r, state.start, state.end); }); }
+  function filteredVisitRows(){ return RAW.filter(function(r){ return inStateScope(r, state.start, state.end); }); }
+  function followupLogsInScope(s, e){
+    var legacy = ALLREC.filter(function(r){ return visitKind(r)==='followup' && r.nm; });
+    return legacy.concat(typeof followupLogRecords!=='undefined' && followupLogRecords ? followupLogRecords : [])
+      .filter(function(r){ return inStateScope(r, s, e); });
   }
 
   // ================= BUCKETING =================
@@ -2122,9 +2166,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var s = parseISO(state.start), e = parseISO(state.end);
     var lenDays = Math.round((e-s)/86400000)+1;
     var prevEnd = addDays(s,-1), prevStart = addDays(prevEnd, -(lenDays-1));
-    return RAW.filter(function(r){
+    return WALKIN.filter(function(r){
       return (state.project==='ALL'||r.p===state.project) && r.d>=toISO(prevStart) && r.d<=toISO(prevEnd);
     });
+  }
+  function getPrevPeriodRevisitRows(){
+    var s = parseISO(state.start), e = parseISO(state.end);
+    var lenDays = Math.round((e-s)/86400000)+1;
+    var prevEnd = addDays(s,-1), prevStart = addDays(prevEnd, -(lenDays-1));
+    return REVISIT.filter(function(r){ return inStateScope(r, toISO(prevStart), toISO(prevEnd)); });
   }
 
   function pctDelta(curN, prevN){
@@ -2181,16 +2231,16 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // real signal, just an artifact of there being no "before" at all. Only show
     // ▲/▼/ใหม่ badges once the previous-period window actually contains some data.
     var hasPrevWindow = prevRows.length > 0;
-    function stageCounts(rs){
+    function stageCounts(rs, rv){
       return {
         total: rs.length,
-        revisit: rs.filter(function(r){ return r.v && r.v.indexOf('Revisit')===0; }).length,
-        closed: rs.filter(isClosedDealRow).length
+        revisit: rv.length,
+        closed: rs.concat(rv).filter(isClosedDealRow).length
       };
     }
-    var cur = stageCounts(rows), prev = stageCounts(prevRows);
+    var cur = stageCounts(rows, filteredRevisitRows()), prev = stageCounts(prevRows, getPrevPeriodRevisitRows());
     var stages = [
-      { label:'Walk-in ทั้งหมด', value: cur.total, prevValue: prev.total },
+      { label:'Walk-in ใหม่ (ครั้งแรก)', value: cur.total, prevValue: prev.total },
       { label:'กลับมาเยี่ยมซ้ำ', value: cur.revisit, prevValue: prev.revisit },
       { label:'ปิดการขาย', value: cur.closed, prevValue: prev.closed }
     ];
@@ -3823,8 +3873,9 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var prevKey = bucketKey(toISO(addDays(parseISO(cur.start), -1)), 'month');
     var prev = spfMonthBounds(prevKey);
 
-    var curWalkin = RAW.filter(function(r){ return r.d>=cur.start && r.d<=curEnd; }).length;
-    var prevWalkin = RAW.filter(function(r){ return r.d>=prev.start && r.d<=prev.end; }).length;
+    var curWalkin = WALKIN.filter(function(r){ return r.d>=cur.start && r.d<=curEnd; }).length;
+    var prevWalkin = WALKIN.filter(function(r){ return r.d>=prev.start && r.d<=prev.end; }).length;
+    var curRevisit = REVISIT.filter(function(r){ return r.d>=cur.start && r.d<=curEnd; }).length;
     var curClosed = RAW.filter(function(r){ return r.d>=cur.start && r.d<=curEnd && isClosedDealRow(r); }).length;
     var prevClosed = RAW.filter(function(r){ return r.d>=prev.start && r.d<=prev.end && isClosedDealRow(r); }).length;
 
@@ -3837,7 +3888,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
 
     var lines = [];
     lines.push('สรุปสถานการณ์ประจำเดือน '+bucketLabel(monthKey,'month')+' (ร่างอัตโนมัติ):');
-    lines.push('- Walk-in รวมทุกโครงการ: '+fmtInt(curWalkin)+' ราย '+spfPctDeltaText(curWalkin, prevWalkin));
+    lines.push('- Walk-in ใหม่ (ครั้งแรก) รวมทุกโครงการ: '+fmtInt(curWalkin)+' ราย '+spfPctDeltaText(curWalkin, prevWalkin)+' · Revisit '+fmtInt(curRevisit)+' ครั้ง (แยกต่างหาก)');
     lines.push('- ปิดการขาย/จองใหม่ รวมทุกโครงการ: '+fmtInt(curClosed)+' ราย '+spfPctDeltaText(curClosed, prevClosed));
     if(overallProgress!=null) lines.push('- ความคืบหน้าเทียบเป้าปี 2026 สะสมทุกโครงการ: '+overallProgress+'%');
     return lines.join('\n');
@@ -4297,6 +4348,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var total = 0;
       rows.forEach(function(r){
         if(r.m!==s.key) return;
+        if(!isNewWalkin(r)) return;
         total++;
         var k = bucketKey(r.d, 'month');
         if(counts[k]!==undefined) counts[k]++;
@@ -4338,7 +4390,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var m = contractByName[mcNormName(r.nm)];
       if(m){ unitsMatched = true; units.push('~'+m); }
     });
-    return { buckets: buckets, series: series, total: channelRows.length, closedCount: closedRows.length, units: units, unitsMatched: unitsMatched };
+    return { buckets: buckets, series: series, total: channelRows.filter(isNewWalkin).length, closedCount: closedRows.length, units: units, unitsMatched: unitsMatched };
   }
 
   // ค่าป้าย/สื่อสิ่งพิมพ์ตาม ERP (SS_DATA.mktCost จาก GL, ดู mkt_cost.py) -- แสดงเฉพาะการ์ด Offline เป็นข้อมูลอ้างอิงแยก
@@ -4406,8 +4458,9 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   }
 
   function computeProfileWalkinAgg(proj, startISO, endISO){
-    var rows = RAW.filter(function(r){ return r.p===proj && r.d>=startISO && r.d<=endISO; });
-    var bookedRows = rows.filter(isClosedDealRow);
+    var rowsAllV = RAW.filter(function(r){ return r.p===proj && r.d>=startISO && r.d<=endISO; });
+    var rows = rowsAllV.filter(isNewWalkin);
+    var bookedRows = rowsAllV.filter(isClosedDealRow);
     function pairs(list, key){
       var m = {};
       list.forEach(function(r){ var v = r[key] || 'N/A'; m[v] = (m[v]||0)+1; });
@@ -5034,7 +5087,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var sdt = parseISO(state.start), edt = parseISO(state.end);
     var lenDays = Math.round((edt - sdt)/86400000)+1;
     var prevEnd = addDays(sdt,-1), prevStart = addDays(prevEnd, -(lenDays-1));
-    var prevVisits = RAW.filter(function(r){ return r.p===p && r.d>=toISO(prevStart) && r.d<=toISO(prevEnd); }).length;
+    var prevVisits = WALKIN.filter(function(r){ return r.p===p && r.d>=toISO(prevStart) && r.d<=toISO(prevEnd); }).length;
     var buckets = buildBucketSequence(state.start, state.end, 'month');
     var d = { t:t, s:s, w:w, prevVisits:prevVisits, book:0, trans:0, cancel:0, cancelMove:0 };
     buckets.forEach(function(k){
@@ -5357,20 +5410,21 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var s = parseISO(state.start), e = parseISO(state.end);
     var lenDays = Math.round((e-s)/86400000)+1;
     var prevEnd = addDays(s,-1), prevStart = addDays(prevEnd, -(lenDays-1));
-    var prevRows = RAW.filter(function(r){
+    var prevRows = WALKIN.filter(function(r){
       return (state.project==='ALL'||r.p===state.project) && r.d>=toISO(prevStart) && r.d<=toISO(prevEnd);
     });
     var delta = prevRows.length>0 ? ((total-prevRows.length)/prevRows.length*100) : null;
 
-    var firstVisit = rows.filter(function(r){ return r.v==='First Visit'; }).length;
-    var revisit = rows.filter(function(r){ return r.v.indexOf('Revisit')===0; }).length;
+    var revisitRowsAll = filteredRevisitRows();
+    var firstVisit = total;
+    var revisit = revisitRowsAll.length;
 
     // Different sales teams recorded the same real-world outcome under different status
     // labels in the source file: ARCADE's team typed the literal English "Active Follow-up",
     // while HORIZON/CASCADE/CHIEFTAIN/PATTA TERRANE used the Thai "อยู่ระหว่างติดตาม Feedback".
     // Both mean the same thing, so they're unified here.
     function isActiveFollow(r){ return r.s==='Active Follow-up' || r.s==='อยู่ระหว่างติดตาม Feedback'; }
-    var activeFollow = rows.filter(isActiveFollow).length;
+    var activeFollow = filteredVisitRows().filter(isActiveFollow).length;
 
     // "ปิดการขาย" (Close Deal) has the same cross-team labeling problem: only ARCADE's team
     // literally typed the English "Close Deal" status. Other teams (HORIZON, CASCADE,
@@ -5404,9 +5458,9 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var counts = {}; rows.forEach(function(r){ counts[r.d]=(counts[r.d]||0)+1; });
     var sparkVals = tail.map(function(k){ return counts[k]||0; });
 
-    var firstVisitRows = rows.filter(function(r){ return r.v==='First Visit'; });
-    var revisitRows = rows.filter(function(r){ return r.v.indexOf('Revisit')===0; });
-    var activeFollowRows = rows.filter(isActiveFollow);
+    var firstVisitRows = rows;
+    var revisitRows = revisitRowsAll;
+    var activeFollowRows = filteredVisitRows().filter(isActiveFollow);
 
     var tiles = [
       { label:'ยอด Walk-in รวม', value: fmtInt(total), delta: delta, sub: 'เทียบช่วงก่อนหน้าเท่ากัน', spark:sparkVals,
@@ -5431,6 +5485,27 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         modal:{ title:'รายชื่อลูกค้าที่อยู่ระหว่างติดตาม', emptyText:'ไม่พบลูกค้าที่อยู่ระหว่างติดตามในช่วง/โครงการที่เลือก',
                 dateHeader:'วันที่ Walk-in', dateGetter:function(r){ return r.d; } } }
     ];
+
+    // WALKIN_LAYERS_V2: ปรับป้าย/ความหมายการ์ด -- Walk-in = ลูกค้าครั้งแรกเท่านั้น, Revisit แยก, การติดตามของเซลล์แยก
+    (function(){
+      var revCust = {}; revisitRowsAll.forEach(function(r){ revCust[customerKey(r)+'|'+r.p] = 1; });
+      var fuLogs = followupLogsInScope(state.start, state.end);
+      tiles.forEach(function(t, i){
+        if(t.key==='total'){
+          t.label = 'Walk-in ใหม่ (ลูกค้าครั้งแรก)';
+          t.sub = 'เทียบช่วงก่อนหน้าเท่ากัน · ไม่รวม Revisit/บันทึกติดตาม';
+          t.modal.title = 'รายชื่อลูกค้า Walk-in ใหม่ (ครั้งแรก)';
+        } else if(t.key==='firstVisit'){
+          tiles[i] = { label:'การติดตามลูกค้า (เซลล์)', value: fmtInt(fuLogs.length),
+            sub: 'บันทึกโทร/LINE 7/30/90 วัน · แยกจาก Walk-in',
+            key:'followupLogs', linkText:'ดูประวัติการติดตาม →',
+            customClick: function(){ if(typeof followupHistoryBtn!=='undefined' && followupHistoryBtn && !followupHistoryBtn.hidden) followupHistoryBtn.click(); } };
+        } else if(t.key==='revisit'){
+          t.label = 'Revisit (ลูกค้าเดิมกลับมาเยี่ยม)';
+          t.sub = fmtInt(Object.keys(revCust).length)+' คน · นับแยก ไม่รวมใน Walk-in ใหม่';
+        }
+      });
+    })();
 
     // "ครบกำหนดติดตาม": independent of the date-range filter above (it's a live
     // "who needs action today" list, not a count of walk-ins within a period) but
@@ -5736,7 +5811,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   }
   function computeFollowupDue(){
     var byCustomer = {};
-    RAW.forEach(function(r){
+    ALLREC.forEach(function(r){
       if(!r.nm || !r.d) return;
       // Grouped by customer+project, not customer alone: a customer who has visited
       // more than one project gets a separate 7/30/90-day follow-up clock per project,
@@ -5826,7 +5901,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       byCheckpoint[cp][status] = (byCheckpoint[cp][status]||0) + 1;
       totalByCheckpoint[cp]++;
     }
-    RAW.forEach(tally);              // backward compat -- see computeFollowupDue()
+    ALLREC.forEach(tally);           // backward compat -- see computeFollowupDue()
     (followupLogRecords || []).forEach(tally);  // guarded -- see computeFollowupDue()
     return { byCheckpoint: byCheckpoint, totalByCheckpoint: totalByCheckpoint };
   }
@@ -6236,13 +6311,25 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   function renderTotalTrendTimeline(){
     totalTrendYearChipsEl.hidden = true;
     var buckets = buildBucketSequence(state.start, state.end, state.gran);
-    var rowsAll = RAW.filter(function(r){ return r.d>=state.start && r.d<=state.end; });
+    var rowsAll = WALKIN.filter(function(r){ return r.d>=state.start && r.d<=state.end; });
+    var revAll = REVISIT.filter(function(r){ return r.d>=state.start && r.d<=state.end; });
     var counts = {}; buckets.forEach(function(b){ counts[b]=0; });
     rowsAll.forEach(function(r){ var k = bucketKey(r.d, state.gran); if(counts[k]!==undefined) counts[k]++; });
-    var series = [{ name:'รวมทุกโครงการ', color:'var(--accent)', values: buckets.map(function(b){ return counts[b]; }), area:true }];
+    var rcounts = {}; buckets.forEach(function(b){ rcounts[b]=0; });
+    revAll.forEach(function(r){ var k = bucketKey(r.d, state.gran); if(rcounts[k]!==undefined) rcounts[k]++; });
+    var series = [
+      { name:'Walk-in ใหม่ (ครั้งแรก)', color:'var(--accent)', values: buckets.map(function(b){ return counts[b]; }), area:true },
+      { name:'Revisit (แยก)', color:'#d97706', values: buckets.map(function(b){ return rcounts[b]; }) }
+    ];
     totalTrendLegendEl.innerHTML = '';
+    series.forEach(function(s){
+      var li = document.createElement('div'); li.className='legend-item';
+      li.innerHTML = '<span class="legend-key" style="background:'+s.color+'"></span><span>'+escapeHTML(s.name)+'</span>';
+      totalTrendLegendEl.appendChild(li);
+    });
     totalTrendSubEl.textContent = GRAN_TH[state.gran] + ' · ' + fmtDateShort(state.start) + ' – ' + fmtDateShort(state.end) + ' · รวม ' + fmtInt(rowsAll.length) + ' ราย ทุกโครงการ (ไม่ผูกกับตัวกรองโครงการด้านบน)';
-    drawLineChart(totalTrendChartEl, buckets, series, function(k){ return bucketLabel(k, state.gran); }, {yTitle:'จำนวน Walk-in (Walk)', xTitle: GRAN_TH[state.gran]});
+    totalTrendSubEl.textContent += ' · Revisit ' + fmtInt(revAll.length) + ' ครั้ง (แยก)';
+    drawLineChart(totalTrendChartEl, buckets, series, function(k){ return bucketLabel(k, state.gran); }, {noAutoTotal:true, yTitle:'จำนวน Walk-in ใหม่ / Revisit', xTitle: GRAN_TH[state.gran]});
   }
 
   function buildTotalTrendYearChips(){
@@ -6272,14 +6359,14 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var series = years.map(function(y){
       var i = ALL_YEARS.indexOf(y);
       var counts = {}; buckets.forEach(function(m){ counts[m]=0; });
-      RAW.forEach(function(r){
+      WALKIN.forEach(function(r){
         if(r.d.slice(0,4)!==y) return;
         var m = parseInt(r.d.slice(5,7),10);
         counts[m] = (counts[m]||0)+1;
       });
       return { name:y, color: yearColor(i, ALL_YEARS.length), values: buckets.map(function(m){ return counts[m]; }) };
     });
-    var totalCount = RAW.filter(function(r){ return years.indexOf(r.d.slice(0,4))>=0; }).length;
+    var totalCount = WALKIN.filter(function(r){ return years.indexOf(r.d.slice(0,4))>=0; }).length;
     totalTrendLegendEl.innerHTML = '';
     series.forEach(function(s){
       var li = document.createElement('div'); li.className='legend-item';
@@ -6643,7 +6730,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var elNatLegend = document.getElementById('profileNatTrendLegend');
     var elNatSub = document.getElementById('profileNatTrendSub');
 
-    var scoped = RAW.filter(function(r){ return r.p===proj; });
+    var scoped = WALKIN.filter(function(r){ return r.p===proj; });
     renderYoY(elAgencyChart, elAgencyLegend, elAgencySub, scoped, function(r){ return r.m==='Agency'; }, proj);
     renderYoY(elMediaChart, elMediaLegend, elMediaSub, scoped, function(r){ return r.m!=='Agency'; }, proj);
 
@@ -6813,7 +6900,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       function normName(v){
         return (v||'').replace(/^(คุณ|Mr\.|Mrs\.|Ms\.|มร\.|นาย|นาง|นางสาว)\s*/i,'').trim().toLowerCase();
       }
-      var agencyAllRows = RAW.filter(function(r){ return r.m==='Agency' && r.ag && (state.project==='ALL'||r.p===state.project); });
+      var agencyAllRows = WALKIN.filter(function(r){ return r.m==='Agency' && r.ag && (state.project==='ALL'||r.p===state.project); });
       if(agencyAllRows.length===0) return;
       var threeMoAgoISO = toISO(addDays(parseISO(DATA_MAX), -90));
       var contractedKey = {};
@@ -6869,7 +6956,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // "สัญชาติผสม" = any value containing a hyphen (e.g. ไทย-อังกฤษ, จีน-ญี่ปุ่น) --
     // covers both Thai-foreign and foreign-foreign dual-nationality entries.
     var natYtdStart = parseISO(DATA_MAX).getUTCFullYear()+'-01-01';
-    var natYtdRows = RAW.filter(function(r){ return (state.project==='ALL'||r.p===state.project) && r.d>=natYtdStart && r.d<=DATA_MAX; });
+    var natYtdRows = WALKIN.filter(function(r){ return (state.project==='ALL'||r.p===state.project) && r.d>=natYtdStart && r.d<=DATA_MAX; });
     function natGroupOf(v){
       if(!v || v==='N/A' || v==='อื่นๆ') return 'ไม่ระบุ';
       if(v.indexOf('-')>=0) return 'สัญชาติผสม';
@@ -6953,6 +7040,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
 
   var currentRows = [];
   function renderTable(rows){
+    rows = filteredVisitRows();
     // Keep this table (and its PDF export, which reads lastTableFiltered below) to
     // genuine Walk-in visits only. A row with "fu" set exists purely to record a
     // 7/30/90-day follow-up outcome under the old flow (before #logFollowupModal), not
@@ -8817,7 +8905,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
 
   function computeCustomerGroups(){
     var groups = {}, order = [];
-    RAW.forEach(function(r){
+    ALLREC.forEach(function(r){
       if(!r.nm || !r.d || !r.p) return;
       var key = customerKey(r) + '|' + r.p;
       if(!groups[key]){ groups[key] = { key: key, visits: [] }; order.push(key); }
@@ -9109,7 +9197,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   }
   function computeFollowupHistoryRows(){
     var rows = [];
-    RAW.forEach(function(r){
+    ALLREC.forEach(function(r){
       if(!r.fu || !r.nm) return;
       rows.push({
         d: r.d, __checkpoint: String(r.fu), nm: r.nm||'', p: r.p, sl: r.sl||'', ph: r.ph||'',
