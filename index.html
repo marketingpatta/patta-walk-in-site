@@ -1057,7 +1057,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div class="table-scroll"><table class="data" id="exTable">
         <thead><tr>
           <th class="col-start">โครงการ</th><th>สถานการณ์</th><th class="num">Walk-in</th><th class="num">เทียบช่วงก่อน</th>
-          <th class="num">กลับมาซ้ำ</th><th class="num">ปิดการขาย</th><th class="num">เกรด A/B</th><th class="num">A/B ค้างติดตาม</th>
+          <th class="num">Revisit</th><th class="num">ปิดการขาย</th><th class="num">เกรด A/B</th><th class="num">A/B ค้างติดตาม</th>
           <th>งบส่วนใหญ่</th><th>ช่องทางหลัก</th><th>สัญชาติหลัก</th><th>อุปสรรคหลัก</th>
         </tr></thead>
         <tbody id="exTableBody"></tbody>
@@ -2718,6 +2718,17 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   }
   function exBudgetBand(b){ var i = BUDGET_ORDER.indexOf(b); return i; }
 
+  // [walkin-layers v2] rows = Walk-in ใหม่ (นับเป็น n) ; allRows = ทุก visit ในช่วง/โครงการเดียวกัน
+  // -> Revisit (ครั้ง) และ Close Deal นับจากทุก visit (ไม่นับแถวซ้ำวันเดียวกัน) แต่อัตราคิดต่อ Walk-in ใหม่
+  function exStatsV(rows, allRows){
+    var st = exStats(rows);
+    var vs = (allRows||rows).filter(function(r){ return visitKind(r)!=='dup'; });
+    st.revisit = vs.filter(function(r){ var k=visitKind(r); return k==='revisit' || k==='revisitD'; }).length;
+    st.closed = vs.filter(isClosedDealRow).length;
+    st.revisitRate = exPct(st.revisit, st.n);
+    st.closeRate = exPct(st.closed, st.n);
+    return st;
+  }
   function exStats(rows){
     var st = { n: rows.length, revisit:0, closed:0, graded:0, ab:0,
       budget:{}, budgetKnown:0, budgetIdx:[], media:{}, nat:{}, natKnown:0, foreign:0,
@@ -2769,11 +2780,13 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
 
   function computeExecTrends(){
     var s = state.start, e = state.end;
-    var curAll = RAW.filter(function(r){ return r.d>=s && r.d<=e; });
+    var curVis = RAW.filter(function(r){ return r.d>=s && r.d<=e; });
+    var curAll = curVis.filter(isNewWalkin);
     var sD = parseISO(s), eD = parseISO(e);
     var lenDays = Math.round((eD-sD)/86400000)+1;
     var prevEnd = toISO(addDays(sD,-1)), prevStart = toISO(addDays(sD, -lenDays));
-    var prevAll = RAW.filter(function(r){ return r.d>=prevStart && r.d<=prevEnd; });
+    var prevVis = RAW.filter(function(r){ return r.d>=prevStart && r.d<=prevEnd; });
+    var prevAll = prevVis.filter(isNewWalkin);
     var hasPrev = prevAll.length>0;
 
     // A/B leads still in follow-up whose latest Walk-in is in range (same rule as the
@@ -2792,15 +2805,16 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       }
     });
 
-    var company = exStats(curAll), companyPrev = exStats(prevAll);
+    var company = exStatsV(curAll, curVis), companyPrev = exStatsV(prevAll, prevVis);
     company.openAB = Object.keys(openAB).reduce(function(a,k){ return a+openAB[k]; }, 0);
     var projNames = PROJECTS.slice();
     curAll.concat(prevAll).forEach(function(r){ if(r.p && projNames.indexOf(r.p)<0) projNames.push(r.p); });
     var projects = projNames.map(function(p){
       var curRows = curAll.filter(function(r){ return r.p===p; });
-      var cur = exStats(curRows);
-      cur.th = thSummarize(curRows);
-      var prev = exStats(prevAll.filter(function(r){ return r.p===p; }));
+      var curVisP = curVis.filter(function(r){ return r.p===p; });
+      var cur = exStatsV(curRows, curVisP);
+      cur.th = thSummarize(curVisP);
+      var prev = exStatsV(prevAll.filter(function(r){ return r.p===p; }), prevVis.filter(function(r){ return r.p===p; }));
       cur.openAB = openAB[p]||0;
       return { p:p, cur:cur, prev:prev, status: exStatus(cur, prev, hasPrev, company) };
     }).filter(function(x){ return x.cur.n>0 || x.prev.n>0; })
@@ -2826,7 +2840,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var cmp = c.closeRate>co.closeRate ? 'สูงกว่า' : c.closeRate<co.closeRate ? 'ต่ำกว่า' : 'เท่ากับ';
     out.push('ปิดการขาย '+fmtInt(c.closed)+' ราย ('+c.closeRate+'%) '+cmp+'ค่าเฉลี่ยบริษัท ('+co.closeRate+'%)');
     // 3) revisit
-    if(c.n>=5) out.push('กลับมาเยี่ยมซ้ำ '+c.revisitRate+'% (บริษัท '+co.revisitRate+'%)'+(c.revisitRate<co.revisitRate*0.6?' — ต่ำ ควรเพิ่มการนัดชมซ้ำ':''));
+    if(c.n>=5) out.push('Revisit '+c.revisitRate+'% ของ Walk-in ใหม่ (บริษัท '+co.revisitRate+'%)'+(c.revisitRate<co.revisitRate*0.6?' — ต่ำ ควรเพิ่มการนัดชมซ้ำ':''));
     // 4) lead quality
     if(c.graded>0) out.push('ลูกค้าเกรด A/B '+c.abRate+'% ของลูกค้าที่มีเกรด'+(c.openAB?' · ยังค้างติดตาม '+fmtInt(c.openAB)+' ราย':''));
     if(c.openAB>=5 && c.closeRate<co.closeRate) reco.push('มีลูกค้า A/B ค้างติดตาม '+fmtInt(c.openAB)+' ราย แต่ปิดการขายต่ำกว่าค่าเฉลี่ย — เร่งปิดกลุ่มนี้ก่อน (กดตัวเลข "A/B ค้าง" เพื่อดูรายชื่อ)');
@@ -2884,7 +2898,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     function kpi(label, value, note){ return '<div class="ex-kpi"><div class="ex-kpi-label">'+label+'</div><div class="ex-kpi-value">'+value+'</div><div class="ex-kpi-note">'+note+'</div></div>'; }
     exKpisEl.innerHTML =
       kpi('Walk-in ทั้งหมด', fmtInt(co.n), res.hasPrev ? deltaBadgeHTML(co.n, cp.n, true)+' ช่วงก่อน '+fmtInt(cp.n) : 'ทุกโครงการ') +
-      kpi('อัตรากลับมาเยี่ยมซ้ำ', co.revisitRate+'%', fmtInt(co.revisit)+' ราย'+(res.hasPrev?' · ช่วงก่อน '+cp.revisitRate+'%':'')) +
+      kpi('Revisit ต่อ Walk-in ใหม่', co.revisitRate+'%', fmtInt(co.revisit)+' ครั้ง'+(res.hasPrev?' · ช่วงก่อน '+cp.revisitRate+'%':'')) +
       kpi('อัตราปิดการขาย', co.closeRate+'%', fmtInt(co.closed)+' ราย'+(res.hasPrev?' · ช่วงก่อน '+cp.closeRate+'%':'')) +
       kpi('ลูกค้าเกรด A/B', co.abRate+'%', 'ของลูกค้าที่มีเกรด · ค้างติดตาม '+exAbLink('', co.openAB)+' ราย');
 
@@ -2920,7 +2934,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     exSummaryEl.innerHTML = bullets.map(function(b){ return '<li>'+escapeHTML(b)+'</li>'; }).join('');
 
     // ---- comparison table ----
-    exTableSubEl.textContent = rangeTxt+' · นับจากจำนวน Walk-in (ครั้งที่เข้าชม) · % กลับมาซ้ำ/ปิดการขาย คิดจาก Walk-in ของโครงการนั้น · เกรด A/B คิดจากลูกค้าที่มีเกรด';
+    exTableSubEl.textContent = rangeTxt+' · นับเฉพาะ Walk-in ใหม่ (ลูกค้ามาครั้งแรก) · Revisit และปิดการขายนับจากทุกครั้งที่เข้าชม แล้วคิดเป็น % ของ Walk-in ใหม่ของโครงการนั้น · เกรด A/B คิดจากลูกค้าที่มีเกรด';
     function cell(main, sub){ return main+(sub?'<span class="ex-sub">'+sub+'</span>':''); }
     function row(name, c, pv, status, cls){
       return '<tr class="'+(cls||'')+'" data-proj="'+escapeHTML(name)+'">'+
@@ -2928,7 +2942,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<td>'+(status?'<span class="pill '+status.key+'">'+status.label+'</span>':'')+'</td>'+
         '<td class="num">'+fmtInt(c.n)+'</td>'+
         '<td class="num">'+(res.hasPrev ? cell(deltaBadgeHTML(c.n, pv.n, true)||'—', 'ช่วงก่อน '+fmtInt(pv.n)) : '—')+'</td>'+
-        '<td class="num">'+cell(c.revisitRate+'%', fmtInt(c.revisit)+' ราย')+'</td>'+
+        '<td class="num">'+cell(c.revisitRate+'%', fmtInt(c.revisit)+' ครั้ง')+'</td>'+
         '<td class="num">'+cell(c.closeRate+'%', fmtInt(c.closed)+' ราย')+'</td>'+
         '<td class="num">'+(c.graded?cell(c.abRate+'%', fmtInt(c.ab)+' ราย'):'—')+'</td>'+
         '<td class="num">'+exAbLink(status ? name : '', c.openAB||0)+'</td>'+
@@ -2955,7 +2969,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<div class="ex-card-head"><div class="card-title">'+escapeHTML(x.p)+'</div><span class="pill '+x.status.key+'">'+x.status.label+'</span></div>'+
         '<div class="ex-mini">'+
           '<div>Walk-in<b>'+fmtInt(c.n)+'</b>'+(res.hasPrev?deltaBadgeHTML(c.n, x.prev.n, true):'')+'</div>'+
-          '<div>กลับมาซ้ำ<b>'+c.revisitRate+'%</b></div>'+
+          '<div>Revisit<b>'+c.revisitRate+'%</b></div>'+
           '<div>ปิดการขาย<b>'+fmtInt(c.closed)+'</b>'+c.closeRate+'%</div>'+
           '<div>A/B ค้าง<b>'+exAbLink(x.p, c.openAB||0)+'</b>'+(c.openAB?'<span style="font-size:14px;">กดดูรายชื่อ</span>':'')+'</div>'+
         '</div>'+
@@ -3031,8 +3045,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   function lnTopShare(m, total){
     var k = exTopOf(m); return k ? { key:k, pct: exPct(m[k], total) } : null;
   }
-  function lnPhaseStats(rows, months, effMonths){
-    var st = exStats(rows), th = thSummarize(rows);
+  function lnPhaseStats(rows, months, effMonths, allRows){
+    var st = exStatsV(rows, allRows||rows), th = thSummarize(allRows||rows);
     st.months = effMonths || months.length;
     st.perMonth = st.months ? Math.round(rows.length/st.months*10)/10 : 0;
     st.foreignRate = exPct(st.foreign, st.natKnown);
@@ -3045,7 +3059,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   }
 
   function computeLaunchTrend(p){
-    var rows = RAW.filter(function(r){ return r.p===p && r.d; });
+    var rowsAll = RAW.filter(function(r){ return r.p===p && r.d; });
+    var rows = rowsAll.filter(isNewWalkin);
     if(!rows.length) return null;
     var dataStart = rows.reduce(function(a,r){ return r.d<a?r.d:a; }, rows[0].d);
     var spf = (SPF_DATA && SPF_DATA[p]) || {};
@@ -3053,7 +3068,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var months = lnMonthsBetween(lnMonthKey(dataStart), lnMonthKey(DATA_MAX));
     var monthly = months.map(function(k){ return { key:k, n:0, closed:0 }; });
     var idx = {}; months.forEach(function(k,i){ idx[k] = i; });
-    rows.forEach(function(r){ var i = idx[lnMonthKey(r.d)]; if(i==null) return; monthly[i].n++; if(isClosedDealRow(r)) monthly[i].closed++; });
+    rows.forEach(function(r){ var i = idx[lnMonthKey(r.d)]; if(i==null) return; monthly[i].n++; });
+    rowsAll.forEach(function(r){ if(visitKind(r)==='dup') return; var i = idx[lnMonthKey(r.d)]; if(i==null) return; if(isClosedDealRow(r)) monthly[i].closed++; });
 
     // The first and the current month are usually partial -- weight them by the share of
     // days actually covered so "Walk-in เฉลี่ย/เดือน" isn't dragged down by a half month.
@@ -3072,10 +3088,11 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       if(!pm.length) continue;
       var set = {}; pm.forEach(function(k){ set[k]=true; });
       var pr = rows.filter(function(r){ return set[lnMonthKey(r.d)]; });
+      var prA = rowsAll.filter(function(r){ return set[lnMonthKey(r.d)]; });
       var label = nPhases===1 ? 'ทั้งหมด' : i===0 ? 'ช่วงแรก' : i===nPhases-1 ? 'ช่วงล่าสุด' : 'ช่วงกลาง';
-      phases.push({ label:label, range: lnMonthLabel(pm[0])+(pm.length>1?' – '+lnMonthLabel(pm[pm.length-1]):''), st: lnPhaseStats(pr, pm, effOf(pm)) });
+      phases.push({ label:label, range: lnMonthLabel(pm[0])+(pm.length>1?' – '+lnMonthLabel(pm[pm.length-1]):''), st: lnPhaseStats(pr, pm, effOf(pm), prA) });
     }
-    var all = lnPhaseStats(rows, months, effOf(months));
+    var all = lnPhaseStats(rows, months, effOf(months), rowsAll);
     var first = phases[0].st, last = phases[phases.length-1].st;
 
     // ---- verdict: latest phase vs first phase ----
@@ -3104,7 +3121,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       if(first.graded>=5 && last.graded>=5 && Math.abs(last.abRate-first.abRate)>=5)
         drivers.push({ dir: last.abRate>first.abRate?1:-1, text:'คุณภาพลูกค้า (เกรด A/B) '+(last.abRate>first.abRate?'ดีขึ้น':'ลดลง')+' จาก '+first.abRate+'% → '+last.abRate+'%' });
       if(Math.abs(last.revisitRate-first.revisitRate)>=5)
-        drivers.push({ dir: last.revisitRate>first.revisitRate?1:-1, text:'ลูกค้ากลับมาเยี่ยมซ้ำ '+(last.revisitRate>first.revisitRate?'มากขึ้น':'น้อยลง')+' จาก '+first.revisitRate+'% → '+last.revisitRate+'%' });
+        drivers.push({ dir: last.revisitRate>first.revisitRate?1:-1, text:'Revisit ต่อ Walk-in ใหม่ '+(last.revisitRate>first.revisitRate?'มากขึ้น':'น้อยลง')+' จาก '+first.revisitRate+'% → '+last.revisitRate+'%' });
       if(first.natKnown>=5 && last.natKnown>=5 && Math.abs(last.foreignRate-first.foreignRate)>=10)
         drivers.push({ dir:0, text:'สัดส่วนลูกค้าต่างชาติ'+(last.foreignRate>first.foreignRate?'เพิ่มขึ้น':'ลดลง')+' จาก '+first.foreignRate+'% → '+last.foreignRate+'%' });
       if(first.medianBudget && last.medianBudget && first.medianBudget!==last.medianBudget)
@@ -3186,7 +3203,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       t.phases.map(function(ph){ return '<th>'+escapeHTML(ph.label)+'<span class="ex-sub" style="display:block;font-weight:400;">'+escapeHTML(ph.range)+'</span></th>'; }).join('')+'</tr></thead><tbody>'+
       phRow('Walk-in เฉลี่ย/เดือน', function(s){ return s.perMonth+' <span class="ex-sub" style="display:inline;">(รวม '+fmtInt(s.n)+')</span>'; })+
       phRow('อัตราปิดการขาย', function(s){ return s.closeRate+'% <span class="ex-sub" style="display:inline;">('+s.closed+')</span>'; })+
-      phRow('กลับมาเยี่ยมซ้ำ', function(s){ return s.revisitRate+'%'; })+
+      phRow('Revisit (ต่อ Walk-in ใหม่)', function(s){ return s.revisitRate+'%'; })+
       phRow('เกรด A/B (ของที่มีเกรด)', function(s){ return s.graded ? s.abRate+'%' : '—'; })+
       phRow('ช่องทางหลัก', function(s){ var x = lnTopShare(s.media, s.n); return x ? escapeHTML(x.key)+' '+x.pct+'%' : '—'; })+
       phRow('ลูกค้าต่างชาติ', function(s){ return s.natKnown ? s.foreignRate+'%' : '—'; })+
@@ -3965,7 +3982,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var e = parseISO(SS_DATA.erpUpdated.slice(0,10));
     var eTime = SS_DATA.erpUpdated.slice(11,16);
     var eStr = e.getDate()+' '+SS_MONTHS[e.getMonth()]+' '+e.getFullYear()+' '+eTime+' น.';
-    var w = parseISO(SS_DATA.walkinUpdated);
+    var w = parseISO((typeof DATA_MAX==='string' && DATA_MAX) ? DATA_MAX : SS_DATA.walkinUpdated);
     var wStr = w.getDate()+' '+SS_MONTHS[w.getMonth()]+' '+w.getFullYear();
     return '<span class="update-note"><span class="dot"></span>อัปเดตล่าสุด: Walk-in '+wStr+' &middot; ERP '+eStr+'</span>';
   }
@@ -4461,6 +4478,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var rowsAllV = RAW.filter(function(r){ return r.p===proj && r.d>=startISO && r.d<=endISO; });
     var rows = rowsAllV.filter(isNewWalkin);
     var bookedRows = rowsAllV.filter(isClosedDealRow);
+    var revisitRows = rowsAllV.filter(function(r){ var k=visitKind(r); return k==='revisit' || k==='revisitD'; });
     function pairs(list, key){
       var m = {};
       list.forEach(function(r){ var v = r[key] || 'N/A'; m[v] = (m[v]||0)+1; });
@@ -4495,6 +4513,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     }
     return {
       total_visits: rows.length,
+      revisit_visits: revisitRows.length,
+      revisit_customers: Object.keys(revisitRows.reduce(function(a,r){ a[customerKey(r)]=1; return a; },{})).length,
       total_booked: bookedRows.length,
       media_all: pairs(rows,'m'),
       media_booked: mediaBooked,
@@ -4665,7 +4685,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     html += '<div class="card-sub" style="margin-bottom:18px;">รวมข้อมูลตั้งแต่ลูกค้า Walk-in เข้าชมโครงการ จนถึงสถานะการขายจริงในระบบ ERP &middot; ช่วงที่แสดง: <b>'+escapeHTML(rangeLabel)+'</b></div>';
 
     html += '<div class="kpi-grid">'+
-      '<div class="kpi"><div class="kpi-label">ลูกค้าเข้าชม (Walk-in)</div><div class="kpi-value">'+fmtInt(w.total_visits||0)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">Walk</span></div><div class="kpi-sub">'+escapeHTML(rangeLabel)+'</div></div>'+
+      '<div class="kpi"><div class="kpi-label">ลูกค้าเข้าชม (Walk-in)</div><div class="kpi-value">'+fmtInt(w.total_visits||0)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">Walk</span></div><div class="kpi-sub">'+escapeHTML(rangeLabel)+' &middot; ลูกค้ามาครั้งแรก &middot; Revisit '+fmtInt(w.revisit_visits||0)+' ครั้ง ('+fmtInt(w.revisit_customers||0)+' คน)</div></div>'+
       '<div class="kpi"><div class="kpi-label">ยอดจอง (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">บันทึกผ่าน Walk-in tracker '+fmtInt(walkinBooked)+' ราย'+(totalActive>walkinBooked?' &mdash; อีก '+fmtInt(totalActive-walkinBooked)+' รายมาจากช่องทางอื่น':'')+'</div></div>'+
       '<div class="kpi"><div class="kpi-label">สัญญา Active (ERP)</div><div class="kpi-value">'+fmtInt(totalActive)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">รวมทุกสถานะที่ยังไม่ยกเลิก'+(fFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':'')+'</div></div>'+
       '<div class="kpi"><div class="kpi-label">โอนกรรมสิทธิ์แล้ว (ERP)</div><div class="kpi-value">'+fmtInt(transferred)+' <span style="font-size:12px; font-weight:600; color:var(--text-muted);">ยูนิต</span></div><div class="kpi-sub">นับตามวันที่โอนกรรมสิทธิ์จริง'+(transferFallback?' &middot; ยังกรองช่วงเวลาไม่ได้ (รอซิงค์ครั้งถัดไป)':' &middot; '+escapeHTML(rangeLabel))+'</div></div>'+
@@ -4725,7 +4745,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         html += '<div class="highlight-answer"><b>สรุปสำหรับ '+proj+':</b> ในบรรดาลูกค้า '+fmtInt(walkinBooked)+' รายที่จองในระบบติดตาม Walk-in มาจาก <b>'+topBooked[0]+' มากที่สุด '+fmtInt(topBooked[1])+' ราย</b> ('+(walkinBooked?(topBooked[1]/walkinBooked*100).toFixed(0):0)+'%)</div>';
       }
       html += '<div class="source-grid">'+
-        '<div class="card"><div class="card-title">แหล่งที่มา (สื่อ) &mdash; ลูกค้าที่เข้าชมทั้งหมด</div><div class="card-sub">n = '+fmtInt(w.total_visits||0)+'</div><div id="profileMediaAll"></div></div>'+
+        '<div class="card"><div class="card-title">แหล่งที่มา (สื่อ) &mdash; Walk-in ใหม่ (ไม่รวม Revisit)</div><div class="card-sub">n = '+fmtInt(w.total_visits||0)+'</div><div id="profileMediaAll"></div></div>'+
         '<div class="card"><div class="card-title">แหล่งที่มา (สื่อ) &mdash; เฉพาะที่จองแล้ว &#11088;</div><div class="card-sub">n = '+fmtInt(walkinBooked)+'</div><div id="profileMediaBooked"></div></div>'+
         '<div class="card"><div class="card-title">สัญชาติผู้เข้าชม (Walk-in)</div><div class="card-sub">n = '+fmtInt(w.total_visits||0)+'</div><div id="profileNatWalkin"></div></div>'+
         '<div class="card"><div class="card-title">สัญชาติผู้ซื้อจริง (ERP)</div><div class="card-sub">n = '+fmtInt(natErpTotal)+' แปลง &middot; '+(natErpFallback ? 'จำนวนสะสมทั้งหมด (ยังไม่รองรับการกรองช่วงเวลาสำหรับโครงการนี้ &mdash; ต้องรอรัน sync_dashboard.py เวอร์ชันใหม่อีกครั้ง)' : escapeHTML(rangeLabel))+'</div><div id="profileNatErp"></div></div>'+
@@ -5209,7 +5229,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           '<div>เหลือขาย<b>'+mrN(t.remaining)+'</b></div>'+
           '<div>จอง / โอน (ช่วงที่เลือก)<b>'+mrN(d.book)+' / '+mrN(d.trans)+'</b></div>'+
           '<div>ยกเลิก (ช่วงที่เลือก)<b>'+(d.hasCancel?mrN(d.cancel):'—')+'</b></div>'+
-          '<div>Walk-in (ช่วงที่เลือก)<b>'+mrN(d.w.total_visits)+'</b></div>'+
+          '<div>Walk-in ใหม่ (ช่วงที่เลือก)<b>'+mrN(d.w.total_visits)+'</b></div>'+
+      '<div>Revisit (ครั้ง)<b>'+mrN(d.w.revisit_visits)+'</b></div>'+
         '</div>'+
         '<ul class="mr-talk">'+talk.map(function(x){ return '<li class="'+x.tone+'"><b class="mr-th">'+x.head+'</b> &mdash; '+x.txt+'</li>'; }).join('')+'</ul>'+
         mrNoteBlock(t.code)+
