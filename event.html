@@ -400,7 +400,7 @@ function desk(){
   h+='<div class="card"><div style="font-weight:700;font-size:18px">'+esc(guestName(g))+nickHtml(g)+'</div><div style="margin:4px 0 10px">'+tags(g)+(inToday?'<span class="tag t-in">เช็คอินวันนี้แล้ว</span>':'<span class="tag t-no">ยังไม่เช็คอินวันนี้</span>')+'</div>';
   h+='<div class="info"><span>เบอร์โทร</span><span>'+(g.phone?esc(g.phone):'<span style="color:var(--err)">'+esc(phoneTxt(g))+'</span>')+'</span><span>แบบบ้านที่สนใจ</span><span>'+(hs.length?esc(hs.map(hl).join(', ')):'ยังไม่ได้ระบุ')+'</span>';
   h+='<span>งบประมาณ</span><span>'+(g.budget?'<b>'+esc(g.budget)+'</b><br><span class="hint">ตั้งโดย '+esc(g.budgetBy||'')+'</span>':'<span style="color:var(--err)">ยังไม่ได้ถาม</span>')+'</span></div>';
-  if(g.src==='pre')h+='<div class="gbox"><div class="gt">ข้อมูลจากฟอร์มลงทะเบียน (Google Form)</div><div class="info"><span>วันที่สะดวก</span><span>'+PD[g.prefDate||'both']+'</span><span>ช่วงเวลา</span><span>'+esc(slotsText(g)||'-')+'</span><span>ลงทะเบียนมา</span><span>'+(g.pax||1)+' คน</span><span>รู้จักงานจาก</span><span>'+esc(g.media||'-')+'</span><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='form'?'ยินยอมแล้วในฟอร์ม ✓':'ไม่พบบันทึกการยินยอม — แจ้ง PDPA ก่อนเก็บข้อมูลเพิ่ม')+'</span></div></div>';
+  if(g.src==='pre')h+='<div class="gbox"><div class="gt">ข้อมูลจากฟอร์มลงทะเบียน (Google Form)</div><div class="info"><span>วันที่สะดวก</span><span>'+PD[g.prefDate||'both']+'</span><span>ช่วงเวลา</span><span>'+esc(slotsText(g)||'-')+'</span><span>ลงทะเบียนมา</span><span>'+(g.pax||1)+' คน</span><span>รู้จักงานจาก</span><span>'+esc(g.media||'-')+'</span><span>เซลล์ที่ดูแล</span><span>'+esc(g.owner||'-')+'</span><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='form'?'ยินยอมแล้วในฟอร์ม ✓':'ไม่พบบันทึกการยินยอม — แจ้ง PDPA ก่อนเก็บข้อมูลเพิ่ม')+'</span></div></div>';
   else h+='<div class="gbox"><div class="gt">Walk-in หน้างาน</div><div class="info"><span>PDPA</span><span>แจ้งตอนลงทะเบียนหน้างานแล้ว ✓</span></div></div>';
   h+='<div style="margin-top:12px;font-weight:600;font-size:14px">มาวันนี้กี่คน'+(S.today?' ('+DAYS[S.today].label+')':'')+'</div>'+stepper();
   if(S.today&&!inToday)h+='<button class="btn" id="cinDetail">เช็คอินวันนี้ ('+DAYS[S.today].label+')</button>';
@@ -445,14 +445,17 @@ function dash(){
   var expP=exp.reduce(function(a,c){return a+(c.pax||1)},0);
   var cameP=exp.reduce(function(a,c){return a+pDay(c,dd)},0);
   h+='<div class="card"><h3>คนที่ลงทะเบียนล่วงหน้า · '+lab+'</h3><div class="two"><div class="kpi"><b>'+expP+'</b><span>แจ้งว่าจะมา (คน) · '+exp.length+' รายชื่อ</span></div><div class="kpi"><b>'+cameP+'</b><span>มาจริงแล้ว (คน)</span></div></div>';
+  h+='<table style="margin-top:12px"><tr><th></th><th>ลงทะเบียน (คน)</th><th>รายชื่อ</th><th>มาแล้ว (คน)</th></tr>';
+  [CU,AG].forEach(function(t){var xs=exp.filter(function(c){return c.type===t});h+='<tr><td>'+typeLabel(t)+'</td><td><b>'+xs.reduce(function(a,c){return a+(c.pax||1)},0)+'</b></td><td>'+xs.length+' ราย</td><td>'+xs.reduce(function(a,c){return a+pDay(c,dd)},0)+'</td></tr>'});
+  h+='<tr class="tot"><td>รวม</td><td><b>'+expP+'</b></td><td>'+exp.length+' ราย</td><td>'+cameP+'</td></tr></table>';
   h+='<div class="bar" style="margin-top:12px"><i style="width:'+Math.min(100,(expP?cameP/expP*100:0))+'%"></i></div><div class="hint">มาแล้ว '+Math.round(expP?cameP/expP*100:0)+'% ของที่ลงทะเบียน (นับเป็นจำนวนคน) · รายชื่อที่ยังไม่มา '+exp.filter(function(c){return pDay(c,dd)===0}).length+' ราย</div></div>';
 
   (dd==='all'?['20','21']:[dd]).forEach(function(d){
-    var m={};pre.forEach(function(c){var sl=c.slots&&c.slots[d];if(sl){m[sl]=m[sl]||{reg:0,came:0};m[sl].reg+=(c.pax||1);m[sl].came+=pin(c,d)}});
+    var m={};pre.forEach(function(c){var sl=c.slots&&c.slots[d];if(sl){m[sl]=m[sl]||{reg:0,came:0,cu:0,ag:0};m[sl].reg+=(c.pax||1);m[sl][c.type===AG?'ag':'cu']+=(c.pax||1);m[sl].came+=pin(c,d)}});
     var ks=Object.keys(m).sort();var mx=Math.max.apply(null,ks.map(function(k){return m[k].reg}).concat([1]));
     h+='<div class="card"><h3>ช่วงเวลาที่ลงทะเบียน · '+DAYS[d].label+'</h3>';
     if(!ks.length)h+='<div class="hint">ยังไม่มีข้อมูลช่วงเวลา</div>';
-    ks.forEach(function(k){h+='<div class="row2"><span>'+esc(k)+'</span><span><b>'+m[k].reg+'</b> คน · มาแล้ว <b>'+m[k].came+'</b></span></div><div class="bar"><i style="width:'+(m[k].reg/mx*100)+'%"></i></div>'});
+    ks.forEach(function(k){h+='<div class="row2"><span>'+esc(k)+'</span><span><b>'+m[k].reg+'</b> คน <span class="hint">(ลูกค้า '+m[k].cu+' · เอเจนท์ '+m[k].ag+')</span> · มาแล้ว <b>'+m[k].came+'</b></span></div><div class="bar"><i style="width:'+(m[k].reg/mx*100)+'%"></i></div>'});
     h+='</div>';
   });
 
@@ -491,17 +494,19 @@ function parseCSV(text){
   row.push(f);if(row.some(function(x){return x!==''}))rows.push(row);return rows;
 }
 function mapHeaders(hdr){
-  var m={type:-1,name:-1,phone:-1,pref:-1,slot20:-1,slot21:-1,slotRaw:[],pax:-1,media:-1,pdpa:-1};
+  /* รองรับฟอร์มที่มีคอลัมน์ซ้ำ (วันที่/ช่วงเวลา/ชื่อ/ประเภท อีกชุด) + คอลัมน์ "เซลล์ที่ดูแล" — เก็บทุกคอลัมน์ที่ตรง แล้วเลือกค่าแรกที่ไม่ว่างต่อแถว */
+  var m={type:-1,name:-1,phone:-1,pref:-1,slot20:-1,slot21:-1,slotRaw:[],pax:-1,media:-1,pdpa:-1,owner:-1,types:[],names:[],prefs:[],f20:[],f21:[]};
   hdr.forEach(function(h,i){
     var t=String(h);
-    if(m.type<0&&/Registrant Type|ประเภทผู้ลงทะเบียน/i.test(t))m.type=i;
-    else if(m.phone<0&&/Phone|เบอร์โทร/i.test(t))m.phone=i;
-    else if(m.pref<0&&/Preferred Date|วันที่สะดวก/i.test(t))m.pref=i;
-    else if(m.name<0&&/Full Name|Company Name|ชื่อ/i.test(t)&&!/ช่องทาง|How Did/i.test(t))m.name=i;
-    else if(/time slot|ช่วงเวลา/i.test(t)){if(m.slot20<0&&/ศุกร์|Friday/i.test(t))m.slot20=i;else if(m.slot21<0&&/เสาร์|Saturday/i.test(t))m.slot21=i;else m.slotRaw.push(i)}
+    if(/ยินยอม|consent|PDPA|พ.ร.บ.|คุ้มครองข้อมูล/i.test(t)){if(m.pdpa<0)m.pdpa=i}
+    else if(/เซลล์ที่ดูแล|ผู้ดูแล|Sales Owner/i.test(t)){if(m.owner<0)m.owner=i}
+    else if(/Registrant Type|ประเภทผู้ลงทะเบียน/i.test(t)){m.types.push(i);if(m.type<0)m.type=i}
+    else if(/Phone|เบอร์โทร/i.test(t)){if(m.phone<0)m.phone=i}
+    else if(/Preferred Date|วันที่สะดวก/i.test(t)){m.prefs.push(i);if(m.pref<0)m.pref=i}
+    else if(/Full Name|Company Name|Copany Name|ชื่อ/i.test(t)&&!/ช่องทาง|How Did/i.test(t)){m.names.push(i);if(m.name<0)m.name=i}
+    else if(/time slot|ช่วงเวลา/i.test(t)){if(/ศุกร์|Friday/i.test(t)){m.f20.push(i);if(m.slot20<0)m.slot20=i}else if(/เสาร์|Saturday/i.test(t)){m.f21.push(i);if(m.slot21<0)m.slot21=i}else m.slotRaw.push(i)}
     else if(m.pax<0&&/How many|จำนวนผู้เข้าร่วม/i.test(t))m.pax=i;
     else if(m.media<0&&/How Did You Hear|ช่องทางที่ได้รับ/i.test(t))m.media=i;
-    else if(m.pdpa<0&&/ยินยอม|consent|PDPA|พ.ร.บ.|คุ้มครองข้อมูล/i.test(t))m.pdpa=i;
   });
   return m;
 }
@@ -509,48 +514,55 @@ function buildImport(text){
   var rows=parseCSV(text);if(rows.length<2)return {error:'ไฟล์ไม่มีข้อมูล (มีแต่หัวคอลัมน์หรือว่างเปล่า)'};
   var m=mapHeaders(rows[0]);
   if(m.phone<0||m.name<0)return {error:'หาคอลัมน์ "ชื่อ" หรือ "เบอร์โทร" ไม่เจอ — ตรวจว่าเป็นไฟล์คำตอบจาก Google Form ที่ส่งออกเป็น CSV'};
-  var existing={};G.forEach(function(g){existing[g.id]=1});
-  var seen={},add=[],dupInFile=0,dupExisting=0,bad=[],noPhone=0;
+  var existing={};G.forEach(function(g){existing[g.id]=g});
+  var seen={},add=[],fix=[],noDay=0,dupInFile=0,dupExisting=0,bad=[],noPhone=0;
   rows.slice(1).forEach(function(r,idx){
-    var rawP=String(r[m.phone]||'').trim(),phone=normPhone(rawP),name=String(r[m.name]||'').trim();
+    var first=function(a){for(var k=0;k<a.length;k++){var v=String(r[a[k]]||'').trim();if(v)return v}return ''};
+    var rawP=String(r[m.phone]||'').trim(),phone=normPhone(rawP),name=first(m.names);
     if(!name){bad.push('แถว '+(idx+2)+': (ไม่มีชื่อ) / '+(rawP||'(ไม่มีเบอร์)'));return}
     var okP=phone.length>=9&&phone.length<=11;if(!okP)phone='';
-    var tt=String(r[m.type]||''),isAg=/agent/i.test(tt);
+    var tt=first(m.types),isAg=/agent/i.test(tt);
     var gid=guestIdFor(phone,isAg?AG:CU,name);
-    if(existing[gid]){dupExisting++;return}
     if(seen[gid]){dupInFile++;return}seen[gid]=1;
-    if(!okP)noPhone++;
     var isCo=isAg&&CO_RE.test(name);
-    var pr=String(r[m.pref]||''),pref='';
+    var pr=first(m.prefs),pref='';
     if(/both|ทั้งสอง/i.test(pr)||(/20/.test(pr)&&/21/.test(pr)))pref='both';else if(/Friday|ศุกร์|20/.test(pr))pref='20';else if(/Saturday|เสาร์|21/.test(pr))pref='21';
-    var slots={};if(m.slot20>=0&&r[m.slot20])slots['20']=String(r[m.slot20]).trim();if(m.slot21>=0&&r[m.slot21])slots['21']=String(r[m.slot21]).trim();
-    if(!slots['20']&&!slots['21']){var raw=m.slotRaw.map(function(i){return String(r[i]||'').trim()}).filter(Boolean)[0];if(raw){if(pref==='21')slots['21']=raw;else slots['20']=raw}}
+    var slots={},f20=first(m.f20),f21=first(m.f21);if(f20)slots['20']=f20;if(f21)slots['21']=f21;
+    if(!slots['20']&&!slots['21']){var raw=first(m.slotRaw);if(raw){if(pref==='21')slots['21']=raw;else if(pref==='20'||pref==='both')slots['20']=raw;else noDay++}}
+    var owner=m.owner>=0?String(r[m.owner]||'').trim():'';
+    if(existing[gid]){
+      var ex=existing[gid];
+      if(ex.src==='pre'&&(ex.prefDate!==pref||JSON.stringify(ex.slots||{})!==JSON.stringify(slots)||(owner&&ex.owner!==owner)))fix.push({_id:gid,prefDate:pref,slots:slots,owner:owner||ex.owner||''});
+      else dupExisting++;
+      return;
+    }
+    if(!okP)noPhone++;
     var pax=m.pax>=0?parseInt(String(r[m.pax]).replace(/[^\d]/g,''),10):1;if(!(pax>0))pax=1;
     var hasP=m.pdpa>=0&&String(r[m.pdpa]||'').trim()!=='';
-    add.push({_id:gid,noPhone:!okP,rawPhone:okP?'':rawP,type:isAg?AG:CU,name:isAg&&isCo?'':name,company:isCo?name:'',phone:phone,src:'pre',prefDate:pref,slots:slots,pax:pax,media:m.media>=0?String(r[m.media]||'').trim():'',budget:'',budgetBy:'',budgetAt:'',checkins:{},notes:[],pdpa:{source:hasP?'form':'none'},createdBy:S.me,createdAt:nowIso(),importedAt:nowIso()});
+    add.push({_id:gid,noPhone:!okP,rawPhone:okP?'':rawP,type:isAg?AG:CU,name:isAg&&isCo?'':name,company:isCo?name:'',phone:phone,src:'pre',prefDate:pref,slots:slots,owner:owner,pax:pax,media:m.media>=0?String(r[m.media]||'').trim():'',budget:'',budgetBy:'',budgetAt:'',checkins:{},notes:[],pdpa:{source:hasP?'form':'none'},createdBy:S.me,createdAt:nowIso(),importedAt:nowIso()});
   });
-  return {add:add,noPhone:noPhone,dupInFile:dupInFile,dupExisting:dupExisting,bad:bad,total:rows.length-1,map:m,hdr:rows[0]};
+  return {add:add,fix:fix,noDay:noDay,noPhone:noPhone,dupInFile:dupInFile,dupExisting:dupExisting,bad:bad,total:rows.length-1,map:m,hdr:rows[0]};
 }
 function importView(){
   var h='<div class="card"><h3>นำเข้ารายชื่อจาก Google Form (เฉพาะผู้ดูแล)</h3><div class="hint" style="font-size:13px;color:var(--ink)">1) เปิดชีตคำตอบ → ไฟล์ → ดาวน์โหลด → ไฟล์ CSV<br>2) เลือกไฟล์ด้านล่าง ตรวจตัวอย่าง แล้วกดนำเข้า<br>นำเข้าซ้ำได้ ระบบข้ามรายชื่อที่มีอยู่แล้ว ไม่ทับข้อมูลที่สตาฟกรอก · แถวที่ไม่มีเบอร์หรือเบอร์ไม่ครบจะนำเข้าและติดป้าย "ต้องเช็กเบอร์" ให้สตาฟถามเบอร์แล้วกรอกที่หน้างาน</div><input type="file" id="impFile" accept=".csv,text/csv" style="margin-top:12px">';
   if(S.imp){
     if(S.imp.error)h+='<div class="err">'+esc(S.imp.error)+'</div>';
     else{var I=S.imp,m=I.map;
-      h+='<div class="gbox" style="margin-top:12px"><div class="gt">ตรวจก่อนนำเข้า</div><div class="info"><span>แถวในไฟล์</span><span>'+I.total+'</span><span>นำเข้าใหม่</span><span><b>'+I.add.length+'</b> ราย</span><span>มีอยู่แล้ว ข้าม</span><span>'+I.dupExisting+'</span><span>เบอร์ซ้ำในไฟล์ ข้าม</span><span>'+I.dupInFile+'</span><span>ไม่มีเบอร์/เบอร์ไม่ครบ (นำเข้า ติดป้าย)</span><span>'+I.noPhone+'</span><span>ไม่มีชื่อ ข้าม</span><span>'+I.bad.length+'</span></div></div>';
+      h+='<div class="gbox" style="margin-top:12px"><div class="gt">ตรวจก่อนนำเข้า</div><div class="info"><span>แถวในไฟล์</span><span>'+I.total+'</span><span>นำเข้าใหม่</span><span><b>'+I.add.length+'</b> ราย</span><span>มีอยู่แล้ว แต่ข้อมูลวัน/เวลา/เซลล์ต่าง → อัปเดต</span><span><b>'+I.fix.length+'</b> ราย</span><span>มีอยู่แล้ว ข้าม</span><span>'+I.dupExisting+'</span><span>ระบุเวลาแต่ไม่ระบุวัน (ไม่ใส่เวลา)</span><span>'+I.noDay+'</span><span>เบอร์ซ้ำในไฟล์ ข้าม</span><span>'+I.dupInFile+'</span><span>ไม่มีเบอร์/เบอร์ไม่ครบ (นำเข้า ติดป้าย)</span><span>'+I.noPhone+'</span><span>ไม่มีชื่อ ข้าม</span><span>'+I.bad.length+'</span></div></div>';
       var nm=function(i){return i>=0?esc(String(I.hdr[i]).slice(0,48)):'<span style="color:var(--err)">ไม่พบ</span>'};
       h+='<div class="gbox"><div class="gt">คอลัมน์ที่จับคู่ได้ (ตรวจว่าถูกต้อง)</div><div class="info"><span>ประเภท</span><span>'+nm(m.type)+'</span><span>ชื่อ/บริษัท</span><span>'+nm(m.name)+'</span><span>เบอร์</span><span>'+nm(m.phone)+'</span><span>วันที่สะดวก</span><span>'+nm(m.pref)+'</span><span>ช่วงเวลา 20</span><span>'+nm(m.slot20)+'</span><span>ช่วงเวลา 21</span><span>'+nm(m.slot21)+'</span><span>จำนวนคน</span><span>'+nm(m.pax)+'</span><span>รู้จักงานจาก</span><span>'+nm(m.media)+'</span><span>PDPA</span><span>'+nm(m.pdpa)+'</span></div></div>';
       if(I.bad.length)h+='<div class="hint">ข้ามเพราะไม่มีชื่อ: '+esc(I.bad.slice(0,8).join(' | '))+(I.bad.length>8?' …':'')+'</div>';
-      h+='<button class="btn" id="impGo"'+(I.add.length?'':' disabled')+'>นำเข้า '+I.add.length+' ราย</button>';
+      h+='<button class="btn" id="impGo"'+((I.add.length||I.fix.length)?'':' disabled')+'>นำเข้า '+I.add.length+' ราย'+(I.fix.length?' + อัปเดต '+I.fix.length+' ราย':'')+'</button>';
     }
   }
   h+='</div><div class="card"><h3>สำรองข้อมูล</h3><div class="hint" style="font-size:13px;color:var(--ink)">ดาวน์โหลดรายชื่อและบันทึกทั้งหมดเป็นไฟล์ CSV เก็บไว้ได้ทุกเมื่อ</div><button class="btn sec" id="expGo">ดาวน์โหลด CSV ทั้งหมด</button></div>';
   return h;
 }
 function exportCSV(){
-  var cols=['ประเภท','ที่มา','ชื่อ','ชื่อเล่น','บริษัท','เบอร์','วันที่สะดวก','ช่วงเวลา','ลงทะเบียน(คน)','มา 20 พ.ย.(คน)','มา 21 พ.ย.(คน)','ช่องทาง','งบประมาณ','แบบบ้าน','บันทึก','รูปถ่าย(รูป)','ยินยอมถ่ายรูป (PDPA)'];
+  var cols=['ประเภท','ที่มา','ชื่อ','ชื่อเล่น','บริษัท','เบอร์','วันที่สะดวก','ช่วงเวลา','ลงทะเบียน(คน)','มา 20 พ.ย.(คน)','มา 21 พ.ย.(คน)','ช่องทาง','เซลล์ที่ดูแล','งบประมาณ','แบบบ้าน','บันทึก','รูปถ่าย(รูป)','ยินยอมถ่ายรูป (PDPA)'];
   var q=function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"'};
   var lines=[cols.map(q).join(',')];
-  G.forEach(function(g){lines.push([typeLabel(g.type),g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in',g.name,g.nickname||'',g.company,"'"+g.phone,PD[g.prefDate]||'',slotsText(g),g.pax||1,pin(g,'20')||'',pin(g,'21')||'',g.media,g.budget,allHouses(g).map(hl).join('; '),(g.notes||[]).map(function(n){return n.by+' '+fmtStamp(n.at)+': '+[n.detail,n.interest].filter(Boolean).join(' / ')}).join(' || '),(g.photos||[]).length||'',g.photoConsent&&g.photoConsent.given?('ยินยอม '+fmtStamp(g.photoConsent.at)+' โดย '+(g.photoConsent.by||'')):''].map(q).join(','))});
+  G.forEach(function(g){lines.push([typeLabel(g.type),g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in',g.name,g.nickname||'',g.company,"'"+g.phone,PD[g.prefDate]||'',slotsText(g),g.pax||1,pin(g,'20')||'',pin(g,'21')||'',g.media,g.owner||'',g.budget,allHouses(g).map(hl).join('; '),(g.notes||[]).map(function(n){return n.by+' '+fmtStamp(n.at)+': '+[n.detail,n.interest].filter(Boolean).join(' / ')}).join(' || '),(g.photos||[]).length||'',g.photoConsent&&g.photoConsent.given?('ยินยอม '+fmtStamp(g.photoConsent.at)+' โดย '+(g.photoConsent.by||'')):''].map(q).join(','))});
   var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='event_guests_'+bangkokDate(nowMs())+'.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 }
@@ -612,11 +624,11 @@ document.addEventListener('click',function(e){
       toast(r.existing?'เบอร์นี้มีอยู่แล้ว เปิดข้อมูลเดิมให้':'เพิ่มแล้ว ✓ กรอกข้อมูลต่อได้เลย');render();window.scrollTo(0,0);
     }).catch(function(er){t.disabled=false;fail(er)});return}
   if(t.id==='impGo'&&S.imp&&S.imp.add){
-    t.disabled=true;var list=S.imp.add.slice(),done=0;
+    t.disabled=true;var list=S.imp.add.slice().concat((S.imp.fix||[]).map(function(f){f._fix=1;return f})),done=0;
     (function next(){
-      if(!list.length){toast('นำเข้าสำเร็จ '+done+' ราย ✓');S.imp=null;render();return}
+      if(!list.length){toast('นำเข้า/อัปเดตสำเร็จ '+done+' ราย ✓');S.imp=null;render();return}
       var chunk=list.splice(0,400),b=db.batch();
-      chunk.forEach(function(d){var id=d._id,c={};Object.keys(d).forEach(function(k){if(k!=='_id')c[k]=d[k]});b.set(ref(id),c)});
+      chunk.forEach(function(d){var id=d._id,c={};Object.keys(d).forEach(function(k){if(k!=='_id'&&k!=='_fix')c[k]=d[k]});if(d._fix)b.update(ref(id),c);else b.set(ref(id),c)});
       b.commit().then(function(){done+=chunk.length;next()}).catch(function(er){fail(er);t.disabled=false});
     })();return}
   if(t.id==='expGo'){exportCSV();return}
