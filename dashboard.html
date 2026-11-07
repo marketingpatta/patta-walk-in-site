@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>PATTA Grand Opening · แดชบอร์ดสรุป</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f7; --card:#ffffff; --ink:#1c2230; --muted:#667085; --line:#e4e7ec;
+  --navy:#1b2f55; --navy-ink:#ffffff; --gold:#b8892b; --bar:#1b2f55; --bar-bg:#e8ebf2;
+  --ok:#1f8a4c; --warn-bg:#fff6df; --warn-ink:#6b4b00;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1420; --card:#171e2e; --ink:#e8ecf4; --muted:#9aa4b8; --line:#273049;
+    --navy:#243b6b; --gold:#e0b45a; --bar:#7fa0e6; --bar-bg:#242e46;
+    --ok:#4cc17f; --warn-bg:#3a2e12; --warn-ink:#f1d48a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1420; --card:#171e2e; --ink:#e8ecf4; --muted:#9aa4b8; --line:#273049;
+  --navy:#243b6b; --gold:#e0b45a; --bar:#7fa0e6; --bar-bg:#242e46;
+  --ok:#4cc17f; --warn-bg:#3a2e12; --warn-ink:#f1d48a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 40px}
+header.hero{background:var(--navy);color:var(--navy-ink);padding:22px 16px 26px}
+header.hero .in{max-width:760px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.08em;opacity:.8}
+h1{font-size:22px;line-height:1.3;margin:2px 0 4px;font-weight:700}
+.sub{font-size:14px;opacity:.85}
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.count .box{background:rgba(255,255,255,.12);border-radius:12px;padding:10px 4px;text-align:center}
+.count .n{font-size:28px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.count .u{font-size:12px;opacity:.8}
+.status{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.14);font-size:18px;font-weight:600;text-align:center}
+.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:14px 0 10px;font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px}
+.dot.off{background:#c0392b}
+.notice{background:var(--warn-bg);color:var(--warn-ink);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:14px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 14px}
+.tabs button{font:inherit;font-weight:600;padding:11px 6px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;min-height:44px}
+.tabs button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink);border-color:var(--navy)}
+.tabs button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 14px}
+.card h2{font-size:16px;margin:0 0 12px;font-weight:700}
+.card h2 small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--bg);border-radius:12px;padding:14px 8px;text-align:center}
+.tile b{display:block;font-size:34px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile span{font-size:13px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{padding:8px 4px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:12px}
+tr.total td{font-weight:700;border-bottom:0}
+td small{color:var(--muted);display:block;white-space:nowrap;font-size:12px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.prog{height:12px;border-radius:99px;background:var(--bar-bg);overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.row{margin:10px 0}
+.row .top{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.row .top span:last-child{font-weight:600;white-space:nowrap}
+.row .sub2{font-size:12px;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--bar-bg);margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);border-radius:99px}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:8px 0}
+.linkbtn{font:inherit;font-size:14px;color:var(--navy);background:none;border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-height:44px;cursor:pointer}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .linkbtn{color:var(--bar)}}
+footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
+@media (min-width:520px){ .count .n{font-size:36px} h1{font-size:26px} }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="in">
+    <div class="eyebrow">PATTA GRAND OPENING</div>
+    <h1>แดชบอร์ดสรุปงานเปิดตัว</h1>
+    <div class="sub">20–21 พฤศจิกายน 2569</div>
+    <div id="countdown" role="timer" aria-label="นับถอยหลังสู่วันงาน"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="meta">
+    <span><i class="dot" id="dot"></i><span id="updated">กำลังโหลดข้อมูล…</span></span>
+    <span>รีเฟรชอัตโนมัติทุก 30 วินาที</span>
+  </div>
+  <div id="notice"></div>
+
+  <div class="tabs" role="group" aria-label="เลือกช่วงวัน">
+    <button type="button" data-scope="20">20 พ.ย.</button>
+    <button type="button" data-scope="21">21 พ.ย.</button>
+    <button type="button" data-scope="all">รวม 2 วัน</button>
+  </div>
+
+  <div id="view"></div>
+
+  <footer>
+    แสดงตัวเลขสรุปเท่านั้น ไม่มีรายชื่อหรือข้อมูลส่วนบุคคลของแขก<br>
+    "จำนวนคน" = คนที่ลงทะเบียน/มาจริง · "ราย" = จำนวนรายชื่อ (1 รายชื่ออาจมาหลายคน)
+  </footer>
+</main>
+
+<script>
+(function(){
+  'use strict';
+  var EVENT_START = '2026-11-20T13:00:00+07:00'; // เริ่มรอบแรกวันที่ 20 พ.ย. 69
+  var EVENT_END   = '2026-11-21T20:00:00+07:00';
+  var PROJECT = 'patta-walk-in';
+  var qs = new URLSearchParams(location.search);
+  var TEST = qs.get('test') === '1';
+  var DEMO = qs.get('demo') === '1';
+  var DOC = TEST ? 'summary_test' : 'summary';
+  var URL_DOC = 'https://firestore.googleapis.com/v1/projects/' + PROJECT + '/databases/(default)/documents/event_stats/' + DOC;
+
+  var data = null, scope = 'all', updatedAt = null, lastErr = 'loading';
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function nf(n){ return Number(n||0).toLocaleString('th-TH'); }
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  /* ---------- นับถอยหลัง ---------- */
+  function tick(){
+    var now = Date.now(), s = Date.parse(EVENT_START), e = Date.parse(EVENT_END), el = $('countdown');
+    if (now >= e){ el.innerHTML = '<div class="status">จบงานแล้ว · ขอบคุณทุกท่านที่ร่วมงาน</div>'; return; }
+    if (now >= s){ el.innerHTML = '<div class="status">งาน Grand Opening เริ่มแล้ว! กำลังจัดงานอยู่ขณะนี้</div>'; return; }
+    var sec = Math.floor((s - now) / 1000);
+    var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60), x = sec % 60;
+    el.innerHTML = '<div class="count">' +
+      [[d,'วัน'],[h,'ชั่วโมง'],[m,'นาที'],[x,'วินาที']].map(function(p){
+        return '<div class="box"><div class="n">' + pad(p[0]) + '</div><div class="u">' + p[1] + '</div></div>';
+      }).join('') + '</div>';
+  }
+
+  /* ---------- ดึงข้อมูล ---------- */
+  var SAMPLE = {"v":1,"records":40,"houses":{"ARCADE Autograph|LINDEN":9,"ARCADE Autograph|MAPLE":6,"PATTA Pillar|PL-A":4},"scopes":{
+    "20":{"reg":{"customer":{"pax":24,"n":10},"agent":{"pax":18,"n":6}},"inn":{"customer":{"pre":{"pax":14,"n":6},"walk":{"pax":5,"n":2}},"agent":{"pre":{"pax":9,"n":3},"walk":{"pax":0,"n":0}}},"slots":{"Early Afternoon: 1:00 PM – 3:00 PM":{"customer":14,"agent":14,"inn":20},"Late Afternoon: 3:00 PM – 6:00 PM":{"customer":5,"agent":4,"inn":8},"Evening: 6:00 PM – 8:00 PM":{"customer":5,"agent":0,"inn":0}},"media":{"LINE":12,"Facebook":8,"การ์ดเชิญออนไลน์":6,"ป้ายโฆษณา":2}},
+    "21":{"reg":{"customer":{"pax":18,"n":7},"agent":{"pax":34,"n":14}},"inn":{"customer":{"pre":{"pax":0,"n":0},"walk":{"pax":0,"n":0}},"agent":{"pre":{"pax":0,"n":0},"walk":{"pax":0,"n":0}}},"slots":{"Morning Session: 10:00 AM – 12:00 PM":{"customer":4,"agent":23,"inn":0},"Early Afternoon: 1:00 PM – 3:00 PM":{"customer":11,"agent":11,"inn":0},"Late Afternoon: 3:00 PM – 5:00 PM":{"customer":3,"agent":0,"inn":0}},"media":{}},
+    "all":{"reg":{"customer":{"pax":41,"n":16},"agent":{"pax":44,"n":17}},"inn":{"customer":{"pre":{"pax":14,"n":6},"walk":{"pax":5,"n":2}},"agent":{"pre":{"pax":9,"n":3},"walk":{"pax":0,"n":0}}},"slots":{},"media":{"LINE":12,"Facebook":8,"การ์ดเชิญออนไลน์":6,"ป้ายโฆษณา":2}}}};
+
+  function load(){
+    if (DEMO){ data = SAMPLE; updatedAt = new Date(); lastErr = ''; render(); return; }
+    fetch(URL_DOC, {cache:'no-store'}).then(function(r){
+      if (r.status === 404) throw {code:'empty'};
+      if (!r.ok) throw {code:'denied'};
+      return r.json();
+    }).then(function(doc){
+      var f = doc.fields || {};
+      data = JSON.parse(f.json.stringValue);
+      updatedAt = f.updatedAt ? new Date(f.updatedAt.stringValue) : null; lastErr = '';
+      render();
+    }).catch(function(err){
+      data = null; lastErr = err && err.code || 'error';
+      render();
+    });
+  }
+
+  /* ---------- วาดหน้า ---------- */
+  function sum(a, b){ return {pax:a.pax+b.pax, n:a.n+b.n}; }
+  function slotStart(k){
+    var m = /(\d+):(\d\d)\s*(AM|PM)/i.exec(k); if (!m) return 0;
+    var h = +m[1] % 12 + (/PM/i.test(m[3]) ? 12 : 0); return h * 60 + +m[2];
+  }
+  function bars(obj, unit){
+    var keys = Object.keys(obj).sort(function(a,b){ return obj[b]-obj[a]; });
+    if (!keys.length) return '<div class="empty">ยังไม่มีข้อมูล</div>';
+    var max = obj[keys[0]] || 1;
+    return keys.map(function(k){
+      return '<div class="row"><div class="top"><span>' + esc(k) + '</span><span>' + nf(obj[k]) + ' ' + unit + '</span></div>' +
+        '<div class="bar"><i style="width:' + Math.max(3, Math.round(obj[k] / max * 100)) + '%"></i></div></div>';
+    }).join('');
+  }
+  function houseLabel(k){ var p = k.split('|'); return p.length === 2 ? p[1] + ' (' + p[0] + ')' : k; }
+
+  function render(){
+    var err = lastErr;
+    var dot = $('dot'), upd = $('updated'), note = $('notice'), view = $('view');
+    document.querySelectorAll('.tabs button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.scope === scope ? 'true' : 'false'); });
+    note.innerHTML = DEMO ? '<div class="notice">โหมดตัวอย่าง: ตัวเลขด้านล่างเป็นข้อมูลสมมติเพื่อดูหน้าตาเท่านั้น</div>' : (TEST ? '<div class="notice">โหมดทดสอบ: แสดงข้อมูลซ้อมระบบ ไม่ใช่ข้อมูลจริง</div>' : '');
+    if (!data){
+      dot.className = 'dot off';
+      upd.textContent = err === 'loading' ? 'กำลังโหลดข้อมูล…' : err === 'empty' ? 'รอเจ้าหน้าที่เปิดระบบ' : 'เชื่อมต่อข้อมูลไม่ได้ในขณะนี้';
+      view.innerHTML = '<div class="card"><div class="empty">' +
+        (err === 'loading' ? 'กำลังโหลดตัวเลขสรุป…' : err === 'empty' ? 'ยังไม่มีตัวเลขสรุป จะแสดงเมื่อเริ่มมีการลงทะเบียน/เช็คอินในระบบ' : 'ยังโหลดตัวเลขไม่ได้ กรุณารีเฟรชอีกครั้งภายหลัง') +
+        '</div>' + (err === 'loading' ? '' : '<div class="empty"><button type="button" id="demoBtn" class="linkbtn">ดูตัวอย่างหน้าตา (ข้อมูลสมมติ)</button></div>') + '</div>';
+      return;
+    }
+    dot.className = 'dot';
+    upd.textContent = 'อัปเดตล่าสุด ' + (updatedAt && !isNaN(updatedAt) ? updatedAt.toLocaleString('th-TH', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) + ' น.' : '—');
+
+    var S = data.scopes[scope] || data.scopes.all;
+    var types = [['customer','ลูกค้า'], ['agent','Property Agent']];
+    var inTot = {pax:0, n:0}, regTot = {pax:0, n:0}, preIn = {pax:0, n:0}, walkIn = {pax:0, n:0};
+    var rowsA = '', rowsB = '';
+    types.forEach(function(t){
+      var i = S.inn[t[0]], r = S.reg[t[0]], tot = sum(i.pre, i.walk);
+      inTot = sum(inTot, tot); regTot = sum(regTot, r); preIn = sum(preIn, i.pre); walkIn = sum(walkIn, i.walk);
+      rowsA += '<tr><td>' + t[1] + '</td><td>' + nf(i.pre.pax) + ' <small>(' + nf(i.pre.n) + ' ราย)</small></td><td>' + nf(i.walk.pax) + ' <small>(' + nf(i.walk.n) + ' ราย)</small></td><td>' + nf(tot.pax) + ' <small>(' + nf(tot.n) + ' ราย)</small></td></tr>';
+      rowsB += '<tr><td>' + t[1] + '</td><td>' + nf(r.pax) + '</td><td>' + nf(r.n) + '</td><td>' + nf(i.pre.pax) + '</td></tr>';
+    });
+    var pct = regTot.pax ? Math.min(100, Math.round(preIn.pax / regTot.pax * 100)) : 0;
+
+    var html = '';
+    html += '<section class="card"><h2>ผู้เข้าร่วมงาน<small>' + (scope === 'all' ? 'รวม 2 วัน (นับคนไม่ซ้ำ)' : 'วันที่ ' + scope + ' พ.ย. 69') + '</small></h2>' +
+      '<div class="tiles"><div class="tile"><b>' + nf(inTot.pax) + '</b><span>จำนวนคน (มาจริง)</span></div><div class="tile"><b>' + nf(inTot.n) + '</b><span>จำนวนราย (เช็คอิน)</span></div></div>' +
+      '<table><thead><tr><th></th><th>ลงทะเบียนมาแล้ว</th><th>Walk-in</th><th>รวม</th></tr></thead><tbody>' + rowsA +
+      '<tr class="total"><td>รวม</td><td>' + nf(preIn.pax) + ' <small>(' + nf(preIn.n) + ' ราย)</small></td><td>' + nf(walkIn.pax) + ' <small>(' + nf(walkIn.n) + ' ราย)</small></td><td>' + nf(inTot.pax) + ' <small>(' + nf(inTot.n) + ' ราย)</small></td></tr></tbody></table></section>';
+
+    html += '<section class="card"><h2>คนที่ลงทะเบียนล่วงหน้า<small>' + (scope === 'all' ? 'รวม 2 วัน (นับคนไม่ซ้ำ)' : 'ผู้ที่แจ้งว่าสะดวกมาวันที่ ' + scope + ' พ.ย.') + '</small></h2>' +
+      '<div class="tiles"><div class="tile"><b>' + nf(regTot.pax) + '</b><span>แจ้งว่าจะมา (คน)</span></div><div class="tile"><b>' + nf(preIn.pax) + '</b><span>มาจริงแล้ว (คน)</span></div></div>' +
+      '<div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="สัดส่วนที่มาแล้ว"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="note">มาแล้ว ' + pct + '% ของที่ลงทะเบียน · ' + nf(regTot.n) + ' รายชื่อ</div>' +
+      '<table><thead><tr><th></th><th>ลงทะเบียน (คน)</th><th>รายชื่อ</th><th>มาแล้ว (คน)</th></tr></thead><tbody>' + rowsB + '</tbody></table></section>';
+
+    if (scope !== 'all'){
+      var sk = Object.keys(S.slots || {}).sort(function(a,b){ return slotStart(a) - slotStart(b); });
+      html += '<section class="card"><h2>ช่วงเวลาที่ลงทะเบียน<small>วันที่ ' + scope + ' พ.ย. 69</small></h2>' + (sk.length ? sk.map(function(k){
+        var r = S.slots[k], tot = r.customer + r.agent;
+        return '<div class="row"><div class="top"><span>' + esc(k) + '</span><span>' + nf(tot) + ' คน</span></div>' +
+          '<div class="sub2">ลูกค้า ' + nf(r.customer) + ' · เอเจนท์ ' + nf(r.agent) + ' · มาแล้ว ' + nf(r.inn) + '</div></div>';
+      }).join('') : '<div class="empty">ยังไม่มีข้อมูล</div>') + '</section>';
+    }
+
+    html += '<section class="card"><h2>รู้จักงานจากช่องทางไหน<small>' + (scope === 'all' ? 'รวม 2 วัน · ' : '') + 'นับจำนวนคนที่มาร่วมงานจริง</small></h2>' + bars(S.media || {}, 'คน') + '</section>';
+
+    if (scope === 'all'){
+      var hs = {}; Object.keys(data.houses || {}).forEach(function(k){ hs[houseLabel(k)] = data.houses[k]; });
+      html += '<section class="card"><h2>แบบบ้านที่ลูกค้าสนใจ<small>จากบันทึกของสตาฟทุกคน · นับเป็นรายชื่อ เลือกได้หลายแบบ</small></h2>' + bars(hs, 'ราย') + '</section>';
+    }
+    view.innerHTML = html;
+  }
+
+  document.addEventListener('click', function(e){
+    if (e.target && e.target.id === 'demoBtn'){ DEMO = true; load(); }
+  });
+  document.querySelector('.tabs').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    scope = b.dataset.scope; render();
+  });
+
+  // เปิดมาแล้วเลือกแท็บให้เหมาะกับวัน: ระหว่างงาน = วันนั้น, นอกนั้น = รวม
+  (function(){
+    var now = Date.now();
+    if (now >= Date.parse('2026-11-20T00:00:00+07:00') && now < Date.parse('2026-11-21T00:00:00+07:00')) scope = '20';
+    else if (now >= Date.parse('2026-11-21T00:00:00+07:00') && now < Date.parse(EVENT_END)) scope = '21';
+  })();
+
+  tick(); setInterval(tick, 1000);
+  render(); load();
+  setInterval(function(){ if (!document.hidden) load(); }, 30000);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>
