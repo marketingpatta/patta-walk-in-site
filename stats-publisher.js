@@ -15,7 +15,7 @@
   if (window.__pattaStats) return;
   window.__pattaStats = true;
 
-  var EVENT_START = '2026-11-20T13:00:00+07:00'; // เริ่มรอบแรกของวันที่ 20 พ.ย. 69 (แก้ได้)
+  var EVENT_START = '2026-11-20T00:00:00+07:00'; // นับถึงเที่ยงคืนต้นวันงาน 20 พ.ย. 69 (แก้ได้)
   var EVENT_END = '2026-11-21T20:00:00+07:00';
   var DAYS = ['20', '21'];
   var PUBLISH_DELAY_MS = 20000;
