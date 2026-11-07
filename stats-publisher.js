@@ -141,9 +141,20 @@
     });
   }
 
-  /* ---------- แถบนับถอยหลังบนแท็บแดชบอร์ด ---------- */
+  /* ---------- แถบนับถอยหลังบนแท็บแดชบอร์ด ----------
+     ใช้เวลาจริงจากเซิร์ฟเวอร์ (หัว HTTP Date) ไม่เชื่อนาฬิกาเครื่อง */
+  var skew = 0;
+  function nowMs() { return Date.now() + skew; }
+  function syncClock() {
+    var t0 = Date.now();
+    fetch(location.pathname + '?_t=' + t0, { method: 'HEAD', cache: 'no-store' }).then(function (r) {
+      var h = r.headers.get('Date'); if (!h) return;
+      var srv = Date.parse(h), t1 = Date.now();
+      if (!isNaN(srv)) skew = srv + (t1 - t0) / 2 - t1;
+    }).catch(function () {});
+  }
   function bannerText() {
-    var now = Date.now(), s = Date.parse(EVENT_START), e = Date.parse(EVENT_END);
+    var now = nowMs(), s = Date.parse(EVENT_START), e = Date.parse(EVENT_END);
     if (now >= e) return 'จบงานแล้ว · ขอบคุณทุกท่าน';
     if (now >= s) return 'งาน Grand Opening เริ่มแล้ว!';
     var sec = Math.floor((s - now) / 1000);
@@ -182,6 +193,6 @@
     ensureBanner();
   }
 
-  function boot() { start(); watchBanner(); }
+  function boot() { syncClock(); setInterval(syncClock, 600000); start(); watchBanner(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

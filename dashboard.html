@@ -84,6 +84,7 @@ footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
     <h1>แดชบอร์ดสรุปงานเปิดตัว</h1>
     <div class="sub">20–21 พฤศจิกายน 2569</div>
     <div id="countdown" role="timer" aria-label="นับถอยหลังสู่วันงาน"></div>
+    <div class="sub" id="thaiNow" style="margin-top:10px;font-size:13px"></div>
   </div>
 </header>
 
@@ -127,12 +128,29 @@ footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
   function nf(n){ return Number(n||0).toLocaleString('th-TH'); }
   function pad(n){ return n < 10 ? '0' + n : '' + n; }
 
+  /* ---------- เวลาจริงของประเทศไทย ----------
+     ไม่เชื่อนาฬิกาเครื่องคนดู: อ่านเวลาจากหัว HTTP "Date" ของเซิร์ฟเวอร์ แล้วเก็บส่วนต่างไว้ (ซิงก์ใหม่ทุก 10 นาที) */
+  var skew = 0;
+  function now(){ return Date.now() + skew; }
+  function syncClock(){
+    var t0 = Date.now();
+    fetch(location.pathname + '?_t=' + t0, {method:'HEAD', cache:'no-store'}).then(function(r){
+      var h = r.headers.get('Date'); if (!h) return;
+      var srv = Date.parse(h), t1 = Date.now();
+      if (!isNaN(srv)) skew = srv + (t1 - t0) / 2 - t1; // ชดเชยเวลาเดินทางของคำขอครึ่งหนึ่ง
+    }).catch(function(){});
+  }
+  function thaiClock(){
+    var el = $('thaiNow'); if (!el) return;
+    el.textContent = 'เวลาไทย ' + new Date(now()).toLocaleString('th-TH', {timeZone:'Asia/Bangkok', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit'}) + ' น.';
+  }
+
   /* ---------- นับถอยหลัง ---------- */
   function tick(){
-    var now = Date.now(), s = Date.parse(EVENT_START), e = Date.parse(EVENT_END), el = $('countdown');
-    if (now >= e){ el.innerHTML = '<div class="status">จบงานแล้ว · ขอบคุณทุกท่านที่ร่วมงาน</div>'; return; }
-    if (now >= s){ el.innerHTML = '<div class="status">งาน Grand Opening เริ่มแล้ว! กำลังจัดงานอยู่ขณะนี้</div>'; return; }
-    var sec = Math.floor((s - now) / 1000);
+    var n = now(), s = Date.parse(EVENT_START), e = Date.parse(EVENT_END), el = $('countdown');
+    if (n >= e){ el.innerHTML = '<div class="status">จบงานแล้ว · ขอบคุณทุกท่านที่ร่วมงาน</div>'; return; }
+    if (n >= s){ el.innerHTML = '<div class="status">งาน Grand Opening เริ่มแล้ว! กำลังจัดงานอยู่ขณะนี้</div>'; return; }
+    var sec = Math.floor((s - n) / 1000);
     var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60), x = sec % 60;
     el.innerHTML = '<div class="count">' +
       [[d,'วัน'],[h,'ชั่วโมง'],[m,'นาที'],[x,'วินาที']].map(function(p){
@@ -248,12 +266,13 @@ footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
 
   // เปิดมาแล้วเลือกแท็บให้เหมาะกับวัน: ระหว่างงาน = วันนั้น, นอกนั้น = รวม
   (function(){
-    var now = Date.now();
-    if (now >= Date.parse('2026-11-20T00:00:00+07:00') && now < Date.parse('2026-11-21T00:00:00+07:00')) scope = '20';
-    else if (now >= Date.parse('2026-11-21T00:00:00+07:00') && now < Date.parse(EVENT_END)) scope = '21';
+    var n = now();
+    if (n >= Date.parse('2026-11-20T00:00:00+07:00') && n < Date.parse('2026-11-21T00:00:00+07:00')) scope = '20';
+    else if (n >= Date.parse('2026-11-21T00:00:00+07:00') && n < Date.parse(EVENT_END)) scope = '21';
   })();
 
-  tick(); setInterval(tick, 1000);
+  syncClock(); setInterval(syncClock, 600000);
+  tick(); thaiClock(); setInterval(function(){ tick(); thaiClock(); }, 1000);
   render(); load();
   setInterval(function(){ if (!document.hidden) load(); }, 30000);
   document.addEventListener('visibilitychange', function(){ if (!document.hidden) load(); });
