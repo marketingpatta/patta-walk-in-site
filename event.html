@@ -200,8 +200,8 @@ function allHouses(g){var s={};(g.notes||[]).forEach(function(n){(n.houses||[]).
 function hl(k){var p=k.split('|');return p[1]+' ('+p[0]+')'}
 function slotsText(g){return ['20','21'].filter(function(d){return g.slots&&g.slots[d]}).map(function(d){return DAYS[d].short+' '+g.slots[d]}).join(' · ')}
 var OWNER_ROSTER=['จิ๋ว','สาลี่','อุ๊','เต่า','น้ำหวาน','เอ๋ย','เปิ้ล','ซัมเมอร์'];/* เซลล์ที่เข้าคิวในงาน — แก้รายชื่อที่นี่ */
-var OWNER_ALIAS={'จิวลี่':'จิ๋ว'};/* ชื่อเซลล์ที่เป็นคนเดียวกัน: ชื่อที่พิมพ์ต่างกัน → ชื่อที่ใช้แสดง */
-function normOwner(s){s=String(s||'').replace(/\s+/g,' ').trim();if(!s)return '';return s.split(/\s*[\/,]\s*|\s+และ\s+/).map(function(p){p=p.replace(/^(เซลล์|เซลส์|เซล|พี่|คุณ)+\s*/,'').trim();return OWNER_ALIAS[p]||p}).filter(function(p,i,a){return p&&a.indexOf(p)===i}).join(' / ')}
+var OWNER_ALIAS={'จิวลี่':'จิ๋ว','จิวลี':'จิ๋ว','จิ๋วลี่':'จิ๋ว','jiwly':'จิ๋ว'};/* ชื่อเซลล์ที่เป็นคนเดียวกัน: ชื่อที่พิมพ์ต่างกัน → ชื่อที่ใช้แสดง */
+function normOwner(s){s=String(s||'').replace(/\s+/g,' ').trim();if(!s)return '';return s.split(/\s*[\/,]\s*|\s+และ\s+/).map(function(p){p=p.replace(/^(เซลล์|เซลส์|เซล|พี่|คุณ)+\s*/,'').trim();return OWNER_ALIAS[p.toLowerCase()]||p}).filter(function(p,i,a){return p&&a.indexOf(p)===i}).join(' / ')}
 function ownerDL(){var m={};G.forEach(function(g){String(g.owner||'').split(' / ').forEach(function(n){if(n)m[n]=1})});return '<datalist id="ownerDL">'+Object.keys(m).sort(function(a,b){return a.localeCompare(b,'th')}).map(function(n){return '<option value="'+esc(n)+'">'}).join('')+'</datalist>'}
 function ownerCounts(){var d=bangkokDate(nowMs()),c={};G.forEach(function(g){if(g.ownerSrc==='staff'&&g.ownerAt&&bangkokDate(Date.parse(g.ownerAt))===d)String(g.owner||'').split(' / ').forEach(function(n){if(n)c[n]=(c[n]||0)+1})});return c}
 function ownerChips(cur){var c=ownerCounts(),names=OWNER_ROSTER.slice();G.forEach(function(g){String(g.owner||'').split(' / ').forEach(function(n){if(n&&names.indexOf(n)<0)names.push(n)})});return '<div class="chips" id="oChips">'+names.map(function(n){return '<div class="chip'+(cur===n?' on':'')+'" data-o="'+esc(n)+'">'+esc(n)+(c[n]?' <span class="hint">· คิววันนี้ '+c[n]+'</span>':'')+'</div>'}).join('')+'</div>'}
@@ -670,7 +670,7 @@ window.addEventListener('offline',function(){S.online=false;softRender()});
 function startListen(){
   if(unsub)unsub();
   unsub=db.collection(COLL).onSnapshot({includeMetadataChanges:true},function(snap){
-    G=snap.docs.map(function(d){var o=d.data();o.id=d.id;return o});
+    G=snap.docs.map(function(d){var o=d.data();o.id=d.id;if(o.owner)o.owner=normOwner(o.owner);return o});
     S.pending=snap.metadata.hasPendingWrites;S.err='';softRender();
   },function(err){S.err='โหลดรายชื่อไม่สำเร็จ: '+(err&&err.code==='permission-denied'?'ยังไม่ได้ตั้งสิทธิ์อ่าน/เขียนคอลเลกชันของโหมดอีเวนต์ (แจ้งผู้ดูแลระบบ)':(err&&err.message||err));render()});
 }
