@@ -92,6 +92,8 @@ tr.tot td{font-weight:700;border-bottom:0}
 .err{color:var(--err);font-size:13px;margin-top:8px}
 .gate{max-width:380px;margin:60px auto;padding:0 16px}
 .nick{font-weight:400;color:var(--mut)}
+.t-sale{background:#d1fae5;color:#065f46}
+@media (prefers-color-scheme:dark){.t-sale{background:#064e3b;color:#a7f3d0}}
 .pdpa{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;margin-top:6px;font-size:13px}
 .pdpa .pt{font-weight:700;color:var(--pri);margin-bottom:6px}
 .pdpa .px{max-height:180px;overflow:auto;white-space:pre-wrap;line-height:1.6}
@@ -197,8 +199,11 @@ function byId(id){for(var i=0;i<G.length;i++)if(G[i].id===id)return G[i];return 
 function allHouses(g){var s={};(g.notes||[]).forEach(function(n){(n.houses||[]).forEach(function(h){s[h]=1})});return Object.keys(s)}
 function hl(k){var p=k.split('|');return p[1]+' ('+p[0]+')'}
 function slotsText(g){return ['20','21'].filter(function(d){return g.slots&&g.slots[d]}).map(function(d){return DAYS[d].short+' '+g.slots[d]}).join(' · ')}
+var OWNER_ALIAS={'จิวลี่':'จิ๋ว'};/* ชื่อเซลล์ที่เป็นคนเดียวกัน: ชื่อที่พิมพ์ต่างกัน → ชื่อที่ใช้แสดง */
+function normOwner(s){s=String(s||'').replace(/\s+/g,' ').trim();if(!s)return '';return s.split(/\s*[\/,]\s*|\s+และ\s+/).map(function(p){p=p.replace(/^(เซลล์|เซลส์|เซล|พี่|คุณ)+\s*/,'').trim();return OWNER_ALIAS[p]||p}).filter(function(p,i,a){return p&&a.indexOf(p)===i}).join(' / ')}
+function ownerDL(){var m={};G.forEach(function(g){String(g.owner||'').split(' / ').forEach(function(n){if(n)m[n]=1})});return '<datalist id="ownerDL">'+Object.keys(m).sort(function(a,b){return a.localeCompare(b,'th')}).map(function(n){return '<option value="'+esc(n)+'">'}).join('')+'</datalist>'}
 function tags(g){
-  return '<span class="tag '+(g.src==='pre'?'t-pre':'t-walk')+'">'+(g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in')+'</span>'+(g.type===AG?'<span class="tag t-ag">Property Agent</span>':'')+(!g.phone?'<span class="tag t-warn">ต้องเช็กเบอร์</span>':'');
+  return '<span class="tag '+(g.src==='pre'?'t-pre':'t-walk')+'">'+(g.src==='pre'?'ลงทะเบียนล่วงหน้า':'Walk-in')+'</span>'+(g.type===AG?'<span class="tag t-ag">Property Agent</span>':'')+(g.owner?'<span class="tag t-sale">เซลล์ '+esc(g.owner)+'</span>':'')+(!g.phone?'<span class="tag t-warn">ต้องเช็กเบอร์</span>':'');
 }
 function nickHtml(g){return g.nickname?' <span class="nick">('+esc(g.nickname)+')</span>':''}
 function resetPhotoState(){S.ph=[];S.pc='';S.busy=false}
@@ -280,6 +285,7 @@ function doSaveNote(g,o){
   if(o.phone){u.phone=o.phone;u.noPhone=false}
   if(g.type===AG){u.name=o.name||'';u.company=o.company||''}
   if(o.nickname!==undefined&&o.nickname!==(g.nickname||''))u.nickname=o.nickname;
+  if(o.owner!==undefined&&o.owner!==(g.owner||'')){u.owner=o.owner;u.ownerSrc='staff'}
   if(o.photoConsent)u.photoConsent=o.photoConsent;
   if(o.photos&&o.photos.length)u.photos=FV().arrayUnion.apply(null,o.photos);
   if(o.checkinDay)u['checkins.'+o.checkinDay]={pax:o.pax,by:S.me,at:nowIso()};
@@ -299,7 +305,7 @@ function doCreateWalkin(o){
       u.updatedAt=nowIso();u.updatedBy=S.me;
       return ref(id).update(u).then(function(){return {existing:true,id:id}});
     }
-    var d={type:o.type,name:o.name,nickname:o.nickname||'',company:o.company||'',phone:o.phone,photos:o.photos||[],src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
+    var d={type:o.type,name:o.name,nickname:o.nickname||'',owner:o.owner||'',ownerSrc:o.owner?'staff':'',company:o.company||'',phone:o.phone,photos:o.photos||[],src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
       checkins:{},notes:[],pdpa:{source:'onsite',by:S.me,at:nowIso()},createdBy:S.me,createdAt:nowIso()};
     if(o.photoConsent)d.photoConsent=o.photoConsent;
     if(S.today)d.checkins[S.today]={pax:o.pax,by:S.me,at:nowIso()};
@@ -377,6 +383,7 @@ function desk(){
     h+='<label>มากี่คน</label>'+stepper();
     h+='<label>รู้จักงานนี้จากไหน</label>'+mediaChips();
     h+='<label>งบประมาณ <span class="hint" style="font-weight:400">(ถามได้ก็ใส่ ไม่ได้ข้ามไปก่อน)</span></label><div class="chips" id="nBudget">'+BUDGET.map(function(b){return '<div class="chip'+(S.nb===b?' on':'')+'" data-b="'+esc(b)+'">'+esc(b)+'</div>'}).join('')+'</div>';
+    h+='<label>เซลล์ที่ดูแล <span class="hint" style="font-weight:400">(ถ้ามี · พิมพ์ชื่อเล่น หรือเลือกจากรายการ)</span></label><input type="text" id="fOwner" list="ownerDL" placeholder="เช่น น้ำหวาน" autocomplete="off">'+ownerDL();
     h+=photoSection(null);
     h+='<label class="consent" style="margin-top:12px"><input type="checkbox" id="fPdpa"><span>แจ้ง PDPA แล้ว ลูกค้ายินยอมให้ติดต่อกลับ</span></label>';
     h+='<div style="display:flex;gap:8px"><button class="btn" id="fSave" style="flex:2">บันทึก'+(S.today?'และเช็คอิน':'')+'</button><button class="btn sec" id="fCancel" style="flex:1">ยกเลิก</button></div></div>';
@@ -385,11 +392,11 @@ function desk(){
   if(!g){
     var q=S.q.trim().toLowerCase(),qd=digits(S.q);
     var list=G.filter(function(x){
-      if(q&&!(((x.name||'')+' '+(x.nickname||'')+' '+(x.company||'')).toLowerCase().indexOf(q)>-1||(qd&&(x.phone||'').indexOf(qd)>-1)))return false;
+      if(q&&!(((x.name||'')+' '+(x.nickname||'')+' '+(x.company||'')+' '+(x.owner||'')).toLowerCase().indexOf(q)>-1||(qd&&(x.phone||'').indexOf(qd)>-1)))return false;
       if(S.flt==='todo')return S.today&&!isIn(x,S.today);
       if(S.flt==='in')return S.today&&isIn(x,S.today);
       return true}).sort(function(a,b){return guestName(a).localeCompare(guestName(b),'th')});
-    h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ ชื่อเล่น บริษัท หรือเบอร์โทร">';
+    h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ ชื่อเล่น บริษัท เบอร์โทร หรือเซลล์">';
     h+='<div class="flt"><button data-f="all" class="'+(S.flt==='all'?'on':'')+'">ทั้งหมด</button><button data-f="todo" class="'+(S.flt==='todo'?'on':'')+'">ยังไม่เช็คอินวันนี้</button><button data-f="in" class="'+(S.flt==='in'?'on':'')+'">เช็คอินแล้ว</button></div>';
     h+='<button class="btn sec" id="newBtn" style="margin-top:10px">+ ไม่เจอชื่อ → เพิ่ม Walk-in ใหม่</button>';
     h+='<div class="hint" style="margin:10px 0 0">'+list.length+' รายการ · แตะชื่อเพื่อกรอกข้อมูล หรือกด "เช็คอิน" ได้เลย</div>'+(G.length?listRows(list):'<div class="hint" style="margin-top:14px">ยังไม่มีรายชื่อ ผู้ดูแลนำเข้ารายชื่อจาก Google Form ได้ที่แท็บ "นำเข้า" หรือกด "เพิ่ม Walk-in ใหม่"</div>')+'</div>';
@@ -406,6 +413,7 @@ function desk(){
   if(S.today&&!inToday)h+='<button class="btn" id="cinDetail">เช็คอินวันนี้ ('+DAYS[S.today].label+')</button>';
   h+='</div>';
   if(!g.phone)h+='<div class="card"><h3>เพิ่มเบอร์โทร</h3><div class="hint" style="margin-bottom:6px">รายชื่อนี้ยังไม่มีเบอร์ที่ใช้ได้ ถามเบอร์จากลูกค้าแล้วกรอก แล้วกดบันทึกด้านล่าง</div><input type="tel" id="aPhone" placeholder="08x-xxx-xxxx" inputmode="numeric"></div>';
+  h+='<div class="card"><h3>เซลล์ที่ดูแล</h3><input type="text" id="aOwner" list="ownerDL" value="'+esc(g.owner||'')+'" placeholder="ยังไม่ระบุ — พิมพ์ชื่อเล่นเซลล์" autocomplete="off">'+ownerDL()+'<div class="hint" style="margin-top:4px">ถ้ามีเซลล์สองคนคั่นด้วย / · กด "บันทึก" ด้านล่างเพื่อเก็บ</div></div>';
   if(g.type===AG)h+='<div class="card"><h3>ข้อมูล Agent</h3><label style="margin-top:0">ชื่อ Agent</label><input type="text" id="aName" value="'+esc(g.name||'')+'" placeholder="ชื่อ–นามสกุล Agent"><label>ชื่อเล่น Agent</label><input type="text" id="gNick" value="'+esc(g.nickname||'')+'" placeholder="ชื่อเล่น (ถ้ามี)"><label>ชื่อบริษัท</label><input type="text" id="aCompany" value="'+esc(g.company||'')+'" placeholder="ชื่อบริษัท Agent">'+photoSection(g)+'</div>';
   else h+='<div class="card"><h3>ชื่อเล่น และรูปลูกค้า</h3><label style="margin-top:0">ชื่อเล่นลูกค้า</label><input type="text" id="gNick" value="'+esc(g.nickname||'')+'" placeholder="ชื่อเล่น (ถ้ามี)">'+photoSection(g)+'</div>';
   h+='<div class="card"><h3>บันทึกจากสตาฟทุกคน ('+(g.notes||[]).length+')</h3>';
@@ -529,10 +537,10 @@ function buildImport(text){
     if(/both|ทั้งสอง/i.test(pr)||(/20/.test(pr)&&/21/.test(pr)))pref='both';else if(/Friday|ศุกร์|20/.test(pr))pref='20';else if(/Saturday|เสาร์|21/.test(pr))pref='21';
     var slots={},f20=first(m.f20),f21=first(m.f21);if(f20)slots['20']=f20;if(f21)slots['21']=f21;
     if(!slots['20']&&!slots['21']){var raw=first(m.slotRaw);if(raw){if(pref==='21')slots['21']=raw;else if(pref==='20'||pref==='both')slots['20']=raw;else noDay++}}
-    var owner=m.owner>=0?String(r[m.owner]||'').trim():'';
+    var owner=m.owner>=0?normOwner(r[m.owner]):'';
     if(existing[gid]){
       var ex=existing[gid];
-      if(ex.src==='pre'&&(ex.prefDate!==pref||JSON.stringify(ex.slots||{})!==JSON.stringify(slots)||(owner&&ex.owner!==owner)))fix.push({_id:gid,prefDate:pref,slots:slots,owner:owner||ex.owner||''});
+      if(ex.src==='pre'&&(ex.prefDate!==pref||JSON.stringify(ex.slots||{})!==JSON.stringify(slots)||(owner&&ex.owner!==owner&&ex.ownerSrc!=='staff')))fix.push({_id:gid,prefDate:pref,slots:slots,owner:ex.ownerSrc==='staff'?(ex.owner||''):(owner||ex.owner||'')});
       else dupExisting++;
       return;
     }
@@ -603,6 +611,7 @@ document.addEventListener('click',function(e){
     if(S.ph.length)o.photos=photoObjs();
     if(S.nb&&S.nb!==g3.budget)o.budgetSet=S.nb;
     if(g3.type===AG){o.name=$('aName').value.trim();o.company=$('aCompany').value.trim()}
+    if($('aOwner'))o.owner=normOwner($('aOwner').value);
     if($('aPhone')&&$('aPhone').value.trim()){var nph=normPhone($('aPhone').value);
       if(nph.length<9)return toast('เบอร์ไม่ครบ ตรวจอีกครั้ง');
       var dupG=G.filter(function(c){return c.phone===nph&&c.id!==g3.id})[0];
@@ -617,7 +626,7 @@ document.addEventListener('click',function(e){
     if(!$('fPdpa').checked)return toast('ต้องติ๊กแจ้ง PDPA');
     if(S.busy)return toast('รอย่อรูปให้เสร็จก่อน');
     t.disabled=true;
-    doCreateWalkin({type:S.type,name:nm,nickname:$('fNick')?$('fNick').value.trim():'',company:co,phone:ph,pax:S.np,media:S.nm,budget:S.nb,
+    doCreateWalkin({type:S.type,name:nm,nickname:$('fNick')?$('fNick').value.trim():'',owner:normOwner($('fOwner')?$('fOwner').value:''),company:co,phone:ph,pax:S.np,media:S.nm,budget:S.nb,
       photos:S.ph.length?photoObjs():[],photoConsent:S.pc==='yes'?consentRecord():null}).then(function(r){
       S.newOpen=false;S.q='';S.flt='all';S.open=r.id;S.nh=[];resetPhotoState();S.noRestore=true;
       var gg=byId(r.id);S.nb=gg?(gg.budget||''):S.nb;
