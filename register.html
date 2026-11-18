@@ -38,6 +38,11 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--pri);outline-of
 .pdpa{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;margin-top:16px;font-size:13px}
 .pdpa .pt{font-weight:700;color:var(--ink);margin-bottom:6px}
 .pdpa .px{max-height:170px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+.pdpa a{color:var(--pri);font-weight:700;word-break:break-all}
+.consent-btn{display:flex;gap:10px;align-items:center;width:100%;text-align:left;margin-top:12px;padding:12px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-weight:600;font-size:15px;cursor:pointer}
+.consent-btn .ck{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;color:transparent;font-size:15px}
+.consent-btn.on{border-color:var(--pri);background:var(--pri);color:var(--onpri)}
+.consent-btn.on .ck{border-color:var(--onpri);background:var(--onpri);color:var(--pri)}
 .consent{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin-top:12px}
 .consent input{width:22px;height:22px;margin-top:2px;flex:none}
 .err{color:var(--err);font-size:13px;margin-top:4px;min-height:0}
@@ -86,8 +91,8 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--pri);outline-of
     <label><span data-t="media"></span> <span class="hint" data-t="optional"></span></label>
     <div class="chips" id="fMedia"></div>
 
-    <div class="pdpa"><div class="pt" data-t="pdpaTitle"></div><div class="px" id="pdpaText"></div></div>
-    <label class="consent"><input type="checkbox" id="pdpa"><span data-t="pdpaCheck"></span></label>
+    <div class="pdpa"><div class="pt" data-t="pdpaTitle"></div><div class="px"><span data-t="pdpaText"></span> <a href="https://patta.co.th/th/privacy-policy/" target="_blank" rel="noopener" data-t="pdpaLink"></a></div></div>
+    <button type="button" class="consent-btn" id="pdpaBtn" aria-pressed="false"><span class="ck">✓</span><span data-t="pdpaCheck"></span></button>
     <div class="err" id="ePdpa"></div>
 
     <input type="text" id="website" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -124,30 +129,30 @@ var params=new URLSearchParams(location.search);
 var TEST=params.get('test')==='1';              // ?test=1 → เขียนลงคิวทดสอบ event_selfreg_test
 var COLL=TEST?'event_selfreg_test':'event_selfreg';
 var OPEN_DATES=['2026-11-20','2026-11-21'];       // เปิดรับเฉพาะวันงาน (เวลาไทย) — กฎ Firestore ก็ล็อกช่วงเวลานี้เช่นกัน
-var PDPA_VER='selfreg-draft-v1';                  // ร่างข้อความ: ต้องให้ฝ่ายกฎหมาย/ผู้บริหารอนุมัติก่อนใช้จริง แล้วเปลี่ยนเลขเวอร์ชัน
+var PDPA_VER='selfreg-policylink-v1';                  // ร่างข้อความ: ต้องให้ฝ่ายกฎหมาย/ผู้บริหารอนุมัติก่อนใช้จริง แล้วเปลี่ยนเลขเวอร์ชัน
 var MEDIA=[['Facebook','Facebook'],['Google','Google'],['ป้ายโฆษณา','Billboard / signage'],['เพื่อน/คนรู้จักแนะนำ','Friend / referral'],['Line OA','LINE OA'],['Agency','Agency / Property agent'],['ขับรถผ่านโครงการ','Drove past the project'],['อื่นๆ','Other']];
 
 var T={
 th:{title:'ลงทะเบียนเข้างาน',sub:'PATTA GRAND OPENING · 20–21 พ.ย. 2569',who:'ท่านเป็น',customer:'ลูกค้า',agent:'Property Agent',
  name:'ชื่อ–นามสกุล',nick:'ชื่อเล่น',optional:'(ไม่บังคับ)',company:'ชื่อบริษัท',phone:'เบอร์โทรศัพท์',pax:'จำนวนผู้เข้าร่วม (รวมตัวท่าน)',media:'ทราบข่าวงานนี้จากช่องทางไหน',
  pdpaTitle:'ความยินยอมการเก็บและใช้ข้อมูลส่วนบุคคล (PDPA)',
- pdpaText:'ข้าพเจ้ายินยอมให้ PATTA Development Co., Ltd. ("บริษัทฯ") เก็บรวบรวมและใช้ข้อมูลที่กรอกในแบบฟอร์มนี้ ได้แก่ ชื่อ–นามสกุล ชื่อเล่น เบอร์โทรศัพท์ ชื่อบริษัท (กรณี Property Agent) จำนวนผู้เข้าร่วม และช่องทางที่ทราบข่าวงาน เพื่อ\n1. ลงทะเบียนและให้บริการในงาน PATTA GRAND OPENING\n2. ติดต่อกลับและติดตามการให้บริการเกี่ยวกับโครงการของบริษัทฯ\n\nข้อมูลจะใช้ภายในบริษัทฯ เท่านั้น และเก็บไว้เท่าที่จำเป็นตามวัตถุประสงค์ข้างต้น ข้าพเจ้าทราบว่าการให้ความยินยอมนี้เป็นไปโดยสมัครใจ หากไม่ประสงค์ให้ข้อมูลผ่านแบบฟอร์มนี้ สามารถแจ้งเจ้าหน้าที่ที่โต๊ะลงทะเบียนได้ และข้าพเจ้าสามารถขอถอนความยินยอมหรือใช้สิทธิตามกฎหมายได้โดยแจ้งเจ้าหน้าที่ของบริษัทฯ',
- pdpaCheck:'ข้าพเจ้าอ่านและยินยอมตามข้อความข้างต้น',submit:'ลงทะเบียน',sending:'กำลังส่ง…',
+ pdpaText:'กรุณาอ่านรายละเอียดนโยบายความเป็นส่วนตัวของ PATTA Development ที่ลิงก์ด้านล่างก่อนกดยินยอม ข้อมูลที่กรอกจะใช้เพื่อลงทะเบียนเข้างานและติดต่อกลับเกี่ยวกับโครงการเท่านั้น',pdpaLink:'patta.co.th/th/privacy-policy',
+ pdpaCheck:'ข้าพเจ้าอ่านและยินยอมให้เก็บและใช้ข้อมูลส่วนบุคคลตามนโยบายความเป็นส่วนตัว',submit:'ลงทะเบียน',sending:'กำลังส่ง…',
  slow:'สัญญาณอ่อน ข้อมูลจะส่งอัตโนมัติเมื่อมีสัญญาณ กรุณาอย่าปิดหน้านี้',
  doneTitle:'ลงทะเบียนเรียบร้อย',doneBody:'กรุณาแจ้งชื่อของท่านกับเจ้าหน้าที่ที่โต๊ะลงทะเบียน เพื่อยืนยันและรับการต้อนรับ',again:'ลงทะเบียนเพิ่มอีกท่าน',
  closedTitle:'ฟอร์มเปิดรับเฉพาะวันงาน',closedBody:'เปิดให้ลงทะเบียนวันที่ 20–21 พฤศจิกายน 2569 เท่านั้น',
- errName:'กรุณากรอกชื่อ–นามสกุล',errCo:'กรุณากรอกชื่อบริษัท',errPhone:'เบอร์โทรไม่ถูกต้อง (ตัวเลข 9–15 หลัก)',errPdpa:'กรุณาติ๊กยินยอมก่อนลงทะเบียน',
+ errName:'กรุณากรอกชื่อ–นามสกุล',errCo:'กรุณากรอกชื่อบริษัท',errPhone:'เบอร์โทรไม่ถูกต้อง (ตัวเลข 9–15 หลัก)',errPdpa:'กรุณากดปุ่มยินยอมก่อนลงทะเบียน',
  errSend:'ส่งข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง หรือแจ้งเจ้าหน้าที่',errPerm:'ส่งข้อมูลไม่ได้ในขณะนี้ (อาจอยู่นอกวันงาน) กรุณาแจ้งเจ้าหน้าที่',
  testBanner:'โหมดทดสอบ: ข้อมูลจะไม่เข้าระบบจริง'},
 en:{title:'Event Registration',sub:'PATTA GRAND OPENING · 20–21 Nov 2026',who:'I am a',customer:'Customer',agent:'Property Agent',
  name:'Full name',nick:'Nickname',optional:'(optional)',company:'Company name',phone:'Phone number',pax:'Number of guests (including you)',media:'How did you hear about this event?',
  pdpaTitle:'Personal data consent (PDPA)',
- pdpaText:'I consent to PATTA Development Co., Ltd. (the "Company") collecting and using the information submitted in this form — full name, nickname, phone number, company name (for Property Agents), number of guests and how I heard about the event — in order to:\n1. register me and provide service at PATTA GRAND OPENING\n2. contact me and follow up regarding the Company\'s projects\n\nThe information will be used within the Company only and kept only as long as necessary for these purposes. I understand that giving this consent is voluntary; if I prefer not to provide information through this form, I may tell the staff at the registration desk. I may withdraw my consent or exercise my legal rights by notifying the Company\'s staff.',
- pdpaCheck:'I have read and I consent to the statement above',submit:'Register',sending:'Sending…',
+ pdpaText:'Please read the privacy policy of PATTA Development at the link below before you consent. The information you provide is used only to register you for the event and to follow up about our projects.',pdpaLink:'patta.co.th/th/privacy-policy',
+ pdpaCheck:'I have read the privacy policy and I consent to the collection and use of my personal data',submit:'Register',sending:'Sending…',
  slow:'Weak signal — your registration will be sent automatically once connected. Please keep this page open.',
  doneTitle:'Registration received',doneBody:'Please tell the staff at the registration desk your name so they can confirm and welcome you.',again:'Register another guest',
  closedTitle:'Registration is open on event days only',closedBody:'You can register on 20–21 November 2026 only.',
- errName:'Please enter your full name',errCo:'Please enter your company name',errPhone:'Invalid phone number (9–15 digits)',errPdpa:'Please tick the consent box to register',
+ errName:'Please enter your full name',errCo:'Please enter your company name',errPhone:'Invalid phone number (9–15 digits)',errPdpa:'Please press the consent button to register',
  errSend:'Could not send. Please try again or ask the staff.',errPerm:'Cannot submit right now (possibly outside the event days). Please ask the staff.',
  testBanner:'Test mode: data does not go into the real system'}
 };
@@ -160,12 +165,12 @@ function t(k){return (T[lang]&&T[lang][k])||T.th[k]||''}
 function normPhone(s){var d=String(s||'').replace(/\D/g,'');if(d.indexOf('66')===0&&d.length===11)d='0'+d.slice(2);if(d.length===9&&d.charAt(0)!=='0')d='0'+d;return d}
 function bkkDate(){return new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Bangkok'})}
 
-var st={type:'customer',pax:1,media:''};
+var st={type:'customer',pax:1,media:'',pdpa:false};
+function setPdpa(v){st.pdpa=v;$('pdpaBtn').classList.toggle('on',v);$('pdpaBtn').setAttribute('aria-pressed',v?'true':'false');if(v)$('ePdpa').textContent=''}
 
 function applyLang(){
   document.documentElement.lang=lang;
   [].forEach.call(document.querySelectorAll('[data-t]'),function(el){el.textContent=t(el.getAttribute('data-t'))});
-  $('pdpaText').textContent=t('pdpaText');
   [].forEach.call(document.querySelectorAll('.lang button'),function(b){b.classList.toggle('on',b.getAttribute('data-lang')===lang)});
   renderMedia();
   var go=$('go');if(!go.disabled)go.textContent=t('submit');
@@ -187,9 +192,10 @@ document.addEventListener('click',function(e){
   if((x=el.closest('.lang button'))){lang=x.getAttribute('data-lang');try{localStorage.setItem('selfreg_lang',lang)}catch(er){}applyLang();return}
   if((x=el.closest('#fType .chip'))){st.type=x.getAttribute('data-v');[].forEach.call(document.querySelectorAll('#fType .chip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')===st.type)});$('coBox').hidden=st.type!=='agent';return}
   if((x=el.closest('#fMedia .chip'))){var v=x.getAttribute('data-m');st.media=st.media===v?'':v;renderMedia();return}
+  if((x=el.closest('#pdpaBtn'))){setPdpa(!st.pdpa);return}
   if(el.id==='pMinus'){st.pax=Math.max(1,st.pax-1);$('pVal').textContent=st.pax;return}
   if(el.id==='pPlus'){st.pax=Math.min(20,st.pax+1);$('pVal').textContent=st.pax;return}
-  if(el.id==='again'){$('done').hidden=true;$('f').reset();st.type='customer';st.pax=1;st.media='';$('pVal').textContent='1';$('coBox').hidden=true;[].forEach.call(document.querySelectorAll('#fType .chip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')==='customer')});renderMedia();clearErrors();setOpenState();window.scrollTo(0,0)}
+  if(el.id==='again'){$('done').hidden=true;$('f').reset();st.type='customer';st.pax=1;st.media='';setPdpa(false);$('pVal').textContent='1';$('coBox').hidden=true;[].forEach.call(document.querySelectorAll('#fType .chip'),function(c){c.classList.toggle('on',c.getAttribute('data-v')==='customer')});renderMedia();clearErrors();setOpenState();window.scrollTo(0,0)}
 });
 
 var db=null;
@@ -202,7 +208,7 @@ $('f').addEventListener('submit',function(e){
   if(name.length<2){$('eName').textContent=t('errName');ok=false}
   if(st.type==='agent'&&!company){$('eCo').textContent=t('errCo');ok=false}
   if(phone.length<9||phone.length>15){$('ePhone').textContent=t('errPhone');ok=false}
-  if(!$('pdpa').checked){$('ePdpa').textContent=t('errPdpa');ok=false}
+  if(!st.pdpa){$('ePdpa').textContent=t('errPdpa');ok=false}
   if(!ok){var first=document.querySelector('.err:not(:empty)');if(first)first.scrollIntoView({block:'center',behavior:'smooth'});return}
   if($('website').value){$('f').hidden=true;$('done').hidden=false;return}   // ช่องกับดักบอท: แกล้งทำเป็นสำเร็จ ไม่บันทึก
   if(!db){$('eSend').textContent=t('errSend');return}
