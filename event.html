@@ -166,12 +166,14 @@ function typeLabel(t){return t===AG?'Property Agent':'ลูกค้า'}
 var params=new URLSearchParams(location.search);
 var TEST=params.get('test')==='1';
 var COLL=TEST?'event_guests_test':'event_guests';
+var COLL_SELF=TEST?'event_selfreg_test':'event_selfreg';
 
 /* ---------- State ---------- */
 var S={user:null,me:'',isAdmin:false,view:'desk',open:null,newOpen:false,flt:'all',q:'',dashDay:'all',type:CU,showAll:false,
   nh:[],nb:'',nm:'',np:1,today:null,todayMsg:'',offsetMs:0,online:true,pending:false,ready:false,err:'',imp:null,noRestore:false,
   ph:[],pc:'',busy:false}; // ph = รูปที่ยังไม่บันทึก, pc = PDPA รูปถ่าย ('' ยังไม่ถาม / 'yes' / 'no')
 var G=[]; // guests from Firestore
+var PEND=[],unsubSelf=null; // ลูกค้าลงทะเบียนเองผ่านหน้า register.html รอฝ่ายลงทะเบียนยืนยัน
 var auth=null,db=null,unsub=null;
 
 /* ---------- Helpers ---------- */
@@ -320,12 +322,32 @@ function doCreateWalkin(o){
       return ref(id).update(u).then(function(){return {existing:true,id:id}});
     }
     var d={type:o.type,name:o.name,nickname:o.nickname||'',owner:o.owner||'',assist:o.assist||'',ownerSrc:(o.owner||o.assist)?'staff':'',ownerBy:(o.owner||o.assist)?S.me:'',ownerAt:(o.owner||o.assist)?nowIso():'',company:o.company||'',phone:o.phone,photos:o.photos||[],src:'walk',prefDate:'',slots:{},pax:o.pax,media:o.media||'',budget:o.budget||'',budgetBy:o.budget?S.me:'',budgetAt:o.budget?nowIso():'',
-      checkins:{},notes:[],pdpa:{source:'onsite',by:S.me,at:nowIso()},createdBy:S.me,createdAt:nowIso()};
+      checkins:{},notes:[],pdpa:o.pdpaSelf?{source:'self',version:o.pdpaSelf,by:S.me,at:nowIso()}:{source:'onsite',by:S.me,at:nowIso()},createdBy:S.me,createdAt:nowIso()};
     if(o.photoConsent)d.photoConsent=o.photoConsent;
     if(S.today)d.checkins[S.today]={pax:o.pax,by:S.me,at:nowIso()};
     if(o.budget)d.notes=[{by:S.me,at:nowIso(),detail:'',interest:'',houses:[],budgetSet:o.budget}];
     return ref(id).set(d).then(function(){return {existing:false,id:id}});
   });
+}
+
+function doConfirmSelf(p){
+  var o={type:p.type==='agent'?AG:CU,name:p.name,nickname:p.nickname||'',company:p.company||'',phone:normPhone(p.phone),pax:p.pax||1,media:p.media||'',pdpaSelf:(p.pdpa&&p.pdpa.version)||'self'};
+  return doCreateWalkin(o).then(function(r){
+    return db.collection(COLL_SELF).doc(p.id).update({status:'confirmed',guestId:r.id,confirmedBy:S.me,confirmedAt:nowIso()}).then(function(){return r});
+  });
+}
+function doRejectSelf(p){return db.collection(COLL_SELF).doc(p.id).update({status:'rejected',confirmedBy:S.me,confirmedAt:nowIso()})}
+function pendCard(){
+  if(!PEND.length)return '';
+  var h='<div class="card" style="border:2px solid var(--pri)"><h3>รอยืนยัน ('+PEND.length+')</h3><div class="hint" style="margin:0 0 8px">ลูกค้าลงทะเบียนเองจากมือถือ กด "ยืนยัน" เพื่อเช็คอินและเลือกเซลล์</div>';
+  PEND.forEach(function(p){
+    var nm=esc(p.name)+(p.nickname?' ('+esc(p.nickname)+')':'');
+    h+='<div style="border-top:1px solid var(--line);padding:10px 0"><div style="font-weight:700">'+nm+(p.type==='agent'?' <span class="tag t-warn">Agent</span>':'')+'</div>'
+      +'<div class="hint" style="margin:2px 0 8px">'+esc(normPhone(p.phone))+(p.company?' · '+esc(p.company):'')+' · '+(p.pax||1)+' คน'+(p.media?' · '+esc(p.media):'')+'</div>'
+      +'<div style="display:flex;gap:8px"><button class="btn" data-selfok="'+esc(p.id)+'" style="margin:0;flex:2">ยืนยัน + เช็คอิน</button>'
+      +'<button class="btn sec" data-selfno="'+esc(p.id)+'" style="margin:0;flex:1">'+(S.rejArm===p.id?'กดอีกครั้งเพื่อปฏิเสธ':'ปฏิเสธ')+'</button></div></div>';
+  });
+  return h+'</div>';
 }
 
 /* ---------- Render ---------- */
@@ -411,6 +433,7 @@ function desk(){
       if(S.flt==='in')return S.today&&isIn(x,S.today);
       if(S.flt==='noown')return !x.owner&&!x.assist;
       return true}).sort(function(a,b){return guestName(a).localeCompare(guestName(b),'th')});
+    h+=pendCard();
     h+='<div class="card"><h3>ค้นหาลูกค้า</h3><input type="text" id="q" value="'+esc(S.q)+'" placeholder="ค้นหาชื่อ ชื่อเล่น บริษัท เบอร์โทร หรือเซลล์">';
     h+='<div class="flt"><button data-f="all" class="'+(S.flt==='all'?'on':'')+'">ทั้งหมด</button><button data-f="todo" class="'+(S.flt==='todo'?'on':'')+'">ยังไม่เช็คอินวันนี้</button><button data-f="in" class="'+(S.flt==='in'?'on':'')+'">เช็คอินแล้ว</button><button data-f="noown" class="'+(S.flt==='noown'?'on':'')+'">ยังไม่มีเซลล์</button></div>';
     h+='<button class="btn sec" id="newBtn" style="margin-top:10px">+ ไม่เจอชื่อ → เพิ่ม Walk-in ใหม่</button>';
@@ -423,7 +446,7 @@ function desk(){
   h+='<div class="info"><span>เบอร์โทร</span><span>'+(g.phone?esc(g.phone):'<span style="color:var(--err)">'+esc(phoneTxt(g))+'</span>')+'</span><span>แบบบ้านที่สนใจ</span><span>'+(hs.length?esc(hs.map(hl).join(', ')):'ยังไม่ได้ระบุ')+'</span>';
   h+='<span>งบประมาณ</span><span>'+(g.budget?'<b>'+esc(g.budget)+'</b><br><span class="hint">ตั้งโดย '+esc(g.budgetBy||'')+'</span>':'<span style="color:var(--err)">ยังไม่ได้ถาม</span>')+'</span></div>';
   if(g.src==='pre')h+='<div class="gbox"><div class="gt">ข้อมูลจากฟอร์มลงทะเบียน (Google Form)</div><div class="info"><span>วันที่สะดวก</span><span>'+PD[g.prefDate||'both']+'</span><span>ช่วงเวลา</span><span>'+esc(slotsText(g)||'-')+'</span><span>ลงทะเบียนมา</span><span>'+(g.pax||1)+' คน</span><span>รู้จักงานจาก</span><span>'+esc(g.media||'-')+'</span><span>เซลล์ที่ดูแล</span><span>'+esc(g.owner||'-')+'</span><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='form'?'ยินยอมแล้วในฟอร์ม ✓':'ไม่พบบันทึกการยินยอม — แจ้ง PDPA ก่อนเก็บข้อมูลเพิ่ม')+'</span></div></div>';
-  else h+='<div class="gbox"><div class="gt">Walk-in หน้างาน</div><div class="info"><span>PDPA</span><span>แจ้งตอนลงทะเบียนหน้างานแล้ว ✓</span></div></div>';
+  else h+='<div class="gbox"><div class="gt">Walk-in หน้างาน</div><div class="info"><span>PDPA</span><span>'+(g.pdpa&&g.pdpa.source==='self'?'ลูกค้าลงทะเบียนเอง · ยินยอมผ่านฟอร์มแล้ว ✓':'แจ้งตอนลงทะเบียนหน้างานแล้ว ✓')+'</span></div></div>';
   h+='<div style="margin-top:12px;font-weight:600;font-size:14px">มาวันนี้กี่คน'+(S.today?' ('+DAYS[S.today].label+')':'')+'</div>'+stepper();
   if(S.today&&!inToday)h+='<button class="btn" id="cinDetail">เช็คอินวันนี้ ('+DAYS[S.today].label+')</button>';
   h+='</div>';
@@ -610,6 +633,11 @@ document.addEventListener('click',function(e){
     doCheckin(g,S.today,g.pax||1).then(function(){toast('เช็คอิน '+guestName(g)+' · '+(g.pax||1)+' คน ✓')}).catch(fail);return}
   if((x=t.closest('[data-pick]'))){var g2=byId(x.dataset.pick);if(!g2)return;S.open=g2.id;S.nh=[];S.nb=g2.budget||'';S.nm=g2.media||'';S.np=(S.today&&pin(g2,S.today))||g2.pax||1;resetPhotoState();S.noRestore=true;render();window.scrollTo(0,0);return}
   if(t.id==='backList'||t.id==='fCancel'){if(S.ph.length&&!confirm('มีรูปที่ยังไม่บันทึก ออกจากหน้านี้เลยไหม?'))return;S.open=null;S.newOpen=false;resetPhotoState();S.noRestore=true;render();window.scrollTo(0,0);return}
+  if((x=t.closest('[data-selfok]'))){var pk=PEND.filter(function(q){return q.id===x.dataset.selfok})[0];if(!pk)return;x.disabled=true;
+    doConfirmSelf(pk).then(function(r){toast('ยืนยัน '+pk.name+' แล้ว · เลือกเซลล์ได้เลย');S.open=r.id;S.newOpen=false;S.nh=[];S.nb='';S.nm='';S.np=pk.pax||1;resetPhotoState();render()}).catch(function(er){x.disabled=false;fail(er)});return}
+  if((x=t.closest('[data-selfno]'))){var pr=PEND.filter(function(q){return q.id===x.dataset.selfno})[0];if(!pr)return;
+    if(S.rejArm!==pr.id){S.rejArm=pr.id;render();return}
+    S.rejArm='';doRejectSelf(pr).then(function(){toast('ปฏิเสธรายการแล้ว')}).catch(fail);return}
   if(t.id==='newBtn'){S.newOpen=true;S.open=null;S.type=CU;S.np=1;S.nm='';S.nb='';resetPhotoState();render();return}
   if(t.id==='showAll'){S.showAll=true;render();return}
   if(t.id==='npMinus'||t.id==='npPlus'){S.np=Math.max(1,S.np+(t.id==='npPlus'?1:-1));$('npVal').textContent=S.np;return}
@@ -680,7 +708,15 @@ window.addEventListener('online',function(){S.online=true;softRender()});
 window.addEventListener('offline',function(){S.online=false;softRender()});
 
 /* ---------- Boot ---------- */
+function startSelfListen(){
+  if(unsubSelf)unsubSelf();
+  unsubSelf=db.collection(COLL_SELF).where('status','==','pending').onSnapshot(function(snap){
+    PEND=snap.docs.map(function(d){var o=d.data();o.id=d.id;return o}).sort(function(a,b){var x=a.createdAt&&a.createdAt.toMillis?a.createdAt.toMillis():0,y=b.createdAt&&b.createdAt.toMillis?b.createdAt.toMillis():0;return x-y});
+    softRender();
+  },function(err){console.error(err);PEND=[]});
+}
 function startListen(){
+  startSelfListen();
   if(unsub)unsub();
   unsub=db.collection(COLL).onSnapshot({includeMetadataChanges:true},function(snap){
     G=snap.docs.map(function(d){var o=d.data();o.id=d.id;if(o.owner)o.owner=normOwner(o.owner);if(o.assist)o.assist=normOwner(o.assist);return o});
@@ -696,7 +732,7 @@ function boot(){
   }catch(e){$('root').innerHTML='<div class="loading">เชื่อมต่อ Firebase ไม่สำเร็จ ลองรีเฟรชหน้านี้</div>';return}
   S.online=navigator.onLine!==false;
   auth.onAuthStateChanged(function(user){
-    if(!user){S.user=null;S.me='';S.ready=true;if(unsub){unsub();unsub=null}G=[];render();return}
+    if(!user){S.user=null;S.me='';S.ready=true;if(unsub){unsub();unsub=null}if(unsubSelf){unsubSelf();unsubSelf=null}G=[];PEND=[];render();return}
     db.collection('profiles').doc(user.uid).get().then(function(snap){
       if(!snap.exists){auth.signOut();S.err='บัญชีนี้ไม่มีสิทธิ์ใช้งาน กรุณาติดต่อผู้ดูแลระบบ';return}
       var p=snap.data()||{};
