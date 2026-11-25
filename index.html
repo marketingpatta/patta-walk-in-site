@@ -738,7 +738,10 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      tables -- without this override they'd force horizontal scroll and the last
      column (the count/reason) would sit out of view. */
   table.data.compact-table{ min-width:0; }
-  .spf-stack-row{ display:grid; grid-template-columns:150px 1fr; align-items:center; gap:10px; margin-bottom:10px; }
+  .spf-stack-row{ display:grid; grid-template-columns:150px 1fr 250px; align-items:center; gap:10px; margin-bottom:10px; }
+  .spf-stack-nums{ font-size:12px; white-space:nowrap; color:var(--text-secondary); font-variant-numeric:tabular-nums; }
+  .spf-stack-nums b{ font-weight:700; }
+  @media (max-width:760px){ .spf-stack-row{ grid-template-columns:110px 1fr; } .spf-stack-nums{ grid-column:1 / -1; } }
   .spf-stack-track{ height:26px; border-radius:6px; overflow:hidden; display:flex; background:var(--surface-2); }
   .spf-stack-seg{ display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; }
   .spf-stack-legend{ display:flex; gap:14px; font-size:11px; color:var(--text-secondary); margin-bottom:14px; }
@@ -3802,7 +3805,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           var pct = total? (s.n/total*100) : 0;
           return pct>0 ? '<div class="spf-stack-seg" style="width:'+pct+'%; background:'+s.color+'" title="'+s.label+': '+fmtInt(s.n)+' ('+pct.toFixed(1)+'%)">'+(pct>=8?fmtInt(s.n):'')+'</div>' : '';
         }).join('');
-        return '<div class="spf-stack-row"><div class="bar-label">'+p+' ('+fmtInt(total)+')</div><div class="spf-stack-track">'+segHtml+'</div></div>';
+        var numsHtml = '<div class="spf-stack-nums">'+segs.map(function(s2){ return '<span style="color:'+s2.color+'">●</span> '+s2.label+' <b>'+fmtInt(s2.n)+'</b>'; }).join(' &nbsp; ')+'</div>';
+        return '<div class="spf-stack-row"><div class="bar-label">'+p+' ('+fmtInt(total)+')</div><div class="spf-stack-track">'+segHtml+'</div>'+numsHtml+'</div>';
       }).join('');
     })();
 
