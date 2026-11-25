@@ -3873,14 +3873,32 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     (function(){
       var t = document.getElementById('spfTable4');
       var head = '<tr><th>Project</th><th>Total Units</th><th>Avg/mo 2024</th><th>Avg/mo 2025</th><th>2026 Target</th>'+
-        '<th>Booked YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th></tr>';
+        '<th>Booked YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th><th>Year to go sales forecast (Unit)</th></tr>';
       var now = new Date();
       var monthsPassed = now.getMonth()+1;
       var monthsLeft = Math.max(12 - monthsPassed, 1);
       var pctPassed = Math.round(monthsPassed/12*100);
+      // Year-to-go forecast: avg bookings/month over the last 3 full months (adjusted bookings, SS_DATA.yearly)
+      // x time left in the year (days to 31 Dec / 30.44), capped by unsold stock. Excludes the current partial month.
+      var ytgMonthIdx = now.getMonth();
+      var ytgLeft = Math.max((new Date(now.getFullYear(),11,31) - now)/86400000, 0)/30.44;
+      var ytgTotal = 0, ytgTotalTarget = 0, ytgTotalYtd = 0;
+      function ytgCalc(p, d){
+        var y = ((SS_DATA.yearly||{})[p]||{})[String(now.getFullYear())] || [];
+        var w = y.slice(Math.max(ytgMonthIdx-3,0), ytgMonthIdx);
+        var sum = w.reduce(function(a,b){ return a+(b||0); }, 0);
+        var eff = 3;
+        if(d.launch_date){ var since = (new Date(now.getFullYear(), ytgMonthIdx, 1) - new Date(d.launch_date))/86400000/30.44; if(since < eff) eff = since; }
+        eff = Math.max(1, Math.min(eff, w.length || 1));
+        var rate = sum/eff;
+        var raw = Math.min(rate*ytgLeft, d.remaining_unsold!=null ? d.remaining_unsold : rate*ytgLeft);
+        return { rate: rate, raw: raw, n: Math.round(raw), sum: sum, eff: eff };
+      }
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         var pct = d.target_progress_pct;
+        var yf = ytgCalc(p, d); ytgTotal += yf.n; ytgTotalTarget += (d.target_2026||0); ytgTotalYtd += (d.sales_2026||0);
+        var yfTip = 'ค่าเฉลี่ยจอง '+yf.rate.toFixed(2)+' ยูนิต/เดือน (3 เดือนเต็มล่าสุด = '+fmtInt(yf.sum)+' ยูนิต) × เวลาที่เหลือ '+ytgLeft.toFixed(2)+' เดือน = '+yf.raw.toFixed(2)+' ยูนิต';
         var color = pct>=70?cssVar('--good'):(pct>=40?cssVar('--warning'):cssVar('--critical'));
         var targetPerMonth = (d.target_remaining/monthsLeft).toFixed(1);
         // Whole-row highlight when this project's yearly progress % is behind how much
@@ -3890,7 +3908,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         return '<tr class="'+(behind?'spf-row-behind':'')+'"><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.total_units)+'</td><td class="num">'+d.avg_monthly_2024+'</td>'+
           '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(d.sales_2026)+'</td>'+
           '<td class="num"><span class="spf-target-cell" style="background:'+color+'22; color:'+color+'">'+pct+'%</span></td>'+
-          '<td class="num">'+fmtInt(d.target_remaining)+'</td><td class="num">'+targetPerMonth+'</td></tr>';
+          '<td class="num">'+fmtInt(d.target_remaining)+'</td><td class="num">'+targetPerMonth+'</td>'+
+          '<td class="num" style="font-weight:700;" title="'+yfTip.replace(/"/g,'&quot;')+'">'+fmtInt(yf.n)+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
       var noteEl = document.getElementById('spfTable4Note');
@@ -3910,6 +3929,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           '<span class="spf-note-row"><b>ผ่านไปแล้ว '+monthsPassed+' เดือน</b> ('+pctPassed+'% ของปี '+now.getFullYear()+')</span>'+
           '<span class="spf-note-row"><b>เหลือระยะเวลาขาย</b> '+monthsLeft+' เดือน</span>'+
           terVsRvrHTML+
+          '<span class="spf-note-row"><b>Year to go sales forecast:</b> ประมาณการยอดจองเพิ่มจนสิ้นปี รวม '+fmtInt(ytgTotal)+' ยูนิต → คาดปิดปีที่ '+fmtInt(ytgTotalYtd+ytgTotal)+' ยูนิต จากเป้ารวม '+fmtInt(ytgTotalTarget)+' ยูนิต · คิดจากค่าเฉลี่ยยอดจองต่อเดือนของ 3 เดือนเต็มล่าสุด (ไม่รวมเดือนปัจจุบัน) × เวลาที่เหลือของปี และไม่เกินยูนิตที่เหลือขาย (เลื่อนเมาส์ที่ตัวเลขเพื่อดูวิธีคำนวณรายโครงการ)</span>'+
           '<span class="spf-note-row spf-note-legend"><span class="spf-legend-swatch behind"></span>แถวที่ไฮไลท์ = ความคืบหน้ายังตามหลังเวลาที่ผ่านไปของปี ('+pctPassed+'%)</span>';
       }
     })();
