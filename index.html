@@ -1113,7 +1113,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div class="card-sub" id="raceSub"></div>
       <div class="race-legend" id="raceLegend"></div>
       <div class="table-scroll" id="raceBody"></div>
-      <div class="ex-legend">คะแนนความพร้อมซื้อ (0–95) คำนวณจากข้อมูลที่เซลบันทึก: จำนวนครั้งที่เข้าชม (2 ครั้ง +20, 3 ครั้ง +30, 4 ครั้งขึ้นไป +40) + เกรดล่าสุด (A +40, B +25, C +10) + สถานะล่าสุด (เช่น ปรึกษาครอบครัว/อยู่ระหว่างติดตาม +15, ไม่สนใจแล้ว/ซื้อที่อื่นแล้ว −15 ถึง −20) · "ลูกค้าที่มีโอกาส" = คะแนน ≥35 หรือเกรด A/B · วางเมาส์บนจุดเพื่อดูรายละเอียด กดที่จุดเพื่อเปิดการ์ด (สัญชาติ/แปลงที่จอง ฯลฯ) · กด "ไทย · ต่างชาติ" ใต้ชื่อโครงการเพื่อดูว่ามีชาติไหนบ้าง · ตัวเลข +N ด้านบนคือจำนวนที่ซ้อนกันเกินจะแสดง</div>
+      <div class="ex-legend">แต่ละช่อง = ลูกค้าอยู่ในรอบติดตามไหน: วันที่ 7 (ยังไม่ได้บันทึกติดตาม 7 วัน) → วันที่ 30 (ติดตาม 7 วันแล้ว) → วันที่ 90 (ติดตาม 30 วันแล้ว) · Potential = ลูกค้าศักยภาพสูง คำนวณจากจำนวนครั้งที่เข้าชม + สถานะล่าสุด (ไม่ใช้เกรด) · สีของจุด: เขียว = ติดตามแล้วมี Feedback · เทา = ยังไม่ได้รับการติดต่อ/ติดตาม · แดง = เกินกำหนดติดตาม · ดำ (ช่อง Dead end) = ขาดการติดต่อและจบการติดตามแล้ว · "ลูกค้าที่มีโอกาส" = ซ่อนลูกค้าที่ไม่สนใจ/ซื้อที่อื่น/ติดต่อไม่ได้ · ในแต่ละช่องเรียงแดง → เทา → เขียว · วางเมาส์บนจุดเพื่อดูรายละเอียด กดที่จุดเพื่อเปิดการ์ด · +N ราย = จำนวนที่ไม่ได้แสดงเพราะเกินพื้นที่</div>
     </div>
 
     <div class="card trend">
@@ -3306,11 +3306,23 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     'เปรียบเทียบโครงการอื่น':5, 'เกินงบประมาณ':0, 'ยังไม่รีบตัดสินใจ':0, 'กู้ไม่ผ่าน/การเงินไม่พร้อม':-5,
     'ยังไม่มีแพลนซื้อ':-10, 'Survey/แวะชมเฉยๆ':-10, 'ขอดูเป็นข้อมูลเบื้องต้น':-10, 'ไม่ให้ข้อมูลติดต่อ':-10, 'ติดต่อไม่ได้':-10,
     'ยังไม่สนใจ/ไม่สนใจแล้ว':-15, 'ซื้อโครงการอื่นแล้ว':-20, 'ซื้อที่ดินปลูกบ้านเอง':-20, 'กลับต่างประเทศแล้ว':-15 };
-  var RACE_ZONES = [
-    { from:0,  to:35, label:'เริ่มต้น', sub:'เข้าชมครั้งแรก / ยังไม่ชัดเจน' },
-    { from:35, to:60, label:'สนใจจริง', sub:'กลับมาซ้ำ หรือเกรด B ขึ้นไป' },
-    { from:60, to:100, label:'Potential', sub:'ลูกค้าศักยภาพสูง ใกล้ตัดสินใจ' }
+  // columns (2026-11-25): where each customer is in the 7/30/90-day follow-up routine; Potential unchanged
+  var RACE_COLS = [
+    { k:'7',  label:'วันที่ 7',  sub:'รอติดตามครั้งแรก (7 วัน)' },
+    { k:'30', label:'วันที่ 30', sub:'ติดตาม 7 วันแล้ว รอ 30 วัน' },
+    { k:'90', label:'วันที่ 90', sub:'ติดตาม 30 วันแล้ว รอ 90 วัน' },
+    { k:'P',  label:'Potential', sub:'ลูกค้าศักยภาพสูง ใกล้ตัดสินใจ' }
   ];
+  function raceStageIdx(it){
+    if(it.score>=60) return 3;
+    if(!it.doneCp['7']) return 0;
+    if(!it.doneCp['30']) return 1;
+    return 2;
+  }
+  function raceDoneTxt(it){
+    var d = ['7','30','90'].filter(function(c){ return it.doneCp[c]; });
+    return d.length ? d.join(' / ')+' วัน' : 'ยังไม่มี';
+  }
   // House ID convention (company rule): always XXXYYY -- 3-letter project code + 3-digit lot,
   // zero-padded (CAS021, HRZ059). Booked-unit codes coming from ERP/the tracker in any other
   // shape ("CAS 21", "cas-021", "21") are normalised here; anything unrecognisable is shown as-is.
@@ -3345,12 +3357,19 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // first-version palette (restored on request 2026-10-26): A blue, B orange, C violet, D/none grey
     return g==='A' ? cssVar('--accent') : g==='B' ? cssVar('--s2') : g==='C' ? cssVar('--s7') : cssVar('--text-muted');
   }
-  function raceScore(visitCount, grade, status){
-    var s = visitCount>=4 ? 40 : visitCount===3 ? 30 : visitCount===2 ? 20 : 0;
-    s += grade==='A' ? 40 : grade==='B' ? 25 : grade==='C' ? 10 : grade==='D' ? 0 : 5;
+  function raceScore(visitCount, status){
+    // grade removed (2026-11-25): readiness = number of visits + latest status only
+    var s = visitCount>=4 ? 65 : visitCount===3 ? 55 : visitCount===2 ? 40 : 10;
     s += RACE_STATUS_POS[status] || 0;
     return Math.max(0, Math.min(95, s));
   }
+  // marker colour = follow-up state (7/30/90 days), not grade
+  var RACE_FU = {
+    overdue:{ label:'เกินกำหนดติดตาม', color:'#D93025' },
+    done:   { label:'ติดตามแล้ว (มี Feedback)', color:'#1E9E4A' },
+    none:   { label:'ยังไม่ได้รับการติดต่อ/ติดตาม', color:'#9A988F' },
+    dead:   { label:'Dead end (ขาดการติดต่อ · จบการติดตามแล้ว)', color:'#1A1A19' }
+  };
 
   function computeRace(){
     var today = toISO(new Date());
@@ -3362,6 +3381,16 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     });
     var dueKeys = {};
     computeFollowupDue().forEach(function(d){ dueKeys[customerKey(d)+'|'+d.p] = true; });
+    // customers that already have a follow-up logged (new log collection or legacy rows with "fu")
+    var followedKeys = {}, lastFb = {};
+    (followupLogRecords || []).forEach(function(rec){
+      if(!rec.nm || !rec.p) return;
+      var k = customerKey(rec)+'|'+rec.p; followedKeys[k] = true;
+      if(!lastFb[k] || (rec.d||'')>=lastFb[k].d) lastFb[k] = { d:rec.d||'', s:(rec.s && rec.s!=='N/A') ? rec.s : '', cp:rec.fu };
+    });
+    var doneCpMap = {};
+    (followupLogRecords || []).forEach(function(rec){ if(rec.nm && rec.p && rec.fu){ var k = customerKey(rec)+'|'+rec.p; (doneCpMap[k] = doneCpMap[k] || {})[String(rec.fu)] = true; } });
+    ALLREC.forEach(function(r){ if(r.fu && r.nm && r.p){ var k = customerKey(r)+'|'+r.p; followedKeys[k] = true; (doneCpMap[k] = doneCpMap[k] || {})[String(r.fu)] = true; } });
     // Fallback for bookings whose Walk-in rows carry no unit code: look the customer up in
     // the ERP active-contract list of the same project by normalised name (same good-faith
     // matching the Agency card uses) -- flagged "(จาก ERP)" in the tooltip.
@@ -3378,7 +3407,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     computeCustomerGroups().forEach(function(g){
       if(state.project!=='ALL' && g.p!==state.project) return;
       if(g.lastVisitDate<state.start || g.lastVisitDate>state.end) return;
-      var lane = lanes[g.p] = lanes[g.p] || { p:g.p, racers:[], finished:[], discontinued:0, hidden:0 };
+      var lane = lanes[g.p] = lanes[g.p] || { p:g.p, racers:[], finished:[], dead:[], discontinued:0, hidden:0 };
       var last = g.visits[g.visits.length-1];
       var status = (last.s && last.s!=='N/A') ? last.s : 'ไม่มี Feedback';
       var grade = GRADE_ORDER.indexOf(last.g)>=0 ? last.g : 'N/A';
@@ -3387,7 +3416,9 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var item = { key:g.key, nm:g.nm, p:g.p, sl:g.sl, grade:grade, status:status, visitCount:g.visitCount,
         natRaw: natRaw || 'ไม่ระบุ', nat: raceNatGroup(natRaw),
         firstVisitDate:g.firstVisitDate, lastVisitDate:g.lastVisitDate, lastContact:contact,
-        daysIdle: Math.round((parseISO(today)-parseISO(contact))/86400000), due: !!dueKeys[g.key] };
+        daysIdle: Math.round((parseISO(today)-parseISO(contact))/86400000), due: !!dueKeys[g.key],
+        followed: !!followedKeys[g.key], fb: lastFb[g.key] || null, doneCp: doneCpMap[g.key] || {} };
+      item.fuState = item.due ? 'overdue' : item.followed ? 'done' : 'none';
       if(g.visits.some(isClosedDealRow)){
         var bookRow = g.visits.filter(isClosedDealRow).pop();
         item.bookDate = bookRow.bd || bookRow.d;
@@ -3401,10 +3432,11 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         item.daysToClose = Math.max(0, Math.round((parseISO(item.bookDate.slice(0,10))-parseISO(g.firstVisitDate))/86400000));
         lane.finished.push(item); return;
       }
-      if(g.closed){ lane.discontinued++; return; }
-      item.score = raceScore(item.visitCount, grade, status);
+      if(g.closed){ item.fuState = 'dead'; item.dead = true; lane.dead.push(item); lane.discontinued++; return; }
+      item.score = raceScore(item.visitCount, status);
+      item.stage = raceStageIdx(item);
       item.stale = item.daysIdle>RACE_STALE_DAYS;
-      if(raceMode==='chance' && !(item.score>=35 || grade==='A' || grade==='B')){ lane.hidden++; return; }
+      if(raceMode==='chance' && (RACE_STATUS_POS[status]||0) < 0){ lane.hidden++; return; }
       lane.racers.push(item);
     });
     var order = PROJECTS.slice();
@@ -3475,115 +3507,117 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var raceLegendEl = document.getElementById('raceLegend');
     if(raceLegendEl && !raceLegendEl.dataset.done){
       function ic(color, happy, ring, square, nat){ return '<svg width="22" height="24" viewBox="0 -2 22 24" style="vertical-align:middle;">'+raceFaceSVG(10, 13, 7, color, happy, ring, square, nat)+'</svg>'; }
+      var gray = RACE_FU.none.color;
       raceLegendEl.innerHTML = [
-        ic(raceGradeColor('A'), true)+'เกรด A', ic(raceGradeColor('B'), true)+'เกรด B', ic(raceGradeColor('C'), true)+'เกรด C', ic(raceGradeColor('N/A'), true)+'เกรด D / ไม่มีเกรด',
-        ic(cssVar('--surface-2'), true, true)+'วงแดง = ครบกำหนดติดตาม (7/30/90 วัน)', ic(raceGradeColor('A'), true, false, true)+'สี่เหลี่ยม = ปิดการขายแล้ว (ตัวเลขข้าง ๆ = แปลงที่จอง)'
-      ].concat(['<b style="font-weight:600;">สัญชาติ:</b> '+ic(raceGradeColor('N/A'), true, false, false, 'TH')+'คนไทย (มงกุฎ)',
-        ic(raceGradeColor('N/A'), true, false, false, 'F')+'ต่างชาติ (หมวก · กดที่จุดเพื่อดูว่าชาติไหน)',
-        ic(raceGradeColor('N/A'), true, false, false, 'NA')+'ไม่ระบุ']).map(function(x){ return '<span>'+x+'</span>'; }).join('');
+        ic(RACE_FU.done.color)+'ติดตามแล้ว (มี Feedback)', ic(RACE_FU.none.color)+'ยังไม่ได้รับการติดต่อ/ติดตาม',
+        ic(RACE_FU.overdue.color)+'เกินกำหนดติดตาม (7/30/90 วัน)', ic(RACE_FU.dead.color)+'Dead end = ขาดการติดต่อ · จบการติดตามแล้ว',
+        ic(cssVar('--accent'), true, false, true)+'สี่เหลี่ยม = ปิดการขายแล้ว (ตัวเลขข้าง ๆ = แปลงที่จอง)'
+      ].concat(['<b style="font-weight:600;">สัญชาติ:</b> '+ic(gray, true, false, false, 'TH')+'คนไทย (มงกุฎ)',
+        ic(gray, true, false, false, 'F')+'ต่างชาติ (หมวก · กดที่จุดเพื่อดูว่าชาติไหน)',
+        ic(gray, true, false, false, 'NA')+'ไม่ระบุ']).map(function(x){ return '<span>'+x+'</span>'; }).join('');
       raceLegendEl.dataset.done = '1';
     }
     var lanes = computeRace();
     raceItemsById = []; raceLanesData = [];
-    var totalRacers = 0, totalFinished = 0, totalHidden = 0, totalDisc = 0, zoneCount = [0,0,0];
+    var totalRacers = 0, totalFinished = 0, totalHidden = 0, totalDisc = 0, colCount = [0,0,0,0];
     lanes.forEach(function(l){
       totalRacers += l.racers.length; totalFinished += l.finished.length; totalHidden += l.hidden; totalDisc += l.discontinued;
-      l.racers.forEach(function(it){ zoneCount[it.score>=60?2:it.score>=35?1:0]++; });
+      l.racers.forEach(function(it){ colCount[it.stage]++; });
     });
     var scopeLabel = state.project==='ALL' ? 'ทุกโครงการ' : state.project;
     raceSubEl.textContent = scopeLabel+' · ลูกค้าที่ Walk-in ล่าสุดอยู่ใน '+fmtDateShort(state.start)+' – '+fmtDateShort(state.end)+
       ' · อยู่ในสนาม '+fmtInt(totalRacers)+' ราย · เข้าเส้นชัย (ปิดการขาย) '+fmtInt(totalFinished)+' ราย'+
-      (totalHidden ? ' · ซ่อนลูกค้าโอกาสต่ำ '+fmtInt(totalHidden)+' ราย (กด "ทั้งหมด" เพื่อแสดง)' : '')+
-      (totalDisc ? ' · จบการติดตามแล้ว '+fmtInt(totalDisc)+' ราย (ไม่แสดง)' : '');
+      (totalHidden ? ' · ซ่อนลูกค้าที่ไม่สนใจ/ติดต่อไม่ได้ '+fmtInt(totalHidden)+' ราย (กด "ทั้งหมด" เพื่อแสดง)' : '')+
+      (totalDisc ? ' · Dead end '+fmtInt(totalDisc)+' ราย' : '');
     if(!lanes.length){ raceBodyEl.innerHTML = '<div class="card-sub" style="margin:0;">ไม่มีลูกค้าในช่วงที่เลือก</div>'; return; }
 
     var W = Math.max(860, (raceBodyEl.clientWidth || 1100));
-    var labelW = 170, finishW = Math.max(250, Math.round(W*0.25)), trackL = labelW+14, trackR = W-finishW-18;
-    var headH = 54, r = 7, cell = 2*r+3, cellY = 2*r+11, maxStack = 9;
-    function xOf(score){ return trackL + (score/100)*(trackR-trackL); }
+    var labelW = 170, finishW = Math.max(250, Math.round(W*0.22)), deadW = Math.max(150, Math.round(W*0.12)), trackL = labelW+14, trackR = W-finishW-deadW-18;
+    var headH = 54, r = 7, cell = 2*r+3, cellY = 2*r+5, maxRows = 12;
+    var colW = (trackR+8-trackL)/4;
     var muted = cssVar('--text-muted'), border = cssVar('--border'), text = cssVar('--text-primary'), text2 = cssVar('--text-secondary');
+    var colsPerRow = Math.max(1, Math.floor((colW-14)/(cell+1)));
+    var FU_ORDER = { overdue:0, none:1, done:2 };
 
-    // ---- lane layout (beeswarm per x-bin, stacking out from the lane centre) ----
     var laneBlocks = lanes.map(function(l){
-      var bins = {}, placed = [], overflow = [];
-      l.racers.slice().sort(function(a,b){ return b.score-a.score || a.daysIdle-b.daysIdle; }).forEach(function(it){
-        // spread inside a score by how fresh the last contact is (fresher = further right)
-        // customers sharing a score are fanned out over ±4 points (stable per customer, from
-        // a hash of the key) so a lane reads as a field of runners instead of one tall stack
-        var h = 0; for(var i=0;i<it.key.length;i++){ h = (h*31 + it.key.charCodeAt(i)) >>> 0; }
-        var x = xOf(Math.max(0, Math.min(97, it.score + ((h % 900)/100 - 4.5))));
-        var b = Math.round((x-trackL)/cell);
-        bins[b] = bins[b] || [];
-        if(bins[b].length>=maxStack){ overflow[b] = (overflow[b]||0)+1; return; }
-        var k = bins[b].length; bins[b].push(it);
-        placed.push({ it:it, x: trackL + b*cell, slot: k===0 ? 0 : (k%2 ? Math.ceil(k/2) : -k/2) });
+      var groups = [[],[],[],[]];
+      l.racers.forEach(function(it){ groups[it.stage].push(it); });
+      var placed = [], overflow = [0,0,0,0], maxRowsUsed = 0;
+      groups.forEach(function(arr, gi){
+        arr.sort(function(a,b){ return (FU_ORDER[a.fuState]-FU_ORDER[b.fuState]) || (a.daysIdle-b.daysIdle); });
+        var cap = colsPerRow*maxRows, show = Math.min(arr.length, cap);
+        overflow[gi] = arr.length - show;
+        maxRowsUsed = Math.max(maxRowsUsed, Math.ceil(show/colsPerRow));
+        for(var i=0;i<show;i++) placed.push({ it:arr[i], gi:gi, col:i%colsPerRow, row:Math.floor(i/colsPerRow) });
       });
-      var maxSlot = 0; placed.forEach(function(p){ maxSlot = Math.max(maxSlot, Math.abs(p.slot)); });
-      var finCellW = 78, finCellH = cell+11;   // square + XXXYYY label
+      var finCellW = 78, finCellH = cell+11;
       var finCols = Math.max(1, Math.floor((finishW-20)/finCellW));
       var finShown = Math.min(l.finished.length, finCols*8);
       var finRows = Math.ceil(finShown/finCols);
-      var h = Math.max(84, (2*maxSlot+1)*cellY + 26, finRows*finCellH + 30);
-      return { l:l, placed:placed, overflow:overflow, h:h, finCols:finCols, finShown:finShown, finCellW:finCellW, finCellH:finCellH };
+      var deadCols = Math.max(1, Math.floor((deadW-14)/(cell+4)));
+      var deadShown = Math.min(l.dead.length, deadCols*8), deadRows = Math.ceil(deadShown/deadCols);
+      var h = Math.max(84, maxRowsUsed*cellY + 44, finRows*finCellH + 30, deadRows*(cell+4) + 34);
+      return { l:l, placed:placed, overflow:overflow, h:h, finCols:finCols, finShown:finShown, finCellW:finCellW, finCellH:finCellH, deadCols:deadCols, deadShown:deadShown };
     });
-    var H = headH + laneBlocks.reduce(function(a,b){ return a+b.h; }, 0) + 26;
+    var H = headH + laneBlocks.reduce(function(a,b){ return a+b.h; }, 0) + 8;
     var svg = [];
-    // zone backgrounds + headers
-    // zone backgrounds (2026-10-26): สนใจจริง = light yellow, Potential = light green, finish = green
-    var zoneFill = [ 'transparent', 'rgba(255,214,64,0.20)', 'rgba(12,163,12,0.10)' ];
-    RACE_ZONES.forEach(function(z, i){
-      var x1 = xOf(z.from), x2 = i===RACE_ZONES.length-1 ? trackR+8 : xOf(z.to);
-      svg.push('<rect x="'+x1.toFixed(1)+'" y="'+headH+'" width="'+(x2-x1).toFixed(1)+'" height="'+(H-headH-26)+'" fill="'+zoneFill[i]+'"></rect>');
-      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="18" font-size="14" font-weight="700" fill="'+text+'">'+z.label+' '+fmtInt(zoneCount[i])+' ราย</text>');
-      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="34" font-size="13" fill="'+muted+'">'+z.sub+'</text>');
+    var colFill = [ 'transparent', 'rgba(255,214,64,0.16)', 'rgba(255,150,64,0.14)', 'rgba(12,163,12,0.10)' ];
+    RACE_COLS.forEach(function(c, i){
+      var x1 = trackL + i*colW;
+      svg.push('<rect x="'+x1.toFixed(1)+'" y="'+headH+'" width="'+colW.toFixed(1)+'" height="'+(H-headH-8)+'" fill="'+colFill[i]+'"></rect>');
+      if(i>0) svg.push('<line x1="'+x1.toFixed(1)+'" x2="'+x1.toFixed(1)+'" y1="'+headH+'" y2="'+(H-8)+'" stroke="'+border+'" stroke-dasharray="2 4"></line>');
+      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="18" font-size="14" font-weight="700" fill="'+text+'">'+c.label+' '+fmtInt(colCount[i])+' ราย</text>');
+      svg.push('<text x="'+(x1+6).toFixed(1)+'" y="34" font-size="12" fill="'+muted+'">'+c.sub+'</text>');
     });
-    var finX = W-finishW;
-    svg.push('<rect x="'+finX+'" y="'+headH+'" width="'+finishW+'" height="'+(H-headH-26)+'" fill="'+cssVar('--good')+'" opacity="0.30"></rect>');
+    var finX = W-finishW, deadX = finX-deadW;
+    svg.push('<rect x="'+deadX+'" y="'+headH+'" width="'+(deadW-8)+'" height="'+(H-headH-8)+'" fill="#8A8880" opacity="0.28"></rect>');
+    svg.push('<text x="'+(deadX+8)+'" y="18" font-size="14" font-weight="700" fill="'+text+'">Dead end '+fmtInt(totalDisc)+' ราย</text>');
+    svg.push('<text x="'+(deadX+8)+'" y="34" font-size="12" fill="'+muted+'">ขาดการติดต่อ</text>');
+    svg.push('<rect x="'+finX+'" y="'+headH+'" width="'+finishW+'" height="'+(H-headH-8)+'" fill="'+cssVar('--good')+'" opacity="0.30"></rect>');
     svg.push('<text x="'+(finX+10)+'" y="18" font-size="14" font-weight="700" fill="'+cssVar('--good-ink')+'">เข้าเส้นชัย (ปิดการขาย) '+fmtInt(totalFinished)+' ราย</text>');
     svg.push('<text x="'+(finX+10)+'" y="34" font-size="13" fill="'+muted+'">จองแล้ว/เช่าแล้ว</text>');
-    // checkered finish line
-    for(var cy=headH, ci=0; cy<H-26; cy+=6, ci++){
-      svg.push('<rect x="'+(finX-6)+'" y="'+cy+'" width="3" height="6" fill="'+(ci%2?'#fff':'#111')+'"></rect><rect x="'+(finX-3)+'" y="'+cy+'" width="3" height="6" fill="'+(ci%2?'#111':'#fff')+'"></rect>');
+    for(var cy0=headH, ci=0; cy0<H-8; cy0+=6, ci++){
+      svg.push('<rect x="'+(finX-6)+'" y="'+cy0+'" width="3" height="6" fill="'+(ci%2?'#fff':'#111')+'"></rect><rect x="'+(finX-3)+'" y="'+cy0+'" width="3" height="6" fill="'+(ci%2?'#111':'#fff')+'"></rect>');
     }
-    // lanes
     var y0 = headH;
     laneBlocks.forEach(function(b){
       var l = b.l, cy = y0 + b.h/2;
       svg.push('<line x1="0" x2="'+W+'" y1="'+(y0+b.h)+'" y2="'+(y0+b.h)+'" stroke="'+border+'"></line>');
-      var near = l.racers.filter(function(it){ return it.score>=60; }).length;
+      var near = l.racers.filter(function(it){ return it.stage===3; }).length;
       svg.push('<text x="4" y="'+(cy-8)+'" font-size="15" font-weight="700" fill="'+text+'">'+escapeHTML(l.p)+'</text>');
       svg.push('<text x="4" y="'+(cy+8)+'" font-size="13" fill="'+text2+'">ในสนาม '+l.racers.length+' · Potential '+near+'</text>');
-      svg.push('<text x="4" y="'+(cy+22)+'" font-size="13" fill="'+text2+'">ปิดการขาย '+l.finished.length+'</text>');
-      var all = l.racers.concat(l.finished);
+      svg.push('<text x="4" y="'+(cy+22)+'" font-size="13" fill="'+text2+'">ปิดการขาย '+l.finished.length+' · Dead end '+l.dead.length+'</text>');
+      var all = l.racers.concat(l.finished, l.dead);
       var nTh = all.filter(function(it){ return it.nat==='TH'; }).length, nFo = all.filter(function(it){ return raceIsForeign(it.nat); }).length;
       var laneIdx = raceLanesData.push(l)-1;
       svg.push('<text class="race-lane-nat" data-lane="'+laneIdx+'" x="4" y="'+(cy+38)+'" font-size="13" font-weight="600" fill="'+cssVar('--accent-ink')+'" style="cursor:pointer; text-decoration:underline;">ไทย '+nTh+' · ต่างชาติ '+nFo+' ▸</text>');
       b.placed.forEach(function(pl){
         var id = raceItemsById.push(pl.it)-1, it = pl.it;
-        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(pl.x, cy + 4 + pl.slot*cellY, r, raceGradeColor(it.grade), !it.stale, it.due, false, it.nat)+'</g>');
+        var px = trackL + pl.gi*colW + 8 + pl.col*(cell+1) + r, py = y0 + 24 + pl.row*cellY + r;
+        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(px, py, r, RACE_FU[it.fuState].color, true, false, false, it.nat)+'</g>');
       });
-      b.overflow.forEach(function(n, bi){
+      b.overflow.forEach(function(n, gi){
         if(!n) return;
-        svg.push('<text x="'+(trackL+bi*cell).toFixed(1)+'" y="'+(y0+12)+'" font-size="12.5" font-weight="700" text-anchor="middle" fill="'+text2+'">+'+n+'</text>');
+        svg.push('<text x="'+(trackL+(gi+1)*colW-8).toFixed(1)+'" y="'+(y0+b.h-6)+'" font-size="12.5" font-weight="700" text-anchor="end" fill="'+text2+'">+'+fmtInt(n)+' ราย</text>');
       });
-      // finished customers: squares in a grid, newest bookings first
+      l.dead.slice(0,b.deadShown).forEach(function(it, i){
+        var col = i % b.deadCols, row = Math.floor(i/b.deadCols);
+        var dx = deadX + 10 + col*(cell+4) + r, dy = y0 + 30 + row*(cell+4);
+        var did = raceItemsById.push(it)-1;
+        svg.push('<g class="race-dot" data-id="'+did+'" style="cursor:pointer;">'+raceFaceSVG(dx, dy, r, RACE_FU.dead.color, true, false, false, it.nat)+'</g>');
+      });
+      if(l.dead.length>b.deadShown) svg.push('<text x="'+(finX-14)+'" y="'+(y0+b.h-6)+'" font-size="12.5" text-anchor="end" fill="'+text2+'">+'+(l.dead.length-b.deadShown)+' ราย</text>');
       l.finished.sort(function(a,c){ return a.bookDate<c.bookDate?1:-1; }).slice(0,b.finShown).forEach(function(it, i){
         var col = i % b.finCols, row = Math.floor(i/b.finCols);
         var fx = finX + 14 + col*b.finCellW + r, fy = y0 + 20 + row*b.finCellH + r;
         var id = raceItemsById.push(it)-1;
         var unitTxt = it.units.length ? it.units[0] + (it.units.length>1 ? '+'+(it.units.length-1) : '') : 'ไม่ระบุ';
-        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(fx, fy, r, raceGradeColor(it.grade), true, false, true, it.nat)+
+        svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(fx, fy, r, cssVar('--accent'), true, false, true, it.nat)+
           '<text x="'+(fx+r+9).toFixed(1)+'" y="'+(fy+3.5).toFixed(1)+'" font-size="12.5" font-weight="600" fill="'+(it.units.length?text:muted)+'">'+escapeHTML(unitTxt)+'</text></g>');
       });
       if(l.finished.length>b.finShown) svg.push('<text x="'+(W-8)+'" y="'+(y0+b.h-6)+'" font-size="12.5" text-anchor="end" fill="'+text2+'">+'+(l.finished.length-b.finShown)+' ราย</text>');
       y0 += b.h;
     });
-    // axis
-    [0,25,50,75,95].forEach(function(v){
-      svg.push('<text x="'+xOf(v).toFixed(1)+'" y="'+(H-8)+'" font-size="13" text-anchor="middle" fill="'+muted+'">'+v+'</text>');
-      svg.push('<line x1="'+xOf(v).toFixed(1)+'" x2="'+xOf(v).toFixed(1)+'" y1="'+headH+'" y2="'+(H-26)+'" stroke="'+border+'" stroke-dasharray="2 4"></line>');
-    });
-    svg.push('<text x="'+trackL+'" y="'+(H-8)+'" font-size="13" fill="'+muted+'" text-anchor="start" dx="-'+(trackL-4)+'">คะแนนความพร้อมซื้อ →</text>');
     raceBodyEl.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" style="display:block;">'+svg.join('')+'</svg>';
   }
 
@@ -3592,12 +3626,12 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var g = ev.target.closest('.race-dot'); if(!g){ hideTooltip(); return; }
       var it = raceItemsById[+g.dataset.id]; if(!it) return;
       var rows = [
-        ['เกรด', it.grade], ['เข้าชม', it.visitCount+' ครั้ง'],
+        ['สถานะติดตาม', it.bookDate ? 'ปิดการขายแล้ว' : RACE_FU[it.fuState].label], ['ติดตามแล้วครั้งที่', it.doneCp ? raceDoneTxt(it) : '-'], ['เข้าชม', it.visitCount+' ครั้ง'],
         ['Walk-in ครั้งแรก', fmtDateShort(it.firstVisitDate)], ['Walk-in ล่าสุด', fmtDateShort(it.lastVisitDate)]
       ];
       if(it.bookDate) rows.push(['แปลงที่จอง', it.units.length ? it.units.join(', ')+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
       if(it.bookDate) rows.push(['วันที่จอง', fmtDateShort(it.bookDate.slice(0,10))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
-      else rows.push(['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน'], ['คะแนนความพร้อม', String(it.score)]);
+      else { rows.push(['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน']); if(!it.dead) rows.push(['คะแนนความพร้อม', String(it.score)]); if(it.fb && it.fb.s) rows.push(['Feedback ล่าสุด', it.fb.s+(it.fb.cp ? ' ('+it.fb.cp+' วัน)' : '')]); }
       rows.push(['สัญชาติ', it.natRaw]);
       rows.push(['สถานะล่าสุด', it.status], ['เซล', it.sl || 'N/A']);
       showTooltip(ev.clientX, ev.clientY,
@@ -3631,7 +3665,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var lane = ev.target.closest('.race-lane-nat');
       if(lane){
         var l = raceLanesData[+lane.dataset.lane]; if(!l) return;
-        var all = l.racers.concat(l.finished), counts = {}, th = 0, fo = 0, na = 0;
+        var all = l.racers.concat(l.finished, l.dead), counts = {}, th = 0, fo = 0, na = 0;
         all.forEach(function(it){
           if(it.nat==='TH') th++; else if(it.nat==='NA') na++; else { fo++; counts[it.natRaw] = (counts[it.natRaw]||0)+1; }
         });
@@ -3648,13 +3682,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var g = ev.target.closest('.race-dot'); if(!g) return;
       var it = raceItemsById[+g.dataset.id]; if(!it) return;
       racePopItem = it;
-      var rows = [['สัญชาติ', raceNatBadge(it)], ['เกรด', 'เกรด '+escapeHTML(it.grade)], ['เข้าชม', it.visitCount+' ครั้ง'],
+      var rows = [['สัญชาติ', raceNatBadge(it)], ['สถานะติดตาม', it.bookDate ? 'ปิดการขายแล้ว' : escapeHTML(RACE_FU[it.fuState].label)], ['ติดตามแล้วครั้งที่', it.doneCp ? escapeHTML(raceDoneTxt(it)) : '-'], ['เข้าชม', it.visitCount+' ครั้ง'],
         ['Walk-in ครั้งแรก', escapeHTML(fmtDateShort(it.firstVisitDate))], ['Walk-in ล่าสุด', escapeHTML(fmtDateShort(it.lastVisitDate))]];
       if(it.bookDate){
         rows.push(['แปลงที่จอง', it.units.length ? '<b>'+escapeHTML(it.units.join(', '))+'</b>'+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
         rows.push(['วันที่จอง', escapeHTML(fmtDateShort(it.bookDate.slice(0,10)))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
       } else {
-        rows.push(['คะแนนความพร้อม', String(it.score)], ['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน']);
+        if(!it.dead) rows.push(['คะแนนความพร้อม', String(it.score)]);
+        rows.push(['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน']);
+        if(it.fb && it.fb.s) rows.push(['Feedback ล่าสุด', escapeHTML(it.fb.s)+(it.fb.cp ? ' ('+it.fb.cp+' วัน)' : '')]);
       }
       rows.push(['สถานะล่าสุด', escapeHTML(it.status)], ['เซล', escapeHTML(it.sl || 'N/A')]);
       var tabBtn = mainTabSegEl.querySelector('button[data-tab="customerdata"]');
