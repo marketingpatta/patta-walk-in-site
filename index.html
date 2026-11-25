@@ -1157,7 +1157,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
   <div id="tabPanelSalesPerf" class="tab-panel" hidden>
     <div class="section-heading">
       <h2>Sales Performance</h2>
-      <div class="card-sub">สรุปยอดขาย ยอดโอน อัตราดูดซับ และความคืบหน้าเทียบเป้า อิงจากระบบ ERP (Mango RE Sale System)</div>
+      <div class="card-sub">สรุปยอดจอง ยอดโอน ยอดยกเลิก อัตราดูดซับ และความคืบหน้าเทียบเป้า อิงจากระบบ ERP (Mango RE Sale System)</div>
     </div>
     <div id="spfUpdateNote" style="margin-bottom:14px;"></div>
 
@@ -1172,22 +1172,22 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     <div class="section-heading" style="margin-top:22px;"><h3>2. Sales Performance Overview — Jan <span id="spfYear"></span> ถึงปัจจุบัน</h3><div class="card-sub">ยอดใหม่ที่เกิดขึ้นในช่วงเวลานี้เท่านั้น (ไม่ใช่ยอดสะสม) แยกตามโครงการ</div></div>
     <div class="kpi-grid" id="spfPeriodKpis" style="margin-bottom:16px;"></div>
     <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable2"></table></div>
-      <div class="spf-method-note">ตัวเลข "ยอดขาย" ในตารางนี้เป็นยอดขายใหม่จริง หลังตัดกรณีย้ายแปลง/ยกเลิก+จองใหม่ของลูกค้าเดิมที่ยืนยันแล้วออก — โครงการที่มีการปรับจะมีไอคอน ⓘ ต่อท้ายตัวเลข เลื่อนเมาส์เพื่อดู breakdown เต็ม (ตรวจสอบแล้ว 25 ก.ย. 2569: ยอดขายจริงปี 2569 ของ CHIEFTAIN = 4 ยูนิต จากยอดดิบ 6 ยูนิต เพราะ 2 รายการเป็นการย้ายแปลง/แปลงสิทธิ์ของลูกค้าเดิม ไม่ใช่ลูกค้าใหม่)</div>
+      <div class="spf-method-note">ตัวเลขทั้งหมดในตารางนี้มาจาก ERP (Mango RE) นับตั้งแต่ 1 ม.ค. ถึงปัจจุบัน: <b>ยอดจอง (ตาม ERP)</b> = จำนวนรายการจองตามวันที่จอง · <b>ยอดจอง (ใหม่จริง)</b> = ยอดจองหลังตัดกรณีย้ายแปลงของลูกค้าเดิม และยกเลิก+จองใหม่ (ไม่ใช่ลูกค้าใหม่) · <b>ยอดโอน</b> = นับตามวันที่โอนจริง · <b>ยอดยกเลิก</b> = นับตามวันที่ยกเลิก — โครงการที่มีการปรับจะมีไอคอน ⓘ ต่อท้ายตัวเลข เลื่อนเมาส์เพื่อดู breakdown เต็ม</div>
     </div>
 
     <div class="section-heading" style="margin-top:22px;"><h3>3. Absorption Rate</h3><div class="card-sub">อัตราการขายเทียบกับระยะเวลาที่เปิดขายมาแล้ว และเวลาที่คาดว่าจะขายหมด</div></div>
     <div class="card spf-card">
       <div class="table-scroll"><table class="data" id="spfTable3"></table></div>
-      <div class="spf-method-note">* "Sold After Launch"/"Avg หลังเปิดขาย" เป็นค่าประมาณ (นับสัญญาที่ Book ตั้งแต่วันเปิดขายเป็นต้นไป ไม่ใช่วิธีคำนวณเดียวกับรายงานต้นฉบับเป๊ะๆ) — Time to Close-out = ยูนิตคงเหลือ &divide; Avg หลังเปิดขาย · วันเปิดขายและจำนวนยูนิตรวมของโครงการที่เพิ่งเปิดใหม่บางโครงการยังอ้างอิงข้อมูลจากฝ่ายขาย เนื่องจากยังไม่มีในระบบ ERP</div>
+      <div class="spf-method-note">* "Booked After Launch"/"Avg หลังเปิดขาย" เป็นค่าประมาณ (นับสัญญาที่ Book ตั้งแต่วันเปิดขายเป็นต้นไป ไม่ใช่วิธีคำนวณเดียวกับรายงานต้นฉบับเป๊ะๆ) — Time to Close-out = ยูนิตคงเหลือ &divide; Avg หลังเปิดขาย · วันเปิดขายและจำนวนยูนิตรวมของโครงการที่เพิ่งเปิดใหม่บางโครงการยังอ้างอิงข้อมูลจากฝ่ายขาย เนื่องจากยังไม่มีในระบบ ERP</div>
     </div>
 
-    <div class="section-heading" style="margin-top:22px;"><h3>4. Sales Target Performance</h3><div class="card-sub">เทียบยอดขายจริงปีนี้กับเป้าที่ตั้งไว้ รายโครงการ</div></div>
+    <div class="section-heading" style="margin-top:22px;"><h3>4. Sales Target Performance</h3><div class="card-sub">เทียบยอดจอง (ใหม่จริง) ปีนี้กับเป้าที่ตั้งไว้ รายโครงการ</div></div>
     <div class="card spf-card">
       <div class="table-scroll"><table class="data" id="spfTable4"></table></div>
       <div class="spf-table4-note" id="spfTable4Note"></div>
     </div>
 
-    <div class="section-heading" style="margin-top:22px;"><h3>5. สรุปสถานการณ์ประจำเดือน</h3><div class="card-sub">ร่างอัตโนมัติจากตัวเลข Walk-in/ยอดขาย/ความคืบหน้าเทียบเดือนก่อน — แก้ไข/เพิ่มบริบทแล้วกดบันทึกได้</div></div>
+    <div class="section-heading" style="margin-top:22px;"><h3>5. สรุปสถานการณ์ประจำเดือน</h3><div class="card-sub">ร่างอัตโนมัติจากตัวเลข Walk-in/ยอดจอง/ความคืบหน้าเทียบเดือนก่อน — แก้ไข/เพิ่มบริบทแล้วกดบันทึกได้</div></div>
     <div class="card spf-card monthly-summary-box" id="spfMonthlySummary">
       <textarea id="spfMonthlySummaryText" placeholder="กำลังโหลดร่างอัตโนมัติ..."></textarea>
       <div class="monthly-summary-meta" id="spfMonthlySummaryMeta"></div>
@@ -3780,7 +3780,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // ---- 1. Sale Performance ----
     (function(){
       var t = document.getElementById('spfTable1');
-      var head = '<tr><th>Project</th><th>Total Units</th><th>Sold (Unit)</th><th>Sold %</th><th>Units Transfer</th><th>Transfer %</th></tr>';
+      var head = '<tr><th>Project</th><th>Total Units</th><th>Booked (Unit)</th><th>Booked %</th><th>Units Transfer</th><th>Transfer %</th></tr>';
       var body = withElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.total_units)+'</td><td class="num">'+fmtInt(d.sales_unit)+'</td>'+
@@ -3808,18 +3808,18 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
 
     // ---- 2. Sales Performance Overview (period, dynamic YTD) ----
     (function(){
-      var totalSales=0, totalTransfer=0, totalCancel=0, totalUnitMove=0, totalExcluded=0;
-      withElement.forEach(function(p){ var d=SPF_DATA[p]; if(!d) return; totalSales+=d.period_sales; totalTransfer+=d.period_transfer; totalCancel+=d.period_cancel; totalUnitMove+=(d.period_sales_unit_move||0); totalExcluded+=(d.period_sales_excluded||0); });
+      var totalSales=0, totalRaw=0, totalTransfer=0, totalCancel=0, totalUnitMove=0, totalExcluded=0;
+      withElement.forEach(function(p){ var d=SPF_DATA[p]; if(!d) return; totalSales+=d.period_sales; totalRaw+=(d.period_sales_raw!=null?d.period_sales_raw:d.period_sales); totalTransfer+=d.period_transfer; totalCancel+=d.period_cancel; totalUnitMove+=(d.period_sales_unit_move||0); totalExcluded+=(d.period_sales_excluded||0); });
       // จองใหม่จริงๆ / ย้ายแปลง / ยกเลิกจองใหม่ breakdown (เพิ่ม 25 ก.ย. 69 ตามคำขอ) --
       // period_sales คือยอดขายใหม่จริงหลังตัดเคสย้ายแปลง/แปลงสิทธิ์แล้ว (นับที่วันจองเดิมของ
       // ลูกค้าแทน ไม่ใช่วันที่ย้าย/แปลง) -- ดูรายละเอียดที่ sync_dashboard.py และ project doc
       // ข้อ 9/9.1/9.2 -- title (tooltip) ต่อแถวโครงการจะโชว์รายละเอียดเฉพาะโครงการที่มีการปรับ
       function salesTooltip(d){
         if(!d.period_sales_unit_move && !d.period_sales_excluded) return '';
-        var bits = ['ยอดจองดิบตามวันที่จอง: '+fmtInt(d.period_sales_raw)+' ราย'];
+        var bits = ['ยอดจองตาม ERP: '+fmtInt(d.period_sales_raw)+' ราย'];
         if(d.period_sales_unit_move) bits.push('ในนั้นมีย้ายแปลงของลูกค้าเดิม '+fmtInt(d.period_sales_unit_move)+' ราย (นับที่วันจองเดิมแล้ว ไม่นับซ้ำที่นี่)');
-        if(d.period_sales_excluded) bits.push('มียกเลิก+จองใหม่ภายใน (ไม่ใช่ยอดขายใหม่จริง เช่น แปลงทรัพย์อิงสิทธิ์) '+fmtInt(d.period_sales_excluded)+' ราย');
-        bits.push('เหลือยอดขายใหม่จริง '+fmtInt(d.period_sales)+' ราย');
+        if(d.period_sales_excluded) bits.push('มียกเลิก+จองใหม่ภายใน (ไม่ใช่ยอดจองใหม่จริง เช่น แปลงทรัพย์อิงสิทธิ์) '+fmtInt(d.period_sales_excluded)+' ราย');
+        bits.push('เหลือยอดจอง (ใหม่จริง) '+fmtInt(d.period_sales)+' ราย');
         return bits.join(' • ');
       }
       var kpiEl = document.getElementById('spfPeriodKpis');
@@ -3828,21 +3828,22 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         var subBits = [];
         if (totalUnitMove) subBits.push('ย้ายแปลง '+fmtInt(totalUnitMove));
         if (totalExcluded) subBits.push('ยกเลิกจองใหม่ '+fmtInt(totalExcluded));
-        salesSub = 'ยอดขายใหม่จริง (ไม่รวม '+subBits.join(', ')+' — เลื่อนเมาส์ที่ตัวเลขแต่ละโครงการเพื่อดูรายละเอียด)';
+        salesSub = 'จองใหม่จริง (ไม่รวม '+subBits.join(', ')+' — เลื่อนเมาส์ที่ตัวเลขแต่ละโครงการเพื่อดูรายละเอียด)';
       }
       kpiEl.innerHTML =
-        '<div class="kpi"><div class="kpi-label">ยอดขาย (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalSales)+' ยูนิต</div><div class="kpi-sub">'+salesSub+'</div></div>'+
-        '<div class="kpi"><div class="kpi-label">ยอดโอน (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--good-ink')+'">'+fmtInt(totalTransfer)+' ยูนิต</div><div class="kpi-sub">ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">ยอดยกเลิก (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--critical')+'">'+fmtInt(totalCancel)+' ยูนิต</div><div class="kpi-sub">ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">อัตราคงอยู่</div><div class="kpi-value">'+(totalSales? (100-(totalCancel/totalSales*100)).toFixed(0):0)+'%</div><div class="kpi-sub">ขาย - ยกเลิก / ขาย</div></div>';
+        '<div class="kpi"><div class="kpi-label">ยอดจอง ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalRaw)+' ยูนิต</div><div class="kpi-sub">จำนวนรายการจองตามวันที่จอง ทุกโครงการรวมกัน</div></div>'+
+        '<div class="kpi"><div class="kpi-label">ยอดจอง (ใหม่จริง)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalSales)+' ยูนิต</div><div class="kpi-sub">'+salesSub+'</div></div>'+
+        '<div class="kpi"><div class="kpi-label">ยอดโอน ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--good-ink')+'">'+fmtInt(totalTransfer)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่โอนจริง ทุกโครงการรวมกัน</div></div>'+
+        '<div class="kpi"><div class="kpi-label">ยอดยกเลิก ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--critical')+'">'+fmtInt(totalCancel)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่ยกเลิก ทุกโครงการรวมกัน</div></div>'+
+        '<div class="kpi"><div class="kpi-label">อัตราคงอยู่</div><div class="kpi-value">'+(totalSales? (100-(totalCancel/totalSales*100)).toFixed(0):0)+'%</div><div class="kpi-sub">(จอง − ยกเลิก) / จอง · ใช้ยอดจองใหม่จริง</div></div>';
 
       var t = document.getElementById('spfTable2');
-      var head = '<tr><th>Project</th><th>ยอดขาย</th><th>ยอดโอน</th><th>ยอดยกเลิก</th></tr>';
+      var head = '<tr><th>Project</th><th>ยอดจอง ตาม ERP</th><th>ยอดจอง (ใหม่จริง)</th><th>ยอดโอน</th><th>ยอดยกเลิก</th></tr>';
       var body = withElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         var tip = salesTooltip(d);
         var mark = tip ? ' <span style="cursor:help;opacity:.6" title="'+tip.replace(/"/g,'&quot;')+'">ⓘ</span>' : '';
-        return '<tr><td class="proj">'+p+'</td><td class="num" title="'+(tip?tip.replace(/"/g,'&quot;'):'')+'">'+fmtInt(d.period_sales)+mark+'</td><td class="num" style="color:'+cssVar('--good-ink')+'">'+fmtInt(d.period_transfer)+'</td><td class="num" style="color:'+cssVar('--critical')+'">'+fmtInt(d.period_cancel)+'</td></tr>';
+        return '<tr><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.period_sales_raw!=null?d.period_sales_raw:d.period_sales)+'</td><td class="num" title="'+(tip?tip.replace(/"/g,'&quot;'):'')+'" style="font-weight:700;">'+fmtInt(d.period_sales)+mark+'</td><td class="num" style="color:'+cssVar('--good-ink')+'">'+fmtInt(d.period_transfer)+'</td><td class="num" style="color:'+cssVar('--critical')+'">'+fmtInt(d.period_cancel)+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
     })();
@@ -3850,8 +3851,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // ---- 3. Absorption Rate ----
     (function(){
       var t = document.getElementById('spfTable3');
-      var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Sold (Unit)</th>'+
-        '<th>Avg/mo (Total)</th><th>Sold After Launch</th><th>Avg/mo (After Launch)</th><th>Sold (Past 8mo)</th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
+      var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Booked (Unit)</th>'+
+        '<th>Avg/mo (Total)</th><th>Booked After Launch</th><th>Avg/mo (After Launch)</th><th>Booked (Past 8mo)</th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td>'+spfMoneyM(d.price_min)+'-'+spfMoneyM(d.price_max).replace('MB','')+'</td>'+
@@ -3868,7 +3869,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     (function(){
       var t = document.getElementById('spfTable4');
       var head = '<tr><th>Project</th><th>Total Units</th><th>Avg/mo 2024</th><th>Avg/mo 2025</th><th>2026 Target</th>'+
-        '<th>Sold YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th></tr>';
+        '<th>Booked YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th></tr>';
       var now = new Date();
       var monthsPassed = now.getMonth()+1;
       var monthsLeft = Math.max(12 - monthsPassed, 1);
