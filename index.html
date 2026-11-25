@@ -4381,18 +4381,20 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   (SS_DATA.salesProjects || []).forEach(function(p){ AD_SPEND[p] = { online: null, offline: null }; });
   // 26 ต.ค. 2569: online (Facebook) = ยอดสะสมจากชีตการตลาด (ถึง ก.ย.) + ยอดที่ Meta เรียกเก็บ ~22 ก.ย.–27 ต.ค. (ใบเสร็จบัญชี Patta Development แยกตามแคมเปญ/ชุดโฆษณา
   // + Invoice Summary บัญชี Chieftain 36,592.90 ซึ่งเป็น CHF ทั้งหมด) · แคมเปญ Brand 21,578.83 ใช้ร่วมทุกโครงการ ยังไม่ได้แบ่ง · ช่วงปลาย ก.ย. อาจซ้อนกับยอดในชีต
+  // 25 พ.ย. 2569: บวกใบเสร็จ Meta บัญชี Patta Development อีก 6 ใบ (1, 6, 11, 17, 22, 24 พ.ย.) ค่าโฆษณา ~25 ต.ค.–23 พ.ย. (HRZ +57,577 / ACS +61,956 / CHF +9,289 / CAS +38,095 / TER +14,812 / RVR +15,014 / PPL +30,316)
+  // ไม่รวม: แคมเปญ Brand 28,124.81 (ใช้ร่วม), ใบลดหนี้ 19 พ.ย. 2,162.79 (ไม่มีรายละเอียดแคมเปญ), ใบเสร็จช่วง ~16–24 ต.ค. และบัญชี Chieftain หลัง 27 ต.ค. (ยังไม่มีข้อมูล)
   // OFFLINE_ERP_BUDGET (26 ต.ค. 2569): offline = ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP (เฉพาะที่ลงบัญชีแล้ว ม.ค.–ต.ค.) แทนตัวเลขจากชีต;
   // ค่าที่นี่เป็นค่าสำรอง -- ถ้ามี SS_DATA.mktCost (จาก ERP sync) การ์ดจะใช้ค่าสดจากนั้นแทน (ดู renderMediaCompareCard)
   Object.assign(AD_SPEND, {
-    'HORIZON':          { online: 426106, offline: 174544 },
-    'ARCADE Autograph': { online: 443153, offline: 832778 },
-    'CHIEFTAIN':        { online: 463294, offline: 373719 },
-    'CASCADE':          { online: 416205, offline: 1064067 },
-    'PATTA TERRANE':    { online: 62957,  offline: 170306 },
-    'PATTA RIVERINE':   { online: 67127,  offline: 186848 },
+    'HORIZON':          { online: 483683, offline: 174544 },
+    'ARCADE Autograph': { online: 505109, offline: 832778 },
+    'CHIEFTAIN':        { online: 472583, offline: 373719 },
+    'CASCADE':          { online: 454300, offline: 1064067 },
+    'PATTA TERRANE':    { online: 77769,  offline: 170306 },
+    'PATTA RIVERINE':   { online: 82141,  offline: 186848 },
     // PATTA PILLAR: no Facebook spend logged in the sheet yet; the ป้าย figure has
     // only one month (ก.ย. 2569) recorded so far -- treat it as partial, not a full total.
-    'PATTA PILLAR':     { online: 21886,  offline: 0 }
+    'PATTA PILLAR':     { online: 52202,  offline: 0 }
   });
 
   // Best-effort name match against SS_DATA.contractDetail[proj] (ERP) for closed-deal
@@ -4501,7 +4503,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         '<div>ผลลัพธ์ (Result): <b>'+fmtInt(res.total)+' Walk</b></div>'+
         '<div>ปิดการขาย: <b>'+fmtInt(res.closedCount)+' ราย</b>'+unitsText+'</div>'+
         '<div>ต้นทุนต่อการปิดการขาย 1 ราย: <b>'+(perSuccess!=null ? fmtInt(perSuccess)+' บาท' : '&mdash;')+'</b></div>'+
-'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–ต.ค.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
+'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–พ.ย.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
       '</div>'+
       '<div class="card-sub" style="margin:0;">'+
         res.series.map(function(s){ return escapeHTML(s.name)+': '+fmtInt(s.total)+' Walk'; }).join(' &middot; ')+
