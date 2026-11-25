@@ -1175,7 +1175,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     <div class="section-heading" style="margin-top:22px;"><h3>2. Sales Performance Overview — Jan <span id="spfYear"></span> ถึงปัจจุบัน</h3><div class="card-sub">ยอดใหม่ที่เกิดขึ้นในช่วงเวลานี้เท่านั้น (ไม่ใช่ยอดสะสม) แยกตามโครงการ</div></div>
     <div class="kpi-grid" id="spfPeriodKpis" style="margin-bottom:16px;"></div>
     <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable2"></table></div>
-      <div class="spf-method-note">ตัวเลขทั้งหมดในตารางนี้มาจาก ERP (Mango RE) นับตั้งแต่ 1 ม.ค. ถึงปัจจุบัน: <b>ยอดจอง (ตาม ERP)</b> = จำนวนรายการจองตามวันที่จอง · <b>ยอดจอง (ใหม่จริง)</b> = ยอดจองหลังตัดกรณีย้ายแปลงของลูกค้าเดิม และยกเลิก+จองใหม่ (ไม่ใช่ลูกค้าใหม่) · <b>ยอดโอน</b> = นับตามวันที่โอนจริง · <b>ยอดยกเลิก</b> = นับตามวันที่ยกเลิก — โครงการที่มีการปรับจะมีไอคอน ⓘ ต่อท้ายตัวเลข เลื่อนเมาส์เพื่อดู breakdown เต็ม</div>
+      <div class="spf-method-note">ตัวเลขทั้งหมดในตารางนี้มาจาก ERP (Mango RE) นับตั้งแต่ 1 ม.ค. ถึงปัจจุบัน: <b>ยอดจอง</b> = จำนวนรายการจองตามวันที่จอง · <b>ยอดโอน</b> = นับตามวันที่โอนจริง · <b>ยอดยกเลิก</b> = นับตามวันที่ยกเลิก</div>
     </div>
 
     <div class="section-heading" style="margin-top:22px;"><h3>3. Absorption Rate</h3><div class="card-sub">อัตราการขายเทียบกับระยะเวลาที่เปิดขายมาแล้ว และเวลาที่คาดว่าจะขายหมด</div></div>
@@ -1184,7 +1184,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div class="spf-method-note">* "Booked After Launch"/"Avg หลังเปิดขาย" เป็นค่าประมาณ (นับสัญญาที่ Book ตั้งแต่วันเปิดขายเป็นต้นไป ไม่ใช่วิธีคำนวณเดียวกับรายงานต้นฉบับเป๊ะๆ) — Time to Close-out = ยูนิตคงเหลือ &divide; Avg หลังเปิดขาย · วันเปิดขายและจำนวนยูนิตรวมของโครงการที่เพิ่งเปิดใหม่บางโครงการยังอ้างอิงข้อมูลจากฝ่ายขาย เนื่องจากยังไม่มีในระบบ ERP</div>
     </div>
 
-    <div class="section-heading" style="margin-top:22px;"><h3>4. Sales Target Performance</h3><div class="card-sub">เทียบยอดจอง (ใหม่จริง) ปีนี้กับเป้าที่ตั้งไว้ รายโครงการ</div></div>
+    <div class="section-heading" style="margin-top:22px;"><h3>4. Sales Target Performance</h3><div class="card-sub">เทียบยอดจอง (ตาม ERP) ปีนี้กับเป้าที่ตั้งไว้ รายโครงการ</div></div>
     <div class="card spf-card">
       <div class="table-scroll"><table class="data" id="spfTable4"></table></div>
       <div class="spf-table4-note" id="spfTable4Note"></div>
@@ -3869,18 +3869,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       }
       kpiEl.innerHTML =
         '<div class="kpi"><div class="kpi-label">ยอดจอง ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalRaw)+' ยูนิต</div><div class="kpi-sub">จำนวนรายการจองตามวันที่จอง ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">ยอดจอง (ใหม่จริง)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalSales)+' ยูนิต</div><div class="kpi-sub">'+salesSub+'</div></div>'+
         '<div class="kpi"><div class="kpi-label">ยอดโอน ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--good-ink')+'">'+fmtInt(totalTransfer)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่โอนจริง ทุกโครงการรวมกัน</div></div>'+
         '<div class="kpi"><div class="kpi-label">ยอดยกเลิก ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--critical')+'">'+fmtInt(totalCancel)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่ยกเลิก ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">อัตราคงอยู่</div><div class="kpi-value">'+(totalSales? (100-(totalCancel/totalSales*100)).toFixed(0):0)+'%</div><div class="kpi-sub">(จอง − ยกเลิก) / จอง · ใช้ยอดจองใหม่จริง</div></div>';
+        '<div class="kpi"><div class="kpi-label">อัตราคงอยู่</div><div class="kpi-value">'+(totalRaw? (100-(totalCancel/totalRaw*100)).toFixed(0):0)+'%</div><div class="kpi-sub">(จอง − ยกเลิก) / จอง</div></div>';
 
       var t = document.getElementById('spfTable2');
-      var head = '<tr><th>Project</th><th>ยอดจอง ตาม ERP</th><th>ยอดจอง (ใหม่จริง)</th><th>ยอดโอน</th><th>ยอดยกเลิก</th></tr>';
+      var head = '<tr><th>Project</th><th>ยอดจอง ตาม ERP</th><th>ยอดโอน</th><th>ยอดยกเลิก</th></tr>';
       var body = withElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
-        var tip = salesTooltip(d);
-        var mark = tip ? ' <span style="cursor:help;opacity:.6" title="'+tip.replace(/"/g,'&quot;')+'">ⓘ</span>' : '';
-        return '<tr><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.period_sales_raw!=null?d.period_sales_raw:d.period_sales)+'</td><td class="num" title="'+(tip?tip.replace(/"/g,'&quot;'):'')+'" style="font-weight:700;">'+fmtInt(d.period_sales)+mark+'</td><td class="num" style="color:'+cssVar('--good-ink')+'">'+fmtInt(d.period_transfer)+'</td><td class="num" style="color:'+cssVar('--critical')+'">'+fmtInt(d.period_cancel)+'</td></tr>';
+return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">'+fmtInt(d.period_sales_raw!=null?d.period_sales_raw:d.period_sales)+'</td><td class="num" style="color:'+cssVar('--good-ink')+'">'+fmtInt(d.period_transfer)+'</td><td class="num" style="color:'+cssVar('--critical')+'">'+fmtInt(d.period_cancel)+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
     })();
@@ -3888,15 +3885,19 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     // ---- 3. Absorption Rate ----
     (function(){
       var t = document.getElementById('spfTable3');
+      var nowP8 = new Date(), thM = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+      var p8Months = []; for(var k=7;k>=0;k--){ var dm = new Date(nowP8.getFullYear(), nowP8.getMonth()-k, 1); p8Months.push([dm.getFullYear(), dm.getMonth()]); }
+      var p8Label = thM[p8Months[0][1]]+(p8Months[0][0]!==nowP8.getFullYear()?' '+String(p8Months[0][0]+543).slice(-2):'')+'–'+thM[p8Months[7][1]]+' '+String(nowP8.getFullYear()+543).slice(-2);
+      function p8Count(p){ var g = spfMonthlyBooked(p); return p8Months.reduce(function(a,ym){ return a + g(ym[0], ym[1]); }, 0); }
       var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Booked (Unit)</th>'+
-        '<th>Avg/mo (Total)</th><th>Booked After Launch</th><th>Avg/mo (After Launch)</th><th>Booked (Past 8mo)</th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
+        '<th>Avg/mo (Total)</th><th>Booked After Launch</th><th>Avg/mo (After Launch)</th><th>Booked (Past 8mo)<br><span style="font-weight:400;opacity:.75">'+p8Label+'</span></th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td>'+spfMoneyM(d.price_min)+'-'+spfMoneyM(d.price_max).replace('MB','')+'</td>'+
           '<td>'+(d.launch_date||'-')+'</td><td class="num">'+d.sales_period_months+'</td><td class="num">'+fmtInt(d.total_units)+'</td>'+
           '<td class="num">'+fmtInt(d.sales_unit)+'</td><td class="num">'+d.avg_sales_per_month_total+'</td>'+
           '<td class="num">'+fmtInt(d.sales_after_launch)+'</td><td class="num">'+d.avg_sales_per_month_after_launch+'</td>'+
-          '<td class="num">'+fmtInt(d.past_8_months)+'</td><td class="num">'+fmtInt(d.remaining_unsold)+'</td>'+
+          '<td class="num">'+fmtInt(p8Count(p))+'</td><td class="num">'+fmtInt(d.remaining_unsold)+'</td>'+
           '<td class="num" style="font-weight:700;">'+(d.time_to_closeout_months!=null?d.time_to_closeout_months:'-')+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
@@ -3911,14 +3912,14 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var monthsPassed = now.getMonth()+1;
       var monthsLeft = Math.max(12 - monthsPassed, 1);
       var pctPassed = Math.round(monthsPassed/12*100);
-      // Year-to-go forecast: avg bookings/month over the last 3 full months (adjusted bookings, SS_DATA.yearly)
+      // Year-to-go forecast: avg bookings/month over the last 3 full months (ERP bookings by month)
       // x time left in the year (days to 31 Dec / 30.44), capped by unsold stock. Excludes the current partial month.
       var ytgMonthIdx = now.getMonth();
       var ytgLeft = Math.max((new Date(now.getFullYear(),11,31) - now)/86400000, 0)/30.44;
       var ytgTotal = 0, ytgTotalTarget = 0, ytgTotalYtd = 0;
       function ytgCalc(p, d){
-        var y = ((SS_DATA.yearly||{})[p]||{})[String(now.getFullYear())] || [];
-        var w = y.slice(Math.max(ytgMonthIdx-3,0), ytgMonthIdx);
+        var gm = spfMonthlyBooked(p), w = [];
+        for(var q=Math.max(ytgMonthIdx-3,0); q<ytgMonthIdx; q++) w.push(gm(now.getFullYear(), q));
         var sum = w.reduce(function(a,b){ return a+(b||0); }, 0);
         var eff = 3;
         if(d.launch_date){ var since = (new Date(now.getFullYear(), ytgMonthIdx, 1) - new Date(d.launch_date))/86400000/30.44; if(since < eff) eff = since; }
@@ -3929,19 +3930,22 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       }
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
-        var pct = d.target_progress_pct;
-        var yf = ytgCalc(p, d); ytgTotal += yf.n; ytgTotalTarget += (d.target_2026||0); ytgTotalYtd += (d.sales_2026||0);
+        var bookedYtd = spfBookedYtd(d);
+        var tgtRemaining = Math.max((d.target_2026||0) - bookedYtd, 0);
+        var pct = d.target_2026 ? Math.round(bookedYtd/d.target_2026*1000)/10 : d.target_progress_pct;
+        d._pct = pct;
+        var yf = ytgCalc(p, d); ytgTotal += yf.n; ytgTotalTarget += (d.target_2026||0); ytgTotalYtd += bookedYtd;
         var yfTip = 'ค่าเฉลี่ยจอง '+yf.rate.toFixed(2)+' ยูนิต/เดือน (3 เดือนเต็มล่าสุด = '+fmtInt(yf.sum)+' ยูนิต) × เวลาที่เหลือ '+ytgLeft.toFixed(2)+' เดือน = '+yf.raw.toFixed(2)+' ยูนิต';
         var color = pct>=70?cssVar('--good'):(pct>=40?cssVar('--warning'):cssVar('--critical'));
-        var targetPerMonth = (d.target_remaining/monthsLeft).toFixed(1);
+        var targetPerMonth = (tgtRemaining/monthsLeft).toFixed(1);
         // Whole-row highlight when this project's yearly progress % is behind how much
         // of the year has already elapsed (pctPassed) -- e.g. 8/12 months = 66% of the
         // year gone, so a project still under 66% target progress is falling behind pace.
         var behind = (pct!=null) && (pct < pctPassed);
         return '<tr class="'+(behind?'spf-row-behind':'')+'"><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.total_units)+'</td><td class="num">'+d.avg_monthly_2024+'</td>'+
-          '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(d.sales_2026)+'</td>'+
+          '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(bookedYtd)+'</td>'+
           '<td class="num"><span class="spf-target-cell" style="background:'+color+'22; color:'+color+'">'+pct+'%</span></td>'+
-          '<td class="num">'+fmtInt(d.target_remaining)+'</td><td class="num">'+targetPerMonth+'</td>'+
+          '<td class="num">'+fmtInt(tgtRemaining)+'</td><td class="num">'+targetPerMonth+'</td>'+
           '<td class="num" style="font-weight:700;" title="'+yfTip.replace(/"/g,'&quot;')+'">'+fmtInt(yf.n)+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
@@ -3953,10 +3957,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         // = stronger year-end potential.
         var terD = SPF_DATA['PATTA TERRANE'], rvrD = SPF_DATA['PATTA RIVERINE'];
         var terVsRvrHTML = '';
-        if (terD && rvrD && terD.target_progress_pct!=null && rvrD.target_progress_pct!=null){
-          var rvrAhead = rvrD.target_progress_pct >= terD.target_progress_pct;
+        if (terD && rvrD && terD._pct!=null && rvrD._pct!=null){
+          var rvrAhead = rvrD._pct >= terD._pct;
           var leader = rvrAhead ? 'PATTA RIVERINE' : 'PATTA TERRANE';
-          terVsRvrHTML = '<span class="spf-note-row"><b>TER vs RVR (ศักยภาพช่วงปลายปี):</b> '+leader+' นำอยู่ — Target Progress RVR '+rvrD.target_progress_pct+'% vs TER '+terD.target_progress_pct+'%, Time-to-Close-out RVR '+fmtInt(rvrD.time_to_closeout_months)+' เดือน vs TER '+fmtInt(terD.time_to_closeout_months)+' เดือน</span>';
+          terVsRvrHTML = '<span class="spf-note-row"><b>TER vs RVR (ศักยภาพช่วงปลายปี):</b> '+leader+' นำอยู่ — Target Progress RVR '+rvrD._pct+'% vs TER '+terD._pct+'%, Time-to-Close-out RVR '+fmtInt(rvrD.time_to_closeout_months)+' เดือน vs TER '+fmtInt(terD.time_to_closeout_months)+' เดือน</span>';
         }
         noteEl.innerHTML =
           '<span class="spf-note-row"><b>ผ่านไปแล้ว '+monthsPassed+' เดือน</b> ('+pctPassed+'% ของปี '+now.getFullYear()+')</span>'+
@@ -3971,6 +3975,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     wireMonthlySummaryUIOnce();
     renderMonthlySummarySection();
   }
+
+  // ยอดจองตาม ERP (นับตามวันที่จอง ตั้งแต่ 1 ม.ค.) -- ใช้ตัวเลขเดียวกันทั้งแท็บ Sales Performance
+  function spfBookedYtd(d){ return d.period_sales_raw!=null ? d.period_sales_raw : (d.sales_2026||0); }
+  // ยอดจองรายเดือนตาม ERP (SS_DATA.funnelByMonth[proj][year]['จอง']) -- คำนวณสดจากวันที่ปัจจุบัน
+  function spfMonthlyBooked(p){
+    var fm = ((SS_DATA.funnelByMonth||{})[p]) || {};
+    return function(year, m){ var a = fm[String(year)] && fm[String(year)]['จอง']; return (a && a[m]) || 0; };
+  }
+
 
   // Start/end ISO dates for the calendar month named by monthKey ("YYYY-M", i.e.
   // bucketKey(iso,'month')'s own format).
@@ -4007,7 +4020,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var totalTarget=0, totalSales2026=0;
     PROJECTS.forEach(function(p){
       var d = SPF_DATA[p];
-      if(d && d.target_2026){ totalTarget += d.target_2026; totalSales2026 += (d.sales_2026||0); }
+      if(d && d.target_2026){ totalTarget += d.target_2026; totalSales2026 += spfBookedYtd(d); }
     });
     var overallProgress = totalTarget ? Math.round(totalSales2026/totalTarget*100) : null;
 
