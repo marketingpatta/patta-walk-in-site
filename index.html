@@ -3406,6 +3406,35 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         (erpUnits[k] = erpUnits[k] || []).push(c.rc);
       });
     });
+    // 25 พ.ย. 2569: ถ้ายังไม่เจอแปลง (ไม่มีรหัสในแท็บ Walk-in และชื่อไม่ตรงเป๊ะ) ให้ค้นใน ERP ต่อด้วยคำในชื่อ (ชื่อ/นามสกุลซ้อนกัน)
+    // + ดูโครงการเดียวกัน + วันที่จองใกล้กัน -- ใช้ ERP เท่านั้น
+    var erpList = [];
+    function nameTokens(v){ return normName(v).split(/[\s,]+/).filter(function(t){ return t.length>=2 && !/^(และ|and|โดย|จำกัด|co\.?,?|ltd\.?|บริษัท)$/i.test(t); }); }
+    Object.keys((SS_DATA && SS_DATA.contractDetail) || {}).forEach(function(proj){
+      (SS_DATA.contractDetail[proj]||[]).forEach(function(c){
+        if(c.nm && c.rc) erpList.push({ rc:c.rc, proj:proj, tok:nameTokens(c.nm), bd:(c.bd||'').slice(0,10) });
+      });
+    });
+    function erpFuzzyUnits(nm, proj, bookDate){
+      var tk = nameTokens(nm); if(!tk.length) return [];
+      var bdMs = bookDate ? parseISO(String(bookDate).slice(0,10)).getTime() : null;
+      var best = null, bestScore = 0;
+      erpList.forEach(function(e){
+        var hit = tk.filter(function(t){ return e.tok.indexOf(t)>=0 || e.tok.some(function(x){ return x.length>=4 && t.length>=4 && (x.indexOf(t)>=0 || t.indexOf(x)>=0); }); }).length;
+        if(!hit) return;
+        var need = tk.length>=2 ? 2 : 1;
+        if(hit < need) return;
+        var near = (bdMs!=null && e.bd) ? Math.abs(parseISO(e.bd).getTime()-bdMs)/86400000 <= 30 : false;
+        var same = e.proj===proj;
+        if(tk.length<2 && !(same && near)) return;
+        var sc = hit*2 + (same?2:0) + (near?2:0);
+        if(sc>bestScore){ bestScore=sc; best=e; }
+      });
+      if(!best) return [];
+      var out = [];
+      erpList.forEach(function(e){ if(e.bd===best.bd && e.proj===best.proj && e.tok.join(' ')===best.tok.join(' ')) out.push(e.rc); });
+      return out;
+    }
     var lanes = {};
     computeCustomerGroups().forEach(function(g){
       if(state.project!=='ALL' && g.p!==state.project) return;
@@ -3429,6 +3458,10 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         g.visits.forEach(function(v){ raceHouseIds(v.bu, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
         if(!units.length){
           (erpUnits[normName(g.nm)+'|'+g.p] || []).forEach(function(rc){ raceHouseIds(rc, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
+          item.unitsFromErp = units.length>0;
+        }
+        if(!units.length){
+          erpFuzzyUnits(g.nm, g.p, item.bookDate).forEach(function(rc){ raceHouseIds(rc, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
           item.unitsFromErp = units.length>0;
         }
         item.units = units;
@@ -3614,7 +3647,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         var col = i % b.finCols, row = Math.floor(i/b.finCols);
         var fx = finX + 14 + col*b.finCellW + r, fy = y0 + 20 + row*b.finCellH + r;
         var id = raceItemsById.push(it)-1;
-        var unitTxt = it.units.length ? it.units[0] + (it.units.length>1 ? '+'+(it.units.length-1) : '') : 'ไม่ระบุ';
+        var unitTxt = it.units.length ? it.units[0] + (it.units.length>1 ? '+'+(it.units.length-1) : '') : 'ไม่พบใน ERP';
         svg.push('<g class="race-dot" data-id="'+id+'" style="cursor:pointer;">'+raceFaceSVG(fx, fy, r, cssVar('--accent'), true, false, true, it.nat)+
           '<text x="'+(fx+r+9).toFixed(1)+'" y="'+(fy+3.5).toFixed(1)+'" font-size="12.5" font-weight="600" fill="'+(it.units.length?text:muted)+'">'+escapeHTML(unitTxt)+'</text></g>');
       });
@@ -3632,7 +3665,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
         ['สถานะติดตาม', it.bookDate ? 'ปิดการขายแล้ว' : RACE_FU[it.fuState].label], ['ติดตามแล้วครั้งที่', it.doneCp ? raceDoneTxt(it) : '-'], ['เข้าชม', it.visitCount+' ครั้ง'],
         ['Walk-in ครั้งแรก', fmtDateShort(it.firstVisitDate)], ['Walk-in ล่าสุด', fmtDateShort(it.lastVisitDate)]
       ];
-      if(it.bookDate) rows.push(['แปลงที่จอง', it.units.length ? it.units.join(', ')+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
+      if(it.bookDate) rows.push(['แปลงที่จอง', it.units.length ? it.units.join(', ')+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่พบใน ERP']);
       if(it.bookDate) rows.push(['วันที่จอง', fmtDateShort(it.bookDate.slice(0,10))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
       else { rows.push(['ติดต่อ/เข้าชมล่าสุด', it.daysIdle+' วันก่อน']); if(!it.dead) rows.push(['คะแนนความพร้อม', String(it.score)]); if(it.fb && it.fb.s) rows.push(['Feedback ล่าสุด', it.fb.s+(it.fb.cp ? ' ('+it.fb.cp+' วัน)' : '')]); }
       rows.push(['สัญชาติ', it.natRaw]);
@@ -3688,7 +3721,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       var rows = [['สัญชาติ', raceNatBadge(it)], ['สถานะติดตาม', it.bookDate ? 'ปิดการขายแล้ว' : escapeHTML(RACE_FU[it.fuState].label)], ['ติดตามแล้วครั้งที่', it.doneCp ? escapeHTML(raceDoneTxt(it)) : '-'], ['เข้าชม', it.visitCount+' ครั้ง'],
         ['Walk-in ครั้งแรก', escapeHTML(fmtDateShort(it.firstVisitDate))], ['Walk-in ล่าสุด', escapeHTML(fmtDateShort(it.lastVisitDate))]];
       if(it.bookDate){
-        rows.push(['แปลงที่จอง', it.units.length ? '<b>'+escapeHTML(it.units.join(', '))+'</b>'+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่ระบุในระบบ']);
+        rows.push(['แปลงที่จอง', it.units.length ? '<b>'+escapeHTML(it.units.join(', '))+'</b>'+(it.unitsFromErp?' (จาก ERP)':'') : 'ไม่พบใน ERP']);
         rows.push(['วันที่จอง', escapeHTML(fmtDateShort(it.bookDate.slice(0,10)))], ['ใช้เวลาจนปิดการขาย', fmtInt(it.daysToClose)+' วัน']);
       } else {
         if(!it.dead) rows.push(['คะแนนความพร้อม', String(it.score)]);
