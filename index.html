@@ -3905,7 +3905,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
     // ---- 4. Sales Target Performance ----
     (function(){
       var t = document.getElementById('spfTable4');
-      var head = '<tr><th>Project</th><th>Total Units</th><th>Avg/mo 2024</th><th>Avg/mo 2025</th><th>2026 Target</th>'+
+      var head = '<tr><th>Project</th><th>Total Units</th><th>Avg/mo 2024</th><th>Avg/mo 2025</th><th>Avg/mo 2026</th><th>2026 Target</th>'+
         '<th>Booked YTD 2026</th><th>Target Progress %</th><th>Target Remaining</th><th>Target/mo (remaining months)</th><th>Year to go sales forecast (Unit)</th></tr>';
       var now = new Date();
       var monthsPassed = now.getMonth()+1;
@@ -3942,7 +3942,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
         // year gone, so a project still under 66% target progress is falling behind pace.
         var behind = (pct!=null) && (pct < pctPassed);
         return '<tr class="'+(behind?'spf-row-behind':'')+'"><td class="proj">'+p+'</td><td class="num">'+fmtInt(d.total_units)+'</td><td class="num">'+d.avg_monthly_2024+'</td>'+
-          '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(bookedYtd)+'</td>'+
+          '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+(function(){ var mo = monthsPassed; if(d.sales_period_months!=null && d.sales_period_months>0) mo = Math.min(mo, d.sales_period_months); return mo>0 ? (Math.round(bookedYtd/mo*100)/100) : 0; })()+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(bookedYtd)+'</td>'+
           '<td class="num"><span class="spf-target-cell" style="background:'+color+'22; color:'+color+'">'+pct+'%</span></td>'+
           '<td class="num">'+fmtInt(tgtRemaining)+'</td><td class="num">'+targetPerMonth+'</td>'+
           '<td class="num" style="font-weight:700;" title="'+yfTip.replace(/"/g,'&quot;')+'">'+fmtInt(yf.n)+'</td></tr>';
