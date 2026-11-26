@@ -3794,6 +3794,19 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   // supplied by the sales team (flagged with a footnote) since the ERP has no clean source
   // for them yet -- everything else here refreshes with each ERP sync.
   var SPF_DATA = window.__BE_SPF || {};
+
+  // 26 พ.ย. 2569: งบงานป้ายรายเดือน (ม.ค.–พ.ย.) จากชีตการตลาด ใช้แทนยอดป้ายจาก ERP -- ยอดป้ายทุกจุดในแดชบอร์ด (การ์ด Offline, Marketing Report) อ่านจาก SS_DATA.mktCost[..].billboard
+  // ส่วนสื่อสิ่งพิมพ์ยังใช้ยอดจริงจาก ERP เหมือนเดิม · ยอดตามชีต (รวม VAT ตามที่ชีตบันทึก) ยอด CAS รายเดือนรวมต่างจากยอดรวมในชีต 0.29 บาท
+  var SIGN_SHEET_BUDGET = {"HORIZON": {"posted": 135170.11, "byMonth": {"2026-01": [9973.45, 0], "2026-02": [6298.6, 0], "2026-03": [6973.45, 0], "2026-04": [6973.45, 0], "2026-05": [6973.45, 0], "2026-06": [6973.45, 0], "2026-07": [8773.45, 0], "2026-08": [33723.45, 0], "2026-09": [24207.41, 0], "2026-10": [11299.45, 0], "2026-11": [13000.5, 0]}}, "CHIEFTAIN": {"posted": 254731.48, "byMonth": {"2026-01": [20960.52, 0], "2026-02": [46315.52, 0], "2026-03": [28660.53, 0], "2026-04": [17960.53, 0], "2026-05": [17960.53, 0], "2026-06": [17960.53, 0], "2026-07": [17690.53, 0], "2026-08": [17960.53, 0], "2026-09": [51301.73, 0], "2026-10": [17960.53, 0], "2026-11": [0, 0]}}, "CASCADE": {"posted": 946344.81, "byMonth": {"2026-01": [100000.0, 0], "2026-02": [143995.02, 0], "2026-03": [163333.63, 0], "2026-04": [118851.9, 0], "2026-05": [122813.63, 0], "2026-06": [67213.14, 0], "2026-07": [27912, 0], "2026-08": [46627.1, 0], "2026-09": [63848, 0], "2026-10": [46627.1, 0], "2026-11": [45123.0, 0]}}, "ARCADE Autograph": {"posted": 1496500.31, "byMonth": {"2026-01": [143128.42, 0], "2026-02": [97656.02, 0], "2026-03": [161747.63, 0], "2026-04": [114025.7, 0], "2026-05": [116827.89, 0], "2026-06": [114025.7, 0], "2026-07": [135035.61, 0], "2026-08": [96478.86, 0], "2026-09": [199142.85, 0], "2026-10": [141202.22, 0], "2026-11": [177229.41, 0]}}, "PATTA TERRANE": {"posted": 56825.0, "byMonth": {"2026-06": [25412.5, 0], "2026-07": [6000, 0], "2026-08": [25412.5, 0], "2026-11": [0, 0]}}, "PATTA RIVERINE": {"posted": 36112.5, "byMonth": {"2026-08": [36112.5, 0], "2026-11": [0, 0]}}, "PATTA PILLAR": {"posted": 189207.05, "byMonth": {"2026-09": [73395.84, 0], "2026-10": [57168.11, 0], "2026-11": [58643.1, 0]}}};
+  (function(){
+    SS_DATA.mktCost = SS_DATA.mktCost || {};
+    Object.keys(SIGN_SHEET_BUDGET).forEach(function(p){
+      var mc = SS_DATA.mktCost[p] = SS_DATA.mktCost[p] || {};
+      var b = SIGN_SHEET_BUDGET[p];
+      mc.billboard = { posted: b.posted, sched: 0, byMonth: b.byMonth, source: 'sheet' };
+      mc.print = mc.print || { posted: 0, sched: 0, byMonth: {} };
+    });
+  })();
   var spfRendered = false;
 
   function spfFmtUpdated(){
@@ -4543,11 +4556,11 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
     var posted = (bb.posted||0) + (pr.posted||0), sched = (bb.sched||0) + (pr.sched||0);
     var last = '';
     [bb, pr].forEach(function(k){ Object.keys(k.byMonth||{}).forEach(function(m){ if ((k.byMonth[m][0]||0)!==0 && m>last) last = m; }); });
-    var range = last ? ('ลงบัญชีแล้ว ม.ค.–'+MKT_TH_MONTH[parseInt(last.slice(5,7),10)]) : 'ยังไม่มียอดที่ลงบัญชี';
+    var range = last ? ('ม.ค.–'+MKT_TH_MONTH[parseInt(last.slice(5,7),10)]) : 'ยังไม่มียอด';
     var per = (posted>0 && closedCount>0) ? Math.round(posted/closedCount) : null;
     return '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border, #bbb)">'+
-      '<div style="font-size:11px;opacity:.75;margin-bottom:2px">ตามระบบ ERP ('+range+')</div>'+
-      '<div>ค่าเช่า/ภาษีป้าย: <b>'+fmtInt(bb.posted||0)+' บาท</b> &middot; สื่อสิ่งพิมพ์: <b>'+fmtInt(pr.posted||0)+' บาท</b> &middot; รวม <b>'+fmtInt(posted)+' บาท</b></div>'+
+      '<div style="font-size:11px;opacity:.75;margin-bottom:2px">ป้าย = ชีตการตลาด · สิ่งพิมพ์ = ERP ('+range+')</div>'+
+      '<div>งบงานป้าย: <b>'+fmtInt(bb.posted||0)+' บาท</b> &middot; สื่อสิ่งพิมพ์: <b>'+fmtInt(pr.posted||0)+' บาท</b> &middot; รวม <b>'+fmtInt(posted)+' บาท</b></div>'+
       '<div>ต้นทุน ERP ต่อการปิดการขาย 1 ราย: <b>'+(per!=null ? fmtInt(per)+' บาท' : '&mdash;')+'</b></div>'+
       '<div style="font-size:11px;opacity:.7">สื่อสิ่งพิมพ์ = รหัสต้นทุน G020051 ซึ่ง ERP แยกค่าผลิตป้ายออกจากสิ่งพิมพ์อื่นไม่ได้ · ยอดก่อน VAT · เป็นข้อมูลอ้างอิง แยกจากงบด้านบน (ชีตอาจรวมค่าเช่าป้ายไว้แล้ว)</div>'+
       '</div>';
@@ -4575,7 +4588,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
         '<div>ผลลัพธ์ (Result): <b>'+fmtInt(res.total)+' Walk</b></div>'+
         '<div>ปิดการขาย: <b>'+fmtInt(res.closedCount)+' ราย</b>'+unitsText+'</div>'+
         '<div>ต้นทุนต่อการปิดการขาย 1 ราย: <b>'+(perSuccess!=null ? fmtInt(perSuccess)+' บาท' : '&mdash;')+'</b></div>'+
-'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'ค่าป้าย + สื่อสิ่งพิมพ์จริงตาม ERP ปี 2569 (เฉพาะที่ลงบัญชีแล้ว ไม่รวมยอดรอ Post · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–พ.ย.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
+'<div style="margin-top:6px;font-size:11px;opacity:.7">งบ = '+(channelKey==='offline' ? 'งบงานป้ายตามชีตการตลาด ปี 2569 (ม.ค.–พ.ย.) + สื่อสิ่งพิมพ์จริงตาม ERP (เฉพาะที่ลงบัญชีแล้ว · สื่อสิ่งพิมพ์ ERP แยกค่าผลิตป้ายไม่ได้ · ยอดก่อน VAT)' : 'ยอดสะสมปี 2569 (ชีตถึง ก.ย. + Facebook บวกยอดเรียกเก็บ ก.ย.–พ.ย.)')+' · Walk/ปิดการขายนับตามช่วงวันที่ที่เลือก · ปิดการขาย = แปลงของโครงการนี้ที่มีสัญญาใน ERP</div>'+
       '</div>'+
       '<div class="card-sub" style="margin:0;">'+
         res.series.map(function(s){ return escapeHTML(s.name)+': '+fmtInt(s.total)+' Walk'; }).join(' &middot; ')+
@@ -5554,7 +5567,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
       html += '<tr class="mr-total"><td>รวม</td><td class="mr-n">'+mrN(T.on)+'</td><td>'+verdict(T.on, T.closeOn, true)+'</td><td class="mr-n">'+costPer(T.on, T.closeOn)+'</td><td class="mr-n">'+mrN(T.bb)+'</td><td class="mr-n">'+mrN(T.pr)+'</td><td>'+verdict(T.bb, T.closeOff, true)+'</td><td class="mr-n">'+costPer(T.off, T.closeOff)+'</td><td>'+verdict(T.pr, 0, false)+'</td></tr>';
     }
     html += '</tbody></table></div><div class="mr-legend">'+
-      '<b>งบ Facebook</b> = ยอดสะสมจากชีตการตลาด + ยอดที่ Meta เรียกเก็บล่าสุด · <b>ป้าย / สิ่งพิมพ์</b> = ยอดที่ลงบัญชีใน ERP แล้ว (ยังไม่รวมรายการที่รอลงบัญชี) · '+
+      '<b>งบ Facebook</b> = ยอดสะสมจากชีตการตลาด + ยอดที่ Meta เรียกเก็บล่าสุด · <b>ป้าย</b> = งบงานป้ายจากชีตการตลาด (ม.ค.–พ.ย.) · <b>สิ่งพิมพ์</b> = ยอดที่ลงบัญชีใน ERP แล้ว (ยังไม่รวมรายการที่รอลงบัญชี) · '+
       '<b>ผลของงบ</b> = ยูนิตที่จอง (ERP) ซึ่งลูกค้าบอกว่ามาจาก Facebook / ป้ายโฆษณา+ขับรถผ่านโครงการ ตามข้อมูล Walk-in · สื่อสิ่งพิมพ์ไม่มีช่องทางแยกใน Walk-in จึงติดตามผลรายช่องไม่ได้ (ต้นทุน/ยูนิต Offline รวมป้ายและสิ่งพิมพ์) · '+
       'ต้นทุนไม่รวมค่านายหน้า Agency, อีเวนต์ และแคมเปญ Brand · งบเป็นยอดสะสมปี '+MR_YEAR+' จึงนับผลตั้งแต่ 1 ม.ค. '+MR_YEAR+' ถึงวันที่สิ้นสุดตัวกรอง</div></div>';
 
