@@ -1116,7 +1116,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
       <div class="card-sub" id="raceSub"></div>
       <div class="race-legend" id="raceLegend"></div>
       <div class="table-scroll" id="raceBody"></div>
-      <div class="ex-legend">แต่ละช่อง = ลูกค้าอยู่ในรอบติดตามไหน: วันที่ 7 (ยังไม่ได้บันทึกติดตาม 7 วัน) → วันที่ 30 (ติดตาม 7 วันแล้ว) → วันที่ 90 (ติดตาม 30 วันแล้ว) · Potential = ลูกค้าศักยภาพสูง คำนวณจากจำนวนครั้งที่เข้าชม + สถานะล่าสุด (ไม่ใช้เกรด) · สีของจุด: เขียว = ติดตามแล้วมี Feedback · เทา = ยังไม่ได้รับการติดต่อ/ติดตาม · แดง = เกินกำหนดติดตาม · ดำ (ช่อง Dead end) = ขาดการติดต่อและจบการติดตามแล้ว · "ลูกค้าที่มีโอกาส" = ซ่อนลูกค้าที่ไม่สนใจ/ซื้อที่อื่น/ติดต่อไม่ได้ · ในแต่ละช่องเรียงแดง → เทา → เขียว · วางเมาส์บนจุดเพื่อดูรายละเอียด กดที่จุดเพื่อเปิดการ์ด · +N ราย = จำนวนที่ไม่ได้แสดงเพราะเกินพื้นที่</div>
+      <div class="ex-legend">แต่ละช่อง = ลูกค้าอยู่ในรอบติดตามไหน: วันที่ 7 (ยังไม่ได้บันทึกติดตาม 7 วัน) → วันที่ 30 (ติดตาม 7 วันแล้ว) → วันที่ 90 (ติดตาม 30 วันแล้ว)</div>
     </div>
 
     <div class="card trend">
@@ -3313,11 +3313,21 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
   var RACE_COLS = [
     { k:'7',  label:'วันที่ 7',  sub:'รอติดตามครั้งแรก (7 วัน)' },
     { k:'30', label:'วันที่ 30', sub:'ติดตาม 7 วันแล้ว รอ 30 วัน' },
-    { k:'90', label:'วันที่ 90', sub:'ติดตาม 30 วันแล้ว รอ 90 วัน' },
-    { k:'P',  label:'Potential', sub:'ลูกค้าศักยภาพสูง ใกล้ตัดสินใจ' }
+    { k:'90', label:'วันที่ 90', sub:'ติดตาม 30 วันแล้ว รอ 90 วัน' }
   ];
+  // 26 พ.ย. 2569: นับเฉพาะลูกค้าจริง -- ตัดแถวที่เป็นเอเจนท์/นายหน้า/บริษัทเอเจนท์ออก
+  var RACE_AGENT_RE = /agent|agency|เอเจ|property|real\s*estate|เรียลเอสเตท|house\s*keeper|top\s*ocean|fazwaz|etagi|ibg|gold(en)?\s*elep|lazudi|big\s*hou|บริษัท|จำกัด|co\.\s*,?\s*ltd/i;
+  function raceIsAgentVisit(v){
+    if(!v) return false;
+    var nm = String(v.nm||'');
+    if(RACE_AGENT_RE.test(nm)) return true;
+    if(v.m==='Agency'){
+      var a = String(v.ag||'').toLowerCase().replace(/\s+/g,' ').trim(), n = nm.toLowerCase().replace(/\s+/g,' ').trim();
+      if(a && n && (a.indexOf(n)>=0 || n.indexOf(a)>=0)) return true;
+    }
+    return false;
+  }
   function raceStageIdx(it){
-    if(it.score>=60) return 3;
     if(!it.doneCp['7']) return 0;
     if(!it.doneCp['30']) return 1;
     return 2;
@@ -3435,10 +3445,13 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       erpList.forEach(function(e){ if(e.bd===best.bd && e.proj===best.proj && e.tok.join(' ')===best.tok.join(' ')) out.push(e.rc); });
       return out;
     }
+    var erpUnitSet = {}, finishedUnitSeen = {};
+    erpList.forEach(function(e){ raceHouseIds(e.rc, e.proj).forEach(function(u){ erpUnitSet[u] = true; }); });
     var lanes = {};
     computeCustomerGroups().forEach(function(g){
       if(state.project!=='ALL' && g.p!==state.project) return;
       if(g.lastVisitDate<state.start || g.lastVisitDate>state.end) return;
+      if(g.visits.some(raceIsAgentVisit)) return;
       var lane = lanes[g.p] = lanes[g.p] || { p:g.p, racers:[], finished:[], dead:[], discontinued:0, hidden:0 };
       var last = g.visits[g.visits.length-1];
       var status = (last.s && last.s!=='N/A') ? last.s : 'ไม่มี Feedback';
@@ -3464,6 +3477,11 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           erpFuzzyUnits(g.nm, g.p, item.bookDate).forEach(function(rc){ raceHouseIds(rc, g.p).forEach(function(u){ if(units.indexOf(u)<0) units.push(u); }); });
           item.unitsFromErp = units.length>0;
         }
+        // 26 พ.ย. 2569: เส้นชัย = เฉพาะยอดปัจจุบันที่มีใน ERP -- ตัดรายที่ไม่มีแปลงใน ERP และรายที่ซ้ำแปลงเดียวกัน
+        units = units.filter(function(u){ return erpUnitSet[u]; });
+        if(!units.length) return;
+        if(units.some(function(u){ return finishedUnitSeen[u]; })) return;
+        units.forEach(function(u){ finishedUnitSeen[u] = true; });
         item.units = units;
         item.daysToClose = Math.max(0, Math.round((parseISO(item.bookDate.slice(0,10))-parseISO(g.firstVisitDate))/86400000));
         lane.finished.push(item); return;
@@ -3555,7 +3573,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     }
     var lanes = computeRace();
     raceItemsById = []; raceLanesData = [];
-    var totalRacers = 0, totalFinished = 0, totalHidden = 0, totalDisc = 0, colCount = [0,0,0,0];
+    var totalRacers = 0, totalFinished = 0, totalHidden = 0, totalDisc = 0, colCount = [0,0,0];
     lanes.forEach(function(l){
       totalRacers += l.racers.length; totalFinished += l.finished.length; totalHidden += l.hidden; totalDisc += l.discontinued;
       l.racers.forEach(function(it){ colCount[it.stage]++; });
@@ -3570,15 +3588,15 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     var W = Math.max(860, (raceBodyEl.clientWidth || 1100));
     var labelW = 170, finishW = Math.max(250, Math.round(W*0.22)), deadW = Math.max(150, Math.round(W*0.12)), trackL = labelW+14, trackR = W-finishW-deadW-18;
     var headH = 54, r = 7, cell = 2*r+3, cellY = 2*r+5, maxRows = 12;
-    var colW = (trackR+8-trackL)/4;
+    var colW = (trackR+8-trackL)/3;
     var muted = cssVar('--text-muted'), border = cssVar('--border'), text = cssVar('--text-primary'), text2 = cssVar('--text-secondary');
     var colsPerRow = Math.max(1, Math.floor((colW-14)/(cell+1)));
     var FU_ORDER = { overdue:0, none:1, done:2 };
 
     var laneBlocks = lanes.map(function(l){
-      var groups = [[],[],[],[]];
+      var groups = [[],[],[]];
       l.racers.forEach(function(it){ groups[it.stage].push(it); });
-      var placed = [], overflow = [0,0,0,0], maxRowsUsed = 0;
+      var placed = [], overflow = [0,0,0], maxRowsUsed = 0;
       groups.forEach(function(arr, gi){
         arr.sort(function(a,b){ return (FU_ORDER[a.fuState]-FU_ORDER[b.fuState]) || (a.daysIdle-b.daysIdle); });
         var cap = colsPerRow*maxRows, show = Math.min(arr.length, cap);
@@ -3597,7 +3615,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     });
     var H = headH + laneBlocks.reduce(function(a,b){ return a+b.h; }, 0) + 8;
     var svg = [];
-    var colFill = [ 'transparent', 'rgba(255,214,64,0.16)', 'rgba(255,150,64,0.14)', 'rgba(12,163,12,0.10)' ];
+    var colFill = [ 'transparent', 'rgba(255,214,64,0.16)', 'rgba(255,150,64,0.14)' ];
     RACE_COLS.forEach(function(c, i){
       var x1 = trackL + i*colW;
       svg.push('<rect x="'+x1.toFixed(1)+'" y="'+headH+'" width="'+colW.toFixed(1)+'" height="'+(H-headH-8)+'" fill="'+colFill[i]+'"></rect>');
@@ -3619,9 +3637,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
     laneBlocks.forEach(function(b){
       var l = b.l, cy = y0 + b.h/2;
       svg.push('<line x1="0" x2="'+W+'" y1="'+(y0+b.h)+'" y2="'+(y0+b.h)+'" stroke="'+border+'"></line>');
-      var near = l.racers.filter(function(it){ return it.stage===3; }).length;
       svg.push('<text x="4" y="'+(cy-8)+'" font-size="15" font-weight="700" fill="'+text+'">'+escapeHTML(l.p)+'</text>');
-      svg.push('<text x="4" y="'+(cy+8)+'" font-size="13" fill="'+text2+'">ในสนาม '+l.racers.length+' · Potential '+near+'</text>');
+      svg.push('<text x="4" y="'+(cy+8)+'" font-size="13" fill="'+text2+'">ในสนาม '+l.racers.length+'</text>');
       svg.push('<text x="4" y="'+(cy+22)+'" font-size="13" fill="'+text2+'">ปิดการขาย '+l.finished.length+' · Dead end '+l.dead.length+'</text>');
       var all = l.racers.concat(l.finished, l.dead);
       var nTh = all.filter(function(it){ return it.nat==='TH'; }).length, nFo = all.filter(function(it){ return raceIsForeign(it.nat); }).length;
