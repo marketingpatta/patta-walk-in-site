@@ -738,7 +738,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
      tables -- without this override they'd force horizontal scroll and the last
      column (the count/reason) would sit out of view. */
   table.data.compact-table{ min-width:0; }
-  .spf-stack-row{ display:grid; grid-template-columns:150px 1fr 250px; align-items:center; gap:10px; margin-bottom:10px; }
+  .spf-stack-row{ display:grid; grid-template-columns:150px 1fr 340px; align-items:center; gap:10px; margin-bottom:10px; }
   .spf-stack-nums{ font-size:12px; white-space:nowrap; color:var(--text-secondary); font-variant-numeric:tabular-nums; }
   .spf-stack-nums b{ font-weight:700; }
   @media (max-width:760px){ .spf-stack-row{ grid-template-columns:110px 1fr; } .spf-stack-nums{ grid-column:1 / -1; } }
@@ -1165,7 +1165,7 @@ const PATTA_PDF_FONT_NOTOSANSTHAI_BOLD_BASE64 = "AAEAAAAQAQAABAAAR0RFRhnHGM8AAJz
     <div id="spfUpdateNote" style="margin-bottom:14px;"></div>
 
     <div class="section-heading" style="margin-top:22px;"><h3>1. Sales Performance</h3><div class="card-sub">สัดส่วนโอนแล้ว/รอโอน/เหลือขาย เทียบกับจำนวนยูนิตทั้งหมดของโครงการ</div></div>
-    <div class="card spf-card"><div class="table-scroll"><table class="data" id="spfTable1"></table></div></div>
+    <div class="card spf-card" hidden><div class="table-scroll"><table class="data" id="spfTable1"></table></div></div>
     <div class="card spf-card">
       <div class="card-title">ภาพรวมความคืบหน้า</div>
       <div class="spf-stack-legend"><span><i style="background:var(--good)"></i>โอน</span><span><i style="background:var(--accent-ink)"></i>รอโอน</span><span><i style="background:var(--text-muted)"></i>เหลือขาย</span></div>
@@ -3838,7 +3838,8 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
           var pct = total? (s.n/total*100) : 0;
           return pct>0 ? '<div class="spf-stack-seg" style="width:'+pct+'%; background:'+s.color+'" title="'+s.label+': '+fmtInt(s.n)+' ('+pct.toFixed(1)+'%)">'+(pct>=8?fmtInt(s.n):'')+'</div>' : '';
         }).join('');
-        var numsHtml = '<div class="spf-stack-nums">'+segs.map(function(s2){ return '<span style="color:'+s2.color+'">●</span> '+s2.label+' <b>'+fmtInt(s2.n)+'</b>'; }).join(' &nbsp; ')+'</div>';
+        var bookedHtml = '<span style="color:'+cssVar('--accent')+'">●</span> จอง <b>'+fmtInt(d.sales_unit)+'</b> <span style="color:var(--text-muted)">('+d.sales_pct+'%)</span> &nbsp;|&nbsp; ';
+        var numsHtml = '<div class="spf-stack-nums">'+bookedHtml+segs.map(function(s2){ return '<span style="color:'+s2.color+'">●</span> '+s2.label+' <b>'+fmtInt(s2.n)+'</b>'; }).join(' &nbsp; ')+'</div>';
         return '<div class="spf-stack-row"><div class="bar-label">'+p+' ('+fmtInt(total)+')</div><div class="spf-stack-track">'+segHtml+'</div>'+numsHtml+'</div>';
       }).join('');
     })();
@@ -3870,8 +3871,7 @@ if(window.__BE_ERR){var __d=document.createElement('div');__d.style.cssText='pos
       kpiEl.innerHTML =
         '<div class="kpi"><div class="kpi-label">ยอดจอง ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--accent')+'">'+fmtInt(totalRaw)+' ยูนิต</div><div class="kpi-sub">จำนวนรายการจองตามวันที่จอง ทุกโครงการรวมกัน</div></div>'+
         '<div class="kpi"><div class="kpi-label">ยอดโอน ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--good-ink')+'">'+fmtInt(totalTransfer)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่โอนจริง ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">ยอดยกเลิก ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--critical')+'">'+fmtInt(totalCancel)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่ยกเลิก ทุกโครงการรวมกัน</div></div>'+
-        '<div class="kpi"><div class="kpi-label">อัตราคงอยู่</div><div class="kpi-value">'+(totalRaw? (100-(totalCancel/totalRaw*100)).toFixed(0):0)+'%</div><div class="kpi-sub">(จอง − ยกเลิก) / จอง</div></div>';
+        '<div class="kpi"><div class="kpi-label">ยอดยกเลิก ตาม ERP (ช่วงนี้)</div><div class="kpi-value" style="color:'+cssVar('--critical')+'">'+fmtInt(totalCancel)+' ยูนิต</div><div class="kpi-sub">นับตามวันที่ยกเลิก ทุกโครงการรวมกัน</div></div>';
 
       var t = document.getElementById('spfTable2');
       var head = '<tr><th>Project</th><th>ยอดจอง ตาม ERP</th><th>ยอดโอน</th><th>ยอดยกเลิก</th></tr>';
