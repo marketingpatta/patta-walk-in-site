@@ -3915,6 +3915,8 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
       // x time left in the year (days to 31 Dec / 30.44), capped by unsold stock. Excludes the current partial month.
       var ytgMonthIdx = now.getMonth();
       var ytgLeft = Math.max((new Date(now.getFullYear(),11,31) - now)/86400000, 0)/30.44;
+      // Manual override of the year-to-go forecast (unit) per project, set by marketing (26 พ.ย. 69): CHIEFTAIN = 1 unit.
+      var YTG_OVERRIDE = { 'CHIEFTAIN': 1 };
       var ytgTotal = 0, ytgTotalTarget = 0, ytgTotalYtd = 0;
       function ytgCalc(p, d){
         var gm = spfMonthlyBooked(p), w = [];
@@ -3933,7 +3935,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
         var tgtRemaining = Math.max((d.target_2026||0) - bookedYtd, 0);
         var pct = d.target_2026 ? Math.round(bookedYtd/d.target_2026*1000)/10 : d.target_progress_pct;
         d._pct = pct;
-        var yf = ytgCalc(p, d); ytgTotal += yf.n; ytgTotalTarget += (d.target_2026||0); ytgTotalYtd += bookedYtd;
+        var yf = ytgCalc(p, d); var ytgManual = YTG_OVERRIDE[p]; if(ytgManual!=null){ yf.n = ytgManual; yf.manual = true; } ytgTotal += yf.n; ytgTotalTarget += (d.target_2026||0); ytgTotalYtd += bookedYtd;
         var yfTip = 'ค่าเฉลี่ยจอง '+yf.rate.toFixed(2)+' ยูนิต/เดือน (3 เดือนเต็มล่าสุด = '+fmtInt(yf.sum)+' ยูนิต) × เวลาที่เหลือ '+ytgLeft.toFixed(2)+' เดือน = '+yf.raw.toFixed(2)+' ยูนิต';
         var color = pct>=70?cssVar('--good'):(pct>=40?cssVar('--warning'):cssVar('--critical'));
         var targetPerMonth = (tgtRemaining/monthsLeft).toFixed(1);
@@ -3945,7 +3947,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
           '<td class="num">'+d.avg_monthly_2025+'</td><td class="num">'+(function(){ var mo = monthsPassed; if(d.sales_period_months!=null && d.sales_period_months>0) mo = Math.min(mo, d.sales_period_months); return mo>0 ? (Math.round(bookedYtd/mo*100)/100) : 0; })()+'</td><td class="num">'+fmtInt(d.target_2026)+'</td><td class="num" style="font-weight:700;">'+fmtInt(bookedYtd)+'</td>'+
           '<td class="num"><span class="spf-target-cell" style="background:'+color+'22; color:'+color+'">'+pct+'%</span></td>'+
           '<td class="num">'+fmtInt(tgtRemaining)+'</td><td class="num">'+targetPerMonth+'</td>'+
-          '<td class="num" style="font-weight:700;" title="'+yfTip.replace(/"/g,'&quot;')+'">'+fmtInt(yf.n)+'</td></tr>';
+          '<td class="num" style="font-weight:700;" title="'+((yf.manual?'ปรับเองโดยทีมการตลาด = '+yf.n+' ยูนิต (ค่าที่ระบบคำนวณ: '+Math.round(yf.raw)+') • ':'')+yfTip).replace(/"/g,'&quot;')+'">'+fmtInt(yf.n)+(yf.manual?'*':'')+'</td></tr>';
       }).join('');
       t.innerHTML = head+body;
       var noteEl = document.getElementById('spfTable4Note');
@@ -3965,7 +3967,7 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
           '<span class="spf-note-row"><b>ผ่านไปแล้ว '+monthsPassed+' เดือน</b> ('+pctPassed+'% ของปี '+now.getFullYear()+')</span>'+
           '<span class="spf-note-row"><b>เหลือระยะเวลาขาย</b> '+monthsLeft+' เดือน</span>'+
           terVsRvrHTML+
-          '<span class="spf-note-row"><b>Year to go sales forecast:</b> ประมาณการยอดจองเพิ่มจนสิ้นปี รวม '+fmtInt(ytgTotal)+' ยูนิต → คาดปิดปีที่ '+fmtInt(ytgTotalYtd+ytgTotal)+' ยูนิต จากเป้ารวม '+fmtInt(ytgTotalTarget)+' ยูนิต · คิดจากค่าเฉลี่ยยอดจองต่อเดือนของ 3 เดือนเต็มล่าสุด (ไม่รวมเดือนปัจจุบัน) × เวลาที่เหลือของปี และไม่เกินยูนิตที่เหลือขาย (เลื่อนเมาส์ที่ตัวเลขเพื่อดูวิธีคำนวณรายโครงการ)</span>'+
+          '<span class="spf-note-row"><b>Year to go sales forecast:</b> ประมาณการยอดจองเพิ่มจนสิ้นปี รวม '+fmtInt(ytgTotal)+' ยูนิต → คาดปิดปีที่ '+fmtInt(ytgTotalYtd+ytgTotal)+' ยูนิต จากเป้ารวม '+fmtInt(ytgTotalTarget)+' ยูนิต · คิดจากค่าเฉลี่ยยอดจองต่อเดือนของ 3 เดือนเต็มล่าสุด (ไม่รวมเดือนปัจจุบัน) × เวลาที่เหลือของปี และไม่เกินยูนิตที่เหลือขาย (เลื่อนเมาส์ที่ตัวเลขเพื่อดูวิธีคำนวณรายโครงการ)' + (Object.keys(YTG_OVERRIDE).length ? ' · * = ปรับเองโดยทีมการตลาด (CHIEFTAIN)' : '') + '</span>'+
           '<span class="spf-note-row spf-note-legend"><span class="spf-legend-swatch behind"></span>แถวที่ไฮไลท์ = ความคืบหน้ายังตามหลังเวลาที่ผ่านไปของปี ('+pctPassed+'%)</span>';
       }
     })();
