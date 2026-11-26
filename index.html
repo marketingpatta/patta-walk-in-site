@@ -3886,11 +3886,10 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
     (function(){
       var t = document.getElementById('spfTable3');
       var nowP8 = new Date(), thM = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-      var p8Months = []; for(var k=7;k>=0;k--){ var dm = new Date(nowP8.getFullYear(), nowP8.getMonth()-k, 1); p8Months.push([dm.getFullYear(), dm.getMonth()]); }
-      var p8Label = thM[p8Months[0][1]]+(p8Months[0][0]!==nowP8.getFullYear()?' '+String(p8Months[0][0]+543).slice(-2):'')+'–'+thM[p8Months[7][1]]+' '+String(nowP8.getFullYear()+543).slice(-2);
-      function p8Count(p){ var g = spfMonthlyBooked(p); return p8Months.reduce(function(a,ym){ return a + g(ym[0], ym[1]); }, 0); }
+      var p8Label = 'ม.ค.–'+thM[nowP8.getMonth()]+' '+String(nowP8.getFullYear()+543).slice(-2);
+      function p8Count(p){ var dd = SPF_DATA[p]; return dd ? spfBookedYtd(dd) : 0; }
       var head = '<tr><th>Project</th><th>Price Range</th><th>Launch Date</th><th>Sales Period (mo.)</th><th>Total Units</th><th>Booked (Unit)</th>'+
-        '<th>Avg/mo (Total)</th><th>Booked After Launch</th><th>Avg/mo (After Launch)</th><th>Booked (Past 8mo)<br><span style="font-weight:400;opacity:.75">'+p8Label+'</span></th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
+        '<th>Avg/mo (Total)</th><th>Booked After Launch</th><th>Avg/mo (After Launch)</th><th>Booked (YTD)<br><span style="font-weight:400;opacity:.75">'+p8Label+'</span></th><th>Available Stock</th><th>Time to Close-out (mo.)</th></tr>';
       var body = noElement.map(function(p){
         var d = SPF_DATA[p]; if(!d) return '';
         return '<tr><td class="proj">'+p+'</td><td>'+spfMoneyM(d.price_min)+'-'+spfMoneyM(d.price_max).replace('MB','')+'</td>'+
