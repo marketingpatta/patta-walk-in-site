@@ -4772,10 +4772,12 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
   var MP_PRICES_TEST = {};
   function mpPriceOf(proj,label){
     var src = (SS_DATA.lotPrices && SS_DATA.lotPrices[proj]) || MP_PRICES_TEST[proj] || {};
-    var nums = mpLotNums(label); var ask=0, bot=0, land=0, st=[], n=0;
-    nums.forEach(function(x){ var p = src[String(x)]; if (!p) return; n++; ask+=p[0]; bot+=p[1]; land+=p[2]; var s=String(p[3]||'').replace(/^TYPE\s+/i,''); if (s && st.indexOf(s)<0) st.push(s); });
+    var nums = mpLotNums(label); var ask=0, bot=0, land=0, st=[], n=0, bld=0, hasBld=false, done=[];
+    nums.forEach(function(x){ var p = src[String(x)]; if (!p) return; n++; ask+=p[0]; bot+=p[1]; land+=p[2]; var s=String(p[3]||'').replace(/^TYPE\s+/i,''); if (s && st.indexOf(s)<0) st.push(s);
+      if (p[4]>0){ bld+=p[4]; hasBld=true; } if (p[5] && done.indexOf(p[5])<0) done.push(p[5]); });
     if (!n) return null;
-    return [ask, bot, Math.round(land*10)/10, st.join(' / ')];
+    done.sort();
+    return [ask, bot, Math.round(land*10)/10, st.join(' / '), hasBld ? Math.round(bld*10)/10 : 0, done.length ? done[done.length-1] : ''];
   }
   function mpBaht(k){ return '฿'+(k*1000).toLocaleString('en-US'); }
   var MP_STATUS = [
@@ -4865,7 +4867,8 @@ return '<tr><td class="proj">'+p+'</td><td class="num" style="font-weight:700;">
       var pr = mpPriceOf(proj, String(it.L[0]));
       var priceHtml = pr
         ? '<br>ราคาขาย <b>'+mpBaht(pr[0])+'</b>'+(pr[1]>0 ? ' &middot; ราคาต่ำสุด '+mpBaht(pr[1]) : '')+
-          '<br><span class="mp-hint">ที่ดิน '+pr[2]+' ตร.ว.'+(pr[3] ? ' &middot; แบบ '+escapeHTML(String(pr[3])) : '')+'</span>'
+          '<br><span class="mp-hint">'+(pr[3] ? 'แบบ '+escapeHTML(String(pr[3]))+' &middot; ' : '')+'ที่ดิน '+pr[2]+' ตร.ว. &middot; พื้นที่ใช้สอย '+(pr[4] ? pr[4].toLocaleString('en-US')+' ตร.ม.' : '-')+'</span>'+
+          '<br><span class="mp-hint">กำหนดก่อสร้างแล้วเสร็จ '+(pr[5] ? escapeHTML(fmtDateShort(pr[5])) : '-')+'</span>'
         : '<br><span class="mp-hint">ยังไม่มีราคาในระบบ ERP</span>';
       if (!it.st){
         var hn = it.nums.map(function(n){ return vac[n] ? ('บ้านเลขที่ '+vac[n]) : ''; }).filter(Boolean).join(', ');
